@@ -19,6 +19,8 @@ import java.util.concurrent.Executors;
 import java.util.*;
 
 public class Server extends Application {
+    public static final int MAX_BYTE_SIZE = 100;
+
     ExecutorService executorService;
     ServerSocket serverSocket;
     List<Client> connections = new Vector<Client>();
@@ -30,7 +32,7 @@ public class Server extends Application {
 
         try {
             serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress("localhost", 5001));
+            serverSocket.bind(new InetSocketAddress(serverSocket.getInetAddress(), 5001));
         } catch (Exception e) {
             if(!serverSocket.isClosed()) { stopServer(); }
             return;
@@ -94,23 +96,25 @@ public class Server extends Application {
                 public void run() {
                     try {
                         while (true) {
-                            byte[] byteArr = new byte[100];
+                            byte[] byteArr = new byte[MAX_BYTE_SIZE];
                             InputStream inputStream = socket.getInputStream();
 
                             //클라이언트가 비정상 종료를 했을 경우 IOException 발생
                             int readByteCount = inputStream.read(byteArr);
 
                             if(readByteCount == -1) { throw new IOException(); }
-
+                            
                             String message = "[요청 처리: " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
                             Platform.runLater(()->displayText(message));
-
-                            String data = new String(byteArr, 0, readByteCount, "UTF-8");
-
+                            //
+                            //추가부분
+                            String data = "["+socket.getInetAddress()+"/] " + new String(byteArr, 0, readByteCount, "UTF-8");
+                            //
+                            //
                             for(Client client : connections) {
                                 client.send(data);
                             }
-                        }
+                        } 
                     } catch (Exception e) {
                         try {
                             connections.remove(Client.this);
@@ -144,7 +148,7 @@ public class Server extends Application {
             };
             executorService.submit(runnable);
         }
-    }
+    } 
 
 
     ////////////////////

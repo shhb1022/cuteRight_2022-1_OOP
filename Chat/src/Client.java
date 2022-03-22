@@ -1,5 +1,7 @@
 import javafx.application.Platform;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
@@ -13,10 +15,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 
 public class Client extends Application{
     Socket socket;
+    public static final int MAX_BYTE_SIZE = 400;
+    public static final int MAX_CHAT_LENGTH = MAX_BYTE_SIZE / 4;
+    
     void startClient() {
         Thread thread = new Thread() {
             @Override
@@ -56,7 +60,7 @@ public class Client extends Application{
     void receive() {
         while (true) {
             try {
-                byte[] byteArr = new byte[100];
+                byte[] byteArr = new byte[MAX_BYTE_SIZE];
                 InputStream inputStream = socket.getInputStream();
 
                 //서버가 비정상적으로 종료했을 경우 IOEXCEPTIOn 발생
@@ -66,8 +70,18 @@ public class Client extends Application{
                 if(readByteCount == -1) { throw new IOException(); }
 
                 String data = new String(byteArr, 0, readByteCount, "UTF-8");
-
-                Platform.runLater(()->displayText("[받기 완료]" + data));
+                
+                //
+                //추가한 부분
+                String splitdata[] = data.split("/");
+                InetAddress ip =  InetAddress.getLocalHost();
+                if(splitdata[1].equals(ip.getHostAddress())) {
+                	Platform.runLater(()->displayText("[나]" + data));
+                }
+                else Platform.runLater(()->displayText("[상대방]" + data ));
+                //
+                //
+                
             } catch (Exception e) {
                 Platform.runLater(()->displayText("[서버 통신 안됨]"));
                 stopClient();
@@ -85,7 +99,6 @@ public class Client extends Application{
                     OutputStream outputStream = socket.getOutputStream();
                     outputStream.write(byteArr);
                     outputStream.flush();
-                    Platform.runLater(()->displayText("[보내기 완료]"));
                 } catch (Exception e) {
                     Platform.runLater(()->displayText("[서버 통신 안됨]"));
                     stopClient();
@@ -116,6 +129,7 @@ public class Client extends Application{
         txtInput = new TextField();
         txtInput.setPrefSize(60, 30);
         BorderPane.setMargin(txtInput, new Insets(0,1,1,1));
+        addTextLimiter(txtInput, MAX_CHAT_LENGTH);
 
         btnConn = new Button("start");
         btnConn.setPrefSize(60, 30);
@@ -148,6 +162,18 @@ public class Client extends Application{
 
     void displayText(String text) {
         txtDisplay.appendText(text + "\n");
+    }
+
+    public static void addTextLimiter(final TextField tf, final int maxLength) {
+        tf.textProperty().addListener(new ChangeListener<String>() {
+            @Override
+            public void changed(final ObservableValue<? extends String> ov, final String oldValue, final String newValue) {
+                if (tf.getText().length() > maxLength) {
+                    String s = tf.getText().substring(0, maxLength);
+                    tf.setText(s);
+                }
+            }
+        });
     }
 
     public static void main(String[] args) {
