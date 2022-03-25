@@ -13,7 +13,6 @@ import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.*;
@@ -103,16 +102,11 @@ public class Server extends Application {
                             int readByteCount = inputStream.read(byteArr);
 
                             if(readByteCount == -1) { throw new IOException(); }
-                            
+
                             String message = "[요청 처리: " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
                             Platform.runLater(()->displayText(message));
-                            //
-                            //추가부분
-                            String data = "["+socket.getInetAddress()+"/] " + new String(byteArr, 0, readByteCount, "UTF-8");
-                            //
-                            //
                             for(Client client : connections) {
-                                client.send(data);
+                                client.send(byteArr);
                             }
                         } 
                     } catch (Exception e) {
@@ -127,12 +121,11 @@ public class Server extends Application {
             };
             executorService.submit(runnable);
         }
-        void send(String data) {
+        void send(byte[] byteArr) {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     try {
-                        byte[] byteArr = data.getBytes(StandardCharsets.UTF_8);
                         OutputStream outputStream = socket.getOutputStream();
                         outputStream.write(byteArr);
                         outputStream.flush();
@@ -148,7 +141,7 @@ public class Server extends Application {
             };
             executorService.submit(runnable);
         }
-    } 
+    }
 
 
     ////////////////////

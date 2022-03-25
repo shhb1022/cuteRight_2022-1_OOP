@@ -11,14 +11,13 @@ import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.*;
+import java.util.Arrays;
 
 public class Client extends Application{
     Socket socket;
-    public static final int MAX_BYTE_SIZE = 400;
+    public static final int MAX_BYTE_SIZE = 1024;
     public static final int MAX_CHAT_LENGTH = MAX_BYTE_SIZE / 4;
     
     void startClient() {
@@ -60,28 +59,52 @@ public class Client extends Application{
     void receive() {
         while (true) {
             try {
-                byte[] byteArr = new byte[MAX_BYTE_SIZE];
                 InputStream inputStream = socket.getInputStream();
+                byte[] receiveData = null;
+                byte[] headerBuffer = new byte[8];
 
-                //서버가 비정상적으로 종료했을 경우 IOEXCEPTIOn 발생
-                int readByteCount = inputStream.read(byteArr);
-
+                int readByteCount = inputStream.read(headerBuffer);
                 // 서버가 정상적으로 Socket의 close를 호출 했을 경우
                 if(readByteCount == -1) { throw new IOException(); }
 
-                String data = new String(byteArr, 0, readByteCount, "UTF-8");
-                
+                if(headerBuffer[0] != 0x02) {
+                    continue;
+                }
+                String receiveIp = InetAddress.getByAddress(Arrays.copyOfRange(headerBuffer, 2,6)).getHostAddress();
+
+                // data 길이 체크
+                byte[] lengthChk = new byte[2];
+                lengthChk[0] = headerBuffer[6];
+                lengthChk[1] = headerBuffer[7];
+                int dataLength = MessagePacker.byteArrayToInt(lengthChk,2);
+
+                // Message 내용을 담을 버퍼
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();;
+                int read;
+                receiveData = new byte[dataLength];
+
+                // 버퍼 안의 데이터를 다 읽을 때까지 반복문을 돌린다.
+                while((read = inputStream.read(receiveData,0,receiveData.length))!=-1) {
+                    buffer.write(receiveData,0,read);
+                    dataLength = dataLength - read;
+                    if (dataLength<=0) {
+                        break;
+                    }
+                }
                 //
                 //추가한 부분
-                String splitdata[] = data.split("/");
+                String data = new String(buffer.toByteArray(), "utf-8");
+                buffer.flush();
+                buffer.close();
+
                 InetAddress ip =  InetAddress.getLocalHost();
-                if(splitdata[1].equals(ip.getHostAddress())) {
+                if(receiveIp.equals(ip.getHostAddress())) {
                 	Platform.runLater(()->displayText("[나]" + data));
+                } else {
+                    Platform.runLater(()->displayText("[상대방]" + data ));
                 }
-                else Platform.runLater(()->displayText("[상대방]" + data ));
                 //
                 //
-                
             } catch (Exception e) {
                 Platform.runLater(()->displayText("[서버 통신 안됨]"));
                 stopClient();
@@ -96,8 +119,9 @@ public class Client extends Application{
             public void run() {
                 try {
                     byte[] byteArr = data.getBytes("UTF-8");
+                    MessagePacker packet = new MessagePacker(byteArr);
                     OutputStream outputStream = socket.getOutputStream();
-                    outputStream.write(byteArr);
+                    outputStream.write(packet.getMessage());
                     outputStream.flush();
                 } catch (Exception e) {
                     Platform.runLater(()->displayText("[서버 통신 안됨]"));
