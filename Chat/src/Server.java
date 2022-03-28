@@ -18,7 +18,7 @@ import java.util.concurrent.Executors;
 import java.util.*;
 
 public class Server extends Application {
-    public static final int MAX_BYTE_SIZE = 100;
+    public static final int MAX_BYTE_SIZE = 1024;
 
     ExecutorService executorService;
     ServerSocket serverSocket;
@@ -131,8 +131,7 @@ public class Server extends Application {
                         outputStream.flush();
                     } catch (Exception e) {
                         try {
-                            String message = "[클라이언트 통신 안됨]";
-                            Platform.runLater(()->displayText(message));
+                            Platform.runLater(()->displayText("[클라이언트 통신 안됨]"));
                             connections.remove(Client.this);
                             socket.close();
                         } catch (IOException e2) {}

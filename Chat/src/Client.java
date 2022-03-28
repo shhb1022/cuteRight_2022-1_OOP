@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+import org.w3c.dom.Text;
 
 import java.io.*;
 import java.net.*;
@@ -60,16 +61,18 @@ public class Client extends Application{
         while (true) {
             try {
                 InputStream inputStream = socket.getInputStream();
-                byte[] receiveData = null;
                 byte[] headerBuffer = new byte[8];
 
                 int readByteCount = inputStream.read(headerBuffer);
-                // 서버가 정상적으로 Socket의 close를 호출 했을 경우
+                //클라이언트가 비정상 종료를 했을 경우 IOException 발생
                 if(readByteCount == -1) { throw new IOException(); }
 
+                // 정상적으로 수신된 메세지가 아닐 경우
                 if(headerBuffer[0] != 0x02) {
                     continue;
                 }
+
+                // ip 받기
                 String receiveIp = InetAddress.getByAddress(Arrays.copyOfRange(headerBuffer, 2,6)).getHostAddress();
 
                 // data 길이 체크
@@ -79,9 +82,9 @@ public class Client extends Application{
                 int dataLength = MessagePacker.byteArrayToInt(lengthChk,2);
 
                 // Message 내용을 담을 버퍼
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();;
+                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+                byte[] receiveData = new byte[dataLength];
                 int read;
-                receiveData = new byte[dataLength];
 
                 // 버퍼 안의 데이터를 다 읽을 때까지 반복문을 돌린다.
                 while((read = inputStream.read(receiveData,0,receiveData.length))!=-1) {
@@ -91,20 +94,17 @@ public class Client extends Application{
                         break;
                     }
                 }
-                //
-                //추가한 부분
+
                 String data = new String(buffer.toByteArray(), "utf-8");
                 buffer.flush();
                 buffer.close();
 
                 InetAddress ip =  InetAddress.getLocalHost();
                 if(receiveIp.equals(ip.getHostAddress())) {
-                	Platform.runLater(()->displayText("[나]" + data));
+                	Platform.runLater(()->displayTextM("[나]" + data));
                 } else {
                     Platform.runLater(()->displayText("[상대방]" + data ));
                 }
-                //
-                //
             } catch (Exception e) {
                 Platform.runLater(()->displayText("[서버 통신 안됨]"));
                 stopClient();
@@ -135,7 +135,7 @@ public class Client extends Application{
     //////////
     // UI 생성 코드
 
-    TextArea txtDisplay;
+    TextArea txtDisplay, txtDisplayM;
     TextField txtInput;
     Button btnConn, btnSend;
 
@@ -148,6 +148,12 @@ public class Client extends Application{
         txtDisplay.setEditable(false);
         BorderPane.setMargin(txtDisplay, new Insets(0,0,2,0));
         root.setCenter(txtDisplay);
+
+        txtDisplayM = new TextArea();
+        txtDisplayM.setEditable(false);
+        txtDisplayM.setStyle("-fx-text-fill: gray;");
+        BorderPane.setMargin(txtDisplayM, new Insets(0,0,2,0));
+        root.setCenter(txtDisplayM);
 
         BorderPane bottom = new BorderPane();
         txtInput = new TextField();
@@ -168,7 +174,10 @@ public class Client extends Application{
         btnSend = new Button("send");
         btnSend.setPrefSize(60, 30);
         btnSend.setDisable(true);
-        btnSend.setOnAction(e->send(txtInput.getText()));
+        btnSend.setOnAction(e-> {
+            send(txtInput.getText());
+            txtInput.clear();
+        });
 
         bottom.setCenter(txtInput);
         bottom.setLeft(btnConn);
@@ -186,6 +195,17 @@ public class Client extends Application{
 
     void displayText(String text) {
         txtDisplay.appendText(text + "\n");
+    }
+
+    void displayTextM(String text) {
+        for(int i = 0; i < text.length(); i+= 25) {
+            if (i + 25 > text.length()) {
+                txtDisplayM.appendText(text.substring(i, text.length()));
+                break;
+            }
+            txtDisplayM.appendText(text.substring(i, i+25)+"\n");
+        }
+        txtDisplayM.appendText("\n");
     }
 
     public static void addTextLimiter(final TextField tf, final int maxLength) {
