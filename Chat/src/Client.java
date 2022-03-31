@@ -198,12 +198,13 @@ public class Client extends Application{
     }
 
     void displayTextM(String text) {
-        for(int i = 0; i < text.length(); i+= 25) {
+        int maxLine = 25;
+        for(int i = 0; i < text.length(); i+= maxLine) {
             if (i + 25 > text.length()) {
                 txtDisplayM.appendText(text.substring(i, text.length()));
                 break;
             }
-            txtDisplayM.appendText(text.substring(i, i+25)+"\n");
+            txtDisplayM.appendText(text.substring(i, i+maxLine)+"\n");
         }
         txtDisplayM.appendText("\n");
     }
