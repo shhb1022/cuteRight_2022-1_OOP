@@ -7,8 +7,10 @@ import java.util.Arrays;
 
 public class MessagePacker {
     public static final int HEADER_SIZE = 8;
-    private int bufferSize = 1024;
+    public static final int BUFFER_SIZE = 1024;
     private byte[] byteArr;
+    private InetAddress ip;
+    private byte[] message;
 
     MessagePacker(byte[] msg) throws UnknownHostException {
         byteArr = new byte[msg.length + HEADER_SIZE];
@@ -30,13 +32,72 @@ public class MessagePacker {
         byteArr[7] = (byte) bodySize[1];
 
         for (int i=0; i< msg.length; i++) {
-            byteArr[i+8] = msg[i];
+            byteArr[HEADER_SIZE+i] = msg[i];
         }
+        this.message = msg;
+        this.ip = ip;
     }
 
-    public byte[] getMessage() {
+    MessagePacker(byte[] header, byte[] msg) throws UnknownHostException {
+        byteArr = new byte[msg.length + HEADER_SIZE];
+        for(int i=0; i<header.length; i++) {
+            byteArr[i] = header[i];
+        }
+        for(int i=0; i<msg.length; i++) {
+            byteArr[header.length + i] = msg[i];
+        }
+        this.message = msg;
+        this.ip = InetAddress.getByAddress(Arrays.copyOfRange(header, 2,6));
+    }
+
+    public static MessagePacker unpack(InputStream inputStream) throws IOException {
+        // packet의 시작점이 나올때까지 while문을 돌림
+        int readByteCount;
+        do {
+            readByteCount = inputStream.read();
+            if(readByteCount == -1) { throw new IOException(); }
+        } while (readByteCount != 0x02);
+
+        byte[] headerBuffer = new byte[HEADER_SIZE];
+        byte[] tmp = new byte[HEADER_SIZE - 1];
+        inputStream.read(tmp);
+        headerBuffer[0] = 0x02;
+        System.arraycopy(tmp, 0,headerBuffer,1,tmp.length);
+
+        // data 길이 체크
+        byte[] lengthChk = new byte[2];
+        lengthChk[0] = headerBuffer[6];
+        lengthChk[1] = headerBuffer[7];
+        int dataLength = byteArrayToInt(lengthChk,2);
+
+        // Message 내용을 담을 버퍼
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        byte[] receiveData = new byte[dataLength];
+        int read;
+
+        // 버퍼 안의 데이터를 다 읽을 때까지 반복문을 돌린다.
+        while((read = inputStream.read(receiveData,0,receiveData.length))!=-1) {
+            buffer.write(receiveData,0,read);
+            dataLength = dataLength - read;
+            if (dataLength<=0) {
+                break;
+            }
+        }
+
+        MessagePacker packet = new MessagePacker(headerBuffer, buffer.toByteArray());
+        buffer.flush();
+        buffer.close();
+        // MessagePacker 객체를 리턴한다.
+        return packet;
+    }
+
+    public byte[] getPacket() {
         return byteArr;
     }
+
+    public byte[] getMessage() { return message; }
+
+    public InetAddress getIp() { return ip; }
 
     public static byte[] intToByteArray(int value, int lengthDiv) {
         byte[] byteArray = new byte[lengthDiv];

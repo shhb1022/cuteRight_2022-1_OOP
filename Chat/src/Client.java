@@ -2,19 +2,19 @@ import javafx.application.Platform;
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.Border;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import org.w3c.dom.Text;
 
 import java.io.*;
 import java.net.*;
-import java.util.Arrays;
 
 public class Client extends Application{
     Socket socket;
@@ -27,10 +27,10 @@ public class Client extends Application{
             public void run() {
                 try {
                     socket = new Socket();
-                    socket.connect(new InetSocketAddress("localhost", 5001));
+                    socket.connect(new InetSocketAddress(InetAddress.getLocalHost(), 5001));
                     Platform.runLater(()->{
                         displayText("[연결 완료 " + socket.getRemoteSocketAddress()+"]");
-                        btnConn.setText("stop");
+                        btnConn.setText("종료");
                         btnSend.setDisable(false);
                     });
                 } catch (Exception e) {
@@ -48,7 +48,7 @@ public class Client extends Application{
         try {
             Platform.runLater(() -> {
                 displayText("[연결 끊음]");
-                btnConn.setText("start");
+                btnConn.setText("시작");
                 btnSend.setDisable(true);
             });
             if (socket != null && !socket.isClosed()) {
@@ -61,52 +61,19 @@ public class Client extends Application{
         while (true) {
             try {
                 InputStream inputStream = socket.getInputStream();
-                byte[] headerBuffer = new byte[8];
+                MessagePacker packet = MessagePacker.unpack(inputStream);
 
-                int readByteCount = inputStream.read(headerBuffer);
-                //클라이언트가 비정상 종료를 했을 경우 IOException 발생
-                if(readByteCount == -1) { throw new IOException(); }
-
-                // 정상적으로 수신된 메세지가 아닐 경우
-                if(headerBuffer[0] != 0x02) {
-                    continue;
-                }
-
-                // ip 받기
-                String receiveIp = InetAddress.getByAddress(Arrays.copyOfRange(headerBuffer, 2,6)).getHostAddress();
-
-                // data 길이 체크
-                byte[] lengthChk = new byte[2];
-                lengthChk[0] = headerBuffer[6];
-                lengthChk[1] = headerBuffer[7];
-                int dataLength = MessagePacker.byteArrayToInt(lengthChk,2);
-
-                // Message 내용을 담을 버퍼
-                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-                byte[] receiveData = new byte[dataLength];
-                int read;
-
-                // 버퍼 안의 데이터를 다 읽을 때까지 반복문을 돌린다.
-                while((read = inputStream.read(receiveData,0,receiveData.length))!=-1) {
-                    buffer.write(receiveData,0,read);
-                    dataLength = dataLength - read;
-                    if (dataLength<=0) {
-                        break;
-                    }
-                }
-
-                String data = new String(buffer.toByteArray(), "utf-8");
-                buffer.flush();
-                buffer.close();
-
-                InetAddress ip =  InetAddress.getLocalHost();
-                if(receiveIp.equals(ip.getHostAddress())) {
-                	Platform.runLater(()->displayTextM("[나]" + data));
+                String msg = new String(packet.getMessage(), "utf-8");
+                String ip =  InetAddress.getLocalHost().getHostAddress();
+                String receiveIp = packet.getIp().getHostAddress();
+                if(receiveIp.equals(ip)) {
+                	Platform.runLater(()->displayText("[나] " + msg));
                 } else {
-                    Platform.runLater(()->displayText("[상대방]" + data ));
+                    Platform.runLater(()->displayText("[상대방] " + msg));
                 }
             } catch (Exception e) {
                 Platform.runLater(()->displayText("[서버 통신 안됨]"));
+                e.printStackTrace();
                 stopClient();
                 break;
             }
@@ -121,7 +88,7 @@ public class Client extends Application{
                     byte[] byteArr = data.getBytes("UTF-8");
                     MessagePacker packet = new MessagePacker(byteArr);
                     OutputStream outputStream = socket.getOutputStream();
-                    outputStream.write(packet.getMessage());
+                    outputStream.write(packet.getPacket());
                     outputStream.flush();
                 } catch (Exception e) {
                     Platform.runLater(()->displayText("[서버 통신 안됨]"));
@@ -147,31 +114,35 @@ public class Client extends Application{
         txtDisplay = new TextArea();
         txtDisplay.setEditable(false);
         BorderPane.setMargin(txtDisplay, new Insets(0,0,2,0));
+        txtDisplay.setWrapText(true);
         root.setCenter(txtDisplay);
-
-        txtDisplayM = new TextArea();
-        txtDisplayM.setEditable(false);
-        txtDisplayM.setStyle("-fx-text-fill: gray;");
-        BorderPane.setMargin(txtDisplayM, new Insets(0,0,2,0));
-        root.setCenter(txtDisplayM);
 
         BorderPane bottom = new BorderPane();
         txtInput = new TextField();
         txtInput.setPrefSize(60, 30);
         BorderPane.setMargin(txtInput, new Insets(0,1,1,1));
         addTextLimiter(txtInput, MAX_CHAT_LENGTH);
+        txtInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent k) {
+                if(k.getCode().equals(KeyCode.ENTER)) {
+                    send(txtInput.getText());
+                    txtInput.clear();
+                }
+            }
+        });
 
-        btnConn = new Button("start");
+        btnConn = new Button("시작");
         btnConn.setPrefSize(60, 30);
         btnConn.setOnAction(e->{
-            if (btnConn.getText().equals("start")) {
+            if (btnConn.getText().equals("시작")) {
                 startClient();
-            } else if(btnConn.getText().equals("stop")) {
+            } else if(btnConn.getText().equals("종료")) {
                 stopClient();
             }
         });
 
-        btnSend = new Button("send");
+        btnSend = new Button("보내기");
         btnSend.setPrefSize(60, 30);
         btnSend.setDisable(true);
         btnSend.setOnAction(e-> {
@@ -195,18 +166,6 @@ public class Client extends Application{
 
     void displayText(String text) {
         txtDisplay.appendText(text + "\n");
-    }
-
-    void displayTextM(String text) {
-        int maxLine = 25;
-        for(int i = 0; i < text.length(); i+= maxLine) {
-            if (i + 25 > text.length()) {
-                txtDisplayM.appendText(text.substring(i, text.length()));
-                break;
-            }
-            txtDisplayM.appendText(text.substring(i, i+maxLine)+"\n");
-        }
-        txtDisplayM.appendText("\n");
     }
 
     public static void addTextLimiter(final TextField tf, final int maxLength) {

@@ -43,7 +43,7 @@ public class Server extends Application {
                 Platform.runLater(()->{
                     displayText("[서버 시작]");
                     System.out.println("서버 시작");
-                    btnStartStop.setText("stop");
+                    btnStartStop.setText("종료");
                 });
                 while(true) {
                     try {
@@ -76,7 +76,7 @@ public class Server extends Application {
             if(executorService!=null && !executorService.isShutdown()) { executorService.shutdown(); }
             Platform.runLater(()-> {
                 displayText("[서버 멈춤]");
-                btnStartStop.setText("start");
+                btnStartStop.setText("시작");
             });
         } catch (Exception e) { }
     }
@@ -159,14 +159,14 @@ public class Server extends Application {
         BorderPane.setMargin(txtDisplay, new Insets(0,0,2,0));
         root.setCenter(txtDisplay);
 
-        btnStartStop = new Button("start");
+        btnStartStop = new Button("시작");
         btnStartStop.setPrefHeight(30);
         btnStartStop.setMaxWidth(Double.MAX_VALUE);
 
         btnStartStop.setOnAction(e->{
-            if (btnStartStop.getText().equals("start")) {
+            if (btnStartStop.getText().equals("시작")) {
                 startServer();
-            } else if(btnStartStop.getText().equals("stop")) {
+            } else if(btnStartStop.getText().equals("종료")) {
                 stopServer();
             }
         });

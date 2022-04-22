@@ -1,6 +1,7 @@
 /*text-area 배경색*/
 .text-area {
     -fx-background-color: #FAF4C0;
+    -fx-text-fill: gray;
 }
 
 .text-area .scroll-pane {
