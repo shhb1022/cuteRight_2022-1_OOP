@@ -1,3 +1,5 @@
+package Client;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,7 +14,7 @@ public class MessagePacker {
     private InetAddress ip;
     private byte[] message;
 
-    MessagePacker(byte[] msg) throws UnknownHostException {
+    public MessagePacker(byte[] msg) throws UnknownHostException {
         byteArr = new byte[msg.length + HEADER_SIZE];
         // 헤더 정의
         // STX
@@ -50,7 +52,7 @@ public class MessagePacker {
         this.ip = InetAddress.getByAddress(Arrays.copyOfRange(header, 2,6));
     }
 
-    public static MessagePacker unpack(InputStream inputStream) throws IOException {
+    public static MessagePacker unpack(InputStream inputStream) throws Exception {
         // packet의 시작점이 나올때까지 while문을 돌림
         int readByteCount;
         do {

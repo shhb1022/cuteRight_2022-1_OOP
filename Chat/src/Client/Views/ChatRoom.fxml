@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="Client.Controllers.ChatRoomController"
+            prefHeight="600.0" prefWidth="500.0">
+    <top>
+        <HBox alignment="CENTER_LEFT">
+            <children>
+                <Button fx:id="backBtn" prefWidth="60" text="⬅︎"/>
+                <TextField fx:id="title" alignment="CENTER" editable="false" text="방제">
+                    <HBox.hgrow><Priority fx:constant="ALWAYS"/></HBox.hgrow>
+                </TextField>
+            </children>
+        </HBox>
+    </top>
+    <center>
+        <GridPane alignment="CENTER">
+            <children>
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="0">대화상대</Label>
+                <ListView GridPane.columnIndex="0" GridPane.rowIndex="1" fx:id="contactList" prefWidth="250" />
+                <TextArea GridPane.columnIndex="1" GridPane.rowIndex="0" GridPane.rowSpan="4" fx:id="txtDisplay" editable="false" wrapText="true" />
+                <Label GridPane.columnIndex="0" GridPane.rowIndex="2">대기인원</Label>
+                <ListView GridPane.columnIndex="0" GridPane.rowIndex="3" fx:id="waitingList" prefWidth="250" />
+            </children>
+        </GridPane>
+    </center>
+    <bottom>
+        <BorderPane>
+            <left>
+                <Button fx:id="connBtn" prefWidth="60" prefHeight="30" text="시작"/>
+            </left>
+            <center>
+                <TextField fx:id="txtInput" prefHeight="30" prefWidth="60" />
+            </center>
+            <right>
+                <Button fx:id="sendBtn" prefWidth="60" prefHeight="30" text="보내기" />
+            </right>
+        </BorderPane>
+    </bottom>
+</BorderPane>
