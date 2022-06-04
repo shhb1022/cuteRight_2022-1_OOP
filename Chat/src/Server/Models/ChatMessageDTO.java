@@ -1,5 +1,7 @@
 package Server.Models;
 
+import org.json.simple.JSONObject;
+
 public class ChatMessageDTO {
 
 	int std_id;
@@ -59,5 +61,18 @@ public class ChatMessageDTO {
 
 	public void setTime(String time) {
 		this.time = time;
+	}
+
+	public JSONObject toJSONObject() {
+		JSONObject obj = new JSONObject();
+		obj.put("std_id", this.std_id);
+		obj.put("room_id", this.room_id);
+		obj.put("message", this.message);
+		obj.put("time", this.time);
+		return obj;
+	}
+
+	public String toJSONString() {
+		return toJSONObject().toJSONString();
 	}
 }

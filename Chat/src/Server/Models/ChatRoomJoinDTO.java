@@ -1,34 +1,30 @@
 package Server.Models;
 
 
+import org.json.simple.JSONObject;
+
 //현재 방에서 학생들의 목록을 보여줄때 사용
 public class ChatRoomJoinDTO {
 
+	private int join_id;
 	private int room_id;
 	private int std_id;
-	private int join;
-	private String name;
-	private String d_job;
-	private int state;
+	private int member;
 	
-	public ChatRoomJoinDTO(int std_id, int room_id, int join, String name, String d_job, int state) {
+	public ChatRoomJoinDTO(int join_id, int room_id, int std_id, int member) {
+		this.join_id = join_id;
 		this.std_id = std_id;
 		this.room_id = room_id;
-		this.join = join;
-		this.name = name;
-		this.d_job = d_job;
-		this.state = state;
+		this.member = member;
 	}
 	
+
+	public int getJoin_id() {
+		return join_id;
+	}
 	
-	public ChatRoomJoinDTO() {
-		this.std_id = 0;
-		this.room_id = 0;
-		this.join = 0;
-		this.name = null;
-		this.d_job = null;
-		this.state = 0;
-		
+	public void setJoin_id(int join_id) {
+		this.join_id = join_id;
 	}
 	
 	public int getStd_id() {
@@ -47,36 +43,24 @@ public class ChatRoomJoinDTO {
 		this.room_id = room_id;
 	}
 	
-	public int getJoin() {
-		return join;
+	public int getMember() {
+		return member;
 	}
 	
-	public void setJoin(int join) {
-		this.join = join;
+	public void setMember(int member) {
+		this.member = member;
 	}
 
-	public String getName() {
-		return name;
+	public JSONObject toJSONObject() {
+		JSONObject obj = new JSONObject();
+		obj.put("join_id", this.join_id);
+		obj.put("room_id", this.room_id);
+		obj.put("std_id", this.std_id);
+		obj.put("join", this.member);
+		return obj;
 	}
-	
-	public void setName(String name) {
-		this.name = name;
+
+	public String toJSONString() {
+		return toJSONObject().toJSONString();
 	}
-	
-	public String getD_job() {
-		return d_job;
-	}
-	
-	public void setD_job(String d_job) {
-		this.d_job = d_job;
-	}
-	
-	public int getState() {
-		return state;
-	}
-	
-	public void setState(int state) {
-		this.state = state;
-	}
-	//나중에 name,d_job,state 추가
 }

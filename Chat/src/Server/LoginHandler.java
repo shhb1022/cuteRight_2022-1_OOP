@@ -26,10 +26,10 @@ public class LoginHandler implements HttpHandler {
             Headers headers = exchange.getResponseHeaders();
             if(method.equals("GET")) {
                 String[] author = exchange.getRequestHeaders().get("Authorization").get(0).split(":");
-                String id = author[0];
+                int id = Integer.parseInt(author[0]);
                 String password = author[1];
 
-                int lg= DAO.loginUser(id, password);
+                int lg= DAO.checkLogin(id, password);
 
                 if(lg == 1) {
                     exchange.sendResponseHeaders(200, 0);
