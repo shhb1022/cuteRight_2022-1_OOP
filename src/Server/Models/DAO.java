@@ -330,7 +330,7 @@ public class DAO {
 	//
 	//
 	//모든 user 정보 가져오기->방 생성 시 친구 선택할 때 필요
-	public ArrayList<UsersDTO> getAllUsers(){
+	public static ArrayList<UsersDTO> getAllUsers(){
 		Connection con = null;
 		Statement stmt= null;
 		ResultSet rs = null;

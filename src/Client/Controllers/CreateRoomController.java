@@ -1,9 +1,5 @@
 package Client.Controllers;
 
-import Client.*;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,39 +10,33 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-
-import com.sun.net.httpserver.Headers;
 
 import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-
-import Client.Models.*;
-import Server.Models.ChatMessageDTO;
-import Server.Models.DAO;
-import Client.UserInfo;
 
 public class CreateRoomController implements Initializable {
     @FXML private TextField setTitle;
     @FXML private ComboBox setLimitPersonnel;
+   // ObservableList list = FXCollections.observableArrayList(1,2,3,4,5,6,7,8,9,10);
     @FXML private ListView usersDisplay;
     @FXML private Button backtoMainBtn2,createBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        ObservableList<Integer> comboNumList = FXCollections.observableArrayList(1,2,3,4,5,6);
+        setLimitPersonnel.setItems(comboNumList);
+
+
+
+
+
+        //ObservableList<String> friendList = FXCollections
     	backtoMainBtn2.setOnAction(new EventHandler<ActionEvent>() {
     		public void handle(ActionEvent event) {
     			try {

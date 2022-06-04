@@ -32,7 +32,7 @@ public class Server {
         this.chattingServer = new ChattingServer();
         // HTTP Server.Server Context 설정
         httpServer.createContext("/", new RootHandler());
-        httpServer.createContext("/login", new LoginHandler());g
+        httpServer.createContext("/login", new LoginHandler());
         httpServer.createContext("/logout", new LogoutHandler());
         httpServer.createContext("/signin", new SignInHandler());
         httpServer.createContext("/main",new RootHandler());

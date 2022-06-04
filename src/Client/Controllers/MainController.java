@@ -28,13 +28,16 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     @FXML private ComboBox chooseRoomList;
-    ObservableList<String> list = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
+
 
     @FXML private ListView roomDisplay;
 
     @FXML private Button logoutBtn, createRoomBtn;
 
     public void initialize(URL location, ResourceBundle resources) {
+
+        ObservableList<String> list = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
+        chooseRoomList.setItems(list);
 
     	createRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -84,5 +87,15 @@ public class MainController implements Initializable {
                 }
             }
         });
+    }
+    public static String getResponseBody(InputStream is) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+        String line;
+        while((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        br.close();
+        return sb.toString();
     }
 }
