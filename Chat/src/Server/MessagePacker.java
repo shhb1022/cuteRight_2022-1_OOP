@@ -1,4 +1,4 @@
-package Client;
+package Server;
 
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -6,6 +6,7 @@ import org.json.simple.parser.JSONParser;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 
 
@@ -67,8 +68,8 @@ public class MessagePacker {
     }
 
     public String getMessage() { return (String) body.get("message"); }
-    public String getStdId() { return (String) body.get("std_Id"); }
-    public String getRoomId() { return (String) body.get("room_Id"); }
+    public int getStdId() { return Integer.parseInt((String) body.get("std_Id")); }
+    public int getRoomId() { return Integer.parseInt((String) body.get("room_Id")); }
 
     private static byte[] intToByteArray(int value, int lengthDiv) {
         byte[] byteArray = new byte[lengthDiv];

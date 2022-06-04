@@ -1,6 +1,6 @@
 package Client.Controllers;
 
-import Client.SocketConnection;
+import Client.UserInfo;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -9,46 +9,103 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.scene.layout.AnchorPane;
 
-import java.net.Socket;
+import java.io.*;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
-    Socket socket = null;
     @FXML private TextField idInput;
-    @FXML private TextField pwInput;
+    @FXML private PasswordField pwInput;
     @FXML private Button loginBtn;
     @FXML private Button signUpBtn;
+
+    @FXML private AnchorPane ap;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        try {
-            SocketConnection.connect();
-        } catch (Exception e) {
-            System.out.println("인터넷 연결이 불안정 합니다!!!!!");
-            e.printStackTrace();
-        }
-
         loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("아이디: " + idInput.getText());
-                System.out.println("패스워드: " + pwInput.getText());
-                Stage stage = new Stage();
+                String id = idInput.getText();
+                String pw = pwInput.getText();
+
+                System.out.println("아이디: " + id);
+                System.out.println("패스워드: " + pw);
+
+                // 서버와 연결
                 try {
-                    // 현재 창을 종료한다.
-                    Stage currStage = (Stage) idInput.getScene().getWindow();
-                    currStage.close();
-                    // 새 창을 띄운다.
-                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/ChatRoom.fxml"));
-                    Scene scene = new Scene(root);
-                    stage.setScene(scene);
-                    stage.show();
-                } catch (Exception e){
+                    URL url = new URL("http://localhost:3000/login");
+                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                    http.setRequestMethod("GET");
+                    http.setRequestProperty("Authorization", id+":"+pw);
+
+                    // 요청 방식 구하기
+                    System.out.println("getRequestMethod():" + http.getRequestMethod());
+                    // 응답 코드 구하기
+                    System.out.println("getResponseCode():" + http.getResponseCode());
+                    // 응답 메시지 구하기
+                    System.out.println("getResponseMessage():" + http.getResponseMessage());
+                    if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        // 유저 정보를 저장한다.
+                        UserInfo.setId(id);
+                        UserInfo.setPw(pw);
+                        System.out.println("로그인에 성공했습니다.");
+
+//                        Stage primaryStage = (Stage) ap.getScene().getWindow();
+//                        primaryStage.close();
+
+                        // 현재 창을 종료한다.
+                        Stage currStage = (Stage) idInput.getScene().getWindow();
+                        currStage.close();
+
+
+                        // 새 창을 띄운다.
+                        Stage stage = new Stage();
+                        Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
+                        stage.show();
+                    } else if (http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                        // 경고 메세지를 출력한다.
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setHeaderText(null);
+                        alert.setContentText("잘못된 입력 정보입니다.");
+                        alert.showAndWait();
+                    }
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+        signUpBtn.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Stage stage = new Stage();
+                try {
+                    Stage currStage = (Stage) idInput.getScene().getWindow();
+                    currStage.close();
+                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/SignIn.fxml"));
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+    public static String getResponseBody(InputStream is) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+        String line;
+        while((line = br.readLine()) != null) {
+            sb.append(line).append("\n");
+        }
+        br.close();
+        return sb.toString();
     }
 }

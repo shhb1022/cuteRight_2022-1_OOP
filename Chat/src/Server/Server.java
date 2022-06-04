@@ -1,195 +1,95 @@
 package Server;
 
-import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.geometry.Insets;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.layout.BorderPane;
-import javafx.stage.Stage;
+import com.sun.net.httpserver.HttpServer;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class Server extends Application {
-    public static final int MAX_BYTE_SIZE = 1024;
+public class Server {
+    private final String DEFAULT_HOSTNAME = "0.0.0.0";
+    private final int DEFAULT_PORT = 8080;
+    private final int DEFAULT_BACKLOG = 0;
+    private HttpServer httpServer = null;
+    private ChattingServer chattingServer = null;
 
-    ExecutorService executorService;
-    ServerSocket serverSocket;
-    List<Client> connections = new Vector<Client>();
-
-    void startServer() {
-        executorService = Executors.newFixedThreadPool(
-                Runtime.getRuntime().availableProcessors()
-        );
-
-        try {
-            serverSocket = new ServerSocket();
-            serverSocket.bind(new InetSocketAddress(serverSocket.getInetAddress(), 5001));
-        } catch (Exception e) {
-            if(!serverSocket.isClosed()) { stopServer(); }
-            return;
-        }
-
-        Runnable runnable = new Runnable() {
-            @Override
-            public void run() {
-                Platform.runLater(()->{
-                    displayText("[서버 시작]");
-                    System.out.println("서버 시작");
-                    btnStartStop.setText("종료");
-                });
-                while(true) {
-                    try {
-                        Socket socket = serverSocket.accept();
-                        String message = "[연결 수락:" + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
-                        Platform.runLater(()->displayText(message));
-
-                        Client client = new Client(socket);
-                        connections.add(client);
-                        Platform.runLater(()->displayText("[연결 개수" + connections.size() + "]"));
-                    } catch (Exception e) {
-                        if(!serverSocket.isClosed()) {stopServer();}
-                        break;
-                    }
-                }
-            }
-        };
-        executorService.submit(runnable);
+    // 생성자
+    public Server() throws IOException {
+        createServer(DEFAULT_HOSTNAME, DEFAULT_PORT);
+    }
+    public Server(int port) throws IOException {
+        createServer(DEFAULT_HOSTNAME, port);
+    }
+    public Server(String host, int port) throws IOException {
+        createServer(host, port);
     }
 
-    void stopServer() {
-        try {
-            Iterator<Client> iterator = connections.iterator();
-            while(iterator.hasNext()) {
-                Client client = iterator.next();
-                client.socket.close();
-                iterator.remove();
-            }
-            if(serverSocket!=null && !serverSocket.isClosed()) { serverSocket.close(); }
-            if(executorService!=null && !executorService.isShutdown()) { executorService.shutdown(); }
-            Platform.runLater(()-> {
-                displayText("[서버 멈춤]");
-                btnStartStop.setText("시작");
-            });
-        } catch (Exception e) { }
+    // 서버 생성
+    private void createServer(String host, int port) throws IOException {
+        // HTTP Server.Server 생성
+        this.httpServer = HttpServer.create(new InetSocketAddress(host, port), DEFAULT_BACKLOG);
+        this.chattingServer = new ChattingServer();
+        // HTTP Server.Server Context 설정
+        httpServer.createContext("/", new RootHandler());
+        httpServer.createContext("/login", new LoginHandler());
+        httpServer.createContext("/main",new RootHandler());
+        httpServer.createContext("/chatRoom", new ChatRoomHandler());
+        httpServer.createContext("/chatMessage", new ChatMessageHandler());
     }
 
-    public class Client {
-        Socket socket;
-
-        Client(Socket socket) {
-            this.socket = socket;
-            receive();
-        }
-
-        void receive() {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while (true) {
-                            byte[] byteArr = new byte[MAX_BYTE_SIZE];
-                            InputStream inputStream = socket.getInputStream();
-
-                            //클라이언트가 비정상 종료를 했을 경우 IOException 발생
-                            int readByteCount = inputStream.read(byteArr);
-
-                            if(readByteCount == -1) { throw new IOException(); }
-
-                            String message = "[요청 처리: " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
-                            Platform.runLater(()->displayText(message));
-                            for(Client client : connections) {
-                                client.send(byteArr);
-                            }
-                        } 
-                    } catch (Exception e) {
-                        try {
-                            connections.remove(Client.this);
-                            String message = "클라이언트 통신 안됨";
-                            Platform.runLater(()->displayText(message));
-                            socket.close();
-                        } catch (IOException e2) {}
-                    }
-                }
-            };
-            executorService.submit(runnable);
-        }
-        void send(byte[] byteArr) {
-            Runnable runnable = new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        OutputStream outputStream = socket.getOutputStream();
-                        outputStream.write(byteArr);
-                        outputStream.flush();
-                    } catch (Exception e) {
-                        try {
-                            Platform.runLater(()->displayText("[클라이언트 통신 안됨]"));
-                            connections.remove(Client.this);
-                            socket.close();
-                        } catch (IOException e2) {}
-                    }
-                }
-            };
-            executorService.submit(runnable);
-        }
+    // 서버 실행
+    public void start() {
+        httpServer.start();
+        chattingServer.start();
     }
 
-
-    ////////////////////
-    // UI 생성 코드
-
-    TextArea txtDisplay;
-    Button btnStartStop;
-
-    @Override
-    public void start(Stage primaryStage) throws Exception {
-        BorderPane root = new BorderPane();
-        root.setPrefSize(500, 300);
-
-        txtDisplay = new TextArea();
-        txtDisplay.setEditable(false);
-        BorderPane.setMargin(txtDisplay, new Insets(0,0,2,0));
-        root.setCenter(txtDisplay);
-
-        btnStartStop = new Button("시작");
-        btnStartStop.setPrefHeight(30);
-        btnStartStop.setMaxWidth(Double.MAX_VALUE);
-
-        btnStartStop.setOnAction(e->{
-            if (btnStartStop.getText().equals("시작")) {
-                startServer();
-            } else if(btnStartStop.getText().equals("종료")) {
-                stopServer();
-            }
-        });
-        root.setBottom(btnStartStop);
-
-        Scene scene = new Scene(root);
-        scene.getStylesheets().add(getClass().getResource("/Server/app.css").toString());
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Server");
-        primaryStage.setOnCloseRequest(event->stopServer());
-        primaryStage.show();
-    }
-
-    void displayText(String text) {
-        txtDisplay.appendText(text + "\n");
+    // 서버 중지
+    public void stop(int delay) {
+        httpServer.stop(delay);
+        chattingServer.stop();
     }
 
     public static void main(String[] args) {
-        launch(args);
+        Server httpServerManager = null;
+
+        try {
+            // 시작 로그
+            System.out.println(
+                    String.format(
+                            "[%s][HTTP SERVER][START]",
+                            new SimpleDateFormat("yyyy-MM-dd H:mm:ss").format(new Date())
+                    )
+            );
+
+            // 서버 생성
+            httpServerManager = new Server("localhost", 3000);
+            httpServerManager.start();
+            // Shutdown Hook
+            Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    // 종료 로그
+                    System.out.println(
+                            String.format(
+                                    "[%s][HTTP SERVER][STOP]",
+                                    new SimpleDateFormat("yyyy-MM-dd H:mm:ss").format(new Date())
+                            )
+                    );
+                }
+            }));
+
+            // Enter를 입력하면 종료
+            System.out.print("Please press 'Enter' to stop the server.");
+            System.in.read();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        } finally {
+            // 종료
+            // 0초 대기후  종료
+            httpServerManager.stop(0);
+        }
     }
 }
-
-
-

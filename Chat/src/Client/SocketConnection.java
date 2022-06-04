@@ -4,9 +4,6 @@ import java.io.IOException;
 import java.net.*;
 
 public class SocketConnection {
-    public static final int MAX_BYTE_SIZE = 1024;
-    public static final int MAX_CHAT_LENGTH = MAX_BYTE_SIZE / 4;
-
     public static boolean socketConnect = false;
     public static Socket socket = null;
 

@@ -20,6 +20,8 @@
         <jarDirectory url="file:///Library/Java/JavaVirtualMachines/javafx-sdk-17.0.2/lib" recursive="false" />
       </library>
     </orderEntry>
-    <orderEntry type="library" name="mysql-connector-java-8.0.27" level="project" />
+    <orderEntry type="library" exported="" name="libs" level="project" />
+    <orderEntry type="library" name="sqlite-jdbc-3.36.0.3" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
