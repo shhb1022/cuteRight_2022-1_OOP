@@ -2,7 +2,7 @@ package Client.Models;
 
 import org.json.simple.JSONObject;
 
-//현재 방에서 학생들의 목록을 보여줄때 사용
+//현재 방에서 학생들의 목록을 보여줄때 사용s
 public class ChatRoomInfoDTO{
 
 	private int room_id;

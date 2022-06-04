@@ -23,7 +23,7 @@ public class ChatRoomJoinDTO {
 		return member_id;
 	}
 	
-	public void setMember_id(int member_id) {
+	public void setJoin_id(int member_id) {
 		this.member_id = member_id;
 	}
 	

@@ -41,7 +41,7 @@ public class SignInHandler implements HttpHandler {
 
                 System.out.println(user.toJSONString());
 
-                boolean success = DAO.addSignUp(user);
+                boolean success = DAO.addSignUp(user);;
                 if(success) {
                     // 응답코드 설정
                     System.out.println("회원가입 완료");

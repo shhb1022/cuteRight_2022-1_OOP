@@ -11,7 +11,7 @@ public class UsersDTO{
 	private int state;
 	private String pwd;
 	
-	public UsersDTO(int std_id, String name, String d_job, int state,String pwd) {
+	public UsersDTO(int std_id, String name, String d_job, int state, String pwd) {
 		this.std_id = std_id;
 		this.name = name;
 		this.d_job = d_job;

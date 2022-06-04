@@ -157,7 +157,6 @@ public class DAO {
         return -2;//db 오류
     }
 	
-	//회원가입
 	public static boolean addSignUp(UsersDTO Users) {
 	    Connection con = null;
 	    Statement stmt = null;
@@ -168,23 +167,21 @@ public class DAO {
 	        insert+="('"+Users.getStd_id()+"','"+Users.getName()+"','"+Users.getD_job()+"','"+Users.getState()+"','"+Users.getPwd()+"')";
 	        System.out.println(insert);
 	        int i = stmt.executeUpdate(insert);
-	        if(i==0) {
-				System.out.println("회원정보 추가 실패");
-				return false;
-	        }
-			System.out.println("회원정보 추가 성공");
+	        if(i==1)
+	           	return true;
+	        else 
+	            return false;
 	    } catch (SQLException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
 	        return false;
-	    } finally {
+	    }finally {
 	        try {
 	            if(stmt != null) stmt.close();
 	            if(con != null) con.close();
 	        } catch (Exception e2) {
 	            e2.printStackTrace();
 	        }
-	        return true;
 	    }
 	}
 	//회원가입시 중복아이디 검사
@@ -376,7 +373,7 @@ public class DAO {
 		try {
 			con = makeConnection();
 			stmt = con.createStatement();
-			String insert = "INSERT INTO ChatInfo (title,limit_person,cur_person,leader_id) VALUES ";
+			String insert = "INSERT INTO ChatRoomInfo (title,limit_person,cur_person,leader_id) VALUES ";
 			insert+="('"+room.getTitle()+"','"+"','"+room.getLimit_person()+"','"+0+"','"+room.getLeader_id()+"')";
 			System.out.println(insert);
 			int i = stmt.executeUpdate(insert);
@@ -411,7 +408,7 @@ public class DAO {
 			if(i==1) {
 				System.out.println("레코드 추가 성공");
 				//Chat_Info에 cur_person증가는 따로 메소드로 뻄
-				//String update = "UPDATE ChatInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
+				//String update = "UPDATE ChatRoomInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
 				//int j = stmt.executeUpdate(update);
 				//if(j==1)System.out.println("레코드 갱신 성공");
 				//else System.out.println("레코드 갱신 실패");	
@@ -436,7 +433,7 @@ public class DAO {
 	public void increCur_person(int room_id) {
 		Connection con = null;
 	    Statement stmt = null;
-	    String update = "UPDATE ChatInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
+	    String update = "UPDATE ChatRoomInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
 	    try {
 	        con = makeConnection();
 	        stmt = con.createStatement();
@@ -462,7 +459,7 @@ public class DAO {
 	public void decreCur_person(int room_id) {
 		Connection con = null;
 	    Statement stmt = null;
-	    String update = "UPDATE ChatInfo SET cur_person=cur_person-1 WHERE room_id = "+room_id;
+	    String update = "UPDATE ChatRoomInfo SET cur_person=cur_person-1 WHERE room_id = "+room_id;
 	    try {
 	        con = makeConnection();
 	        stmt = con.createStatement();

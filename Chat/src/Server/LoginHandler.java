@@ -30,13 +30,16 @@ public class LoginHandler implements HttpHandler {
                 String password = author[1];
 
                 int lg= DAO.checkLogin(id, password);
+                boolean checkstate =DAO.checkState(id);
 
                 if(lg == 1) {
-                    // 로그인 성공
-                    DAO.setLogin(id);
-                    exchange.sendResponseHeaders(200, 0);
+                	if(checkstate) {
+                		DAO.setLogin(id);
+                        exchange.sendResponseHeaders(200, 0);
+                	} else {
+                		exchange.sendResponseHeaders(409, 0);
+                	}
                 } else if (lg == 0 || lg == -1){
-                    // 로그인 실패
                     exchange.sendResponseHeaders(400, 0);
                 }
             }
