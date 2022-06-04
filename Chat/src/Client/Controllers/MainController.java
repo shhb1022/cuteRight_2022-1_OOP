@@ -34,7 +34,7 @@ public class MainController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
 
-        createRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
+    	createRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
@@ -46,7 +46,7 @@ public class MainController implements Initializable {
                     Stage currStage = (Stage) createRoomBtn.getScene().getWindow();
                     currStage.close();
 
-                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/.SignIn.fxml"));
+                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/CreateRoom.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     stage.show();

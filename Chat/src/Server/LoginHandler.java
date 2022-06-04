@@ -33,6 +33,7 @@ public class LoginHandler implements HttpHandler {
                 boolean checkstate =DAO.checkState(id);
 
                 if(lg == 1) {
+//                	exchange.sendResponseHeaders(200, 0);
                 	if(checkstate) {
                 		DAO.setLogin(id);
                         exchange.sendResponseHeaders(200, 0);
