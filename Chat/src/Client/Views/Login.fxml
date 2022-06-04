@@ -20,7 +20,7 @@
         <TextField fx:id="idInput" GridPane.rowIndex="0" GridPane.columnIndex="1"
             GridPane.hgrow="ALWAYS"/>
         <Label text="패스워드" GridPane.rowIndex="1" GridPane.columnIndex="0"/>
-        <PasswordField fx:id="pwInput" GridPane.rowIndex="1" GridPane.columnIndex="1"
+        <PasswordField fx:id="pwdInput" GridPane.rowIndex="1" GridPane.columnIndex="1"
             GridPane.hgrow="ALWAYS"/>
 
         <HBox GridPane.rowIndex="2" GridPane.columnIndex="0"

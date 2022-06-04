@@ -1,11 +1,20 @@
 package Server;
 
+import Server.Models.ChatMessageDTO;
+import Server.Models.DAO;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -86,6 +95,18 @@ public class ChattingServer {
                             InputStream is = socket.getInputStream();
                             MessagePacker packet = MessagePacker.unpack(is);
                             String message = "[요청 처리: " + socket.getRemoteSocketAddress() + ": " + Thread.currentThread().getName() + "]";
+                            System.out.println(message);
+
+                            // 현재 시간
+                            LocalDateTime dt = LocalDateTime.now();
+                            String time = dt.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
+
+                            // ChatMessageDTO를 DB에 저장
+                            ChatMessageDTO chat = new ChatMessageDTO(packet.getStdId(), packet.getRoomId(), packet.getMessage(), time);
+                            DAO.addchatMessage(chat);
+
+                            // 모든 클라이언트에 send
+                            // 수정해야할 사항: 동일한 room_id를 가진 client에 넣어야 됨.
                             for(Client client : connections) {
                                 client.send(packet.getPacket());
                             }

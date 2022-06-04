@@ -158,7 +158,7 @@ public class DAO {
     }
 	
 	//회원가입
-	public static void addSignUp(UsersDTO Users) {
+	public static boolean addSignUp(UsersDTO Users) {
 	    Connection con = null;
 	    Statement stmt = null;
 	    try {
@@ -168,20 +168,23 @@ public class DAO {
 	        insert+="('"+Users.getStd_id()+"','"+Users.getName()+"','"+Users.getD_job()+"','"+Users.getState()+"','"+Users.getPwd()+"')";
 	        System.out.println(insert);
 	        int i = stmt.executeUpdate(insert);
-	        if(i==1)
-	            System.out.println("회원정보 추가 성공");
-	        else 
-	            System.out.println("회원정보 추가 실패"); 
+	        if(i==0) {
+				System.out.println("회원정보 추가 실패");
+				return false;
+	        }
+			System.out.println("회원정보 추가 성공");
 	    } catch (SQLException e) {
 	        // TODO Auto-generated catch block
 	        e.printStackTrace();
-	    }finally {
+	        return false;
+	    } finally {
 	        try {
 	            if(stmt != null) stmt.close();
 	            if(con != null) con.close();
 	        } catch (Exception e2) {
 	            e2.printStackTrace();
 	        }
+	        return true;
 	    }
 	}
 	//회원가입시 중복아이디 검사

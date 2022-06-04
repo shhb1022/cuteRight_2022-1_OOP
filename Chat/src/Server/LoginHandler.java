@@ -23,17 +23,20 @@ public class LoginHandler implements HttpHandler {
         try {
             // Write Response Body
             String method = exchange.getRequestMethod();
-            Headers headers = exchange.getResponseHeaders();
+            Headers headers = exchange.getRequestHeaders();
             if(method.equals("GET")) {
-                String[] author = exchange.getRequestHeaders().get("Authorization").get(0).split(":");
+                String[] author = headers.getFirst("Authorization").split(":");
                 int id = Integer.parseInt(author[0]);
                 String password = author[1];
 
                 int lg= DAO.checkLogin(id, password);
 
                 if(lg == 1) {
+                    // 로그인 성공
+                    DAO.setLogin(id);
                     exchange.sendResponseHeaders(200, 0);
                 } else if (lg == 0 || lg == -1){
+                    // 로그인 실패
                     exchange.sendResponseHeaders(400, 0);
                 }
             }

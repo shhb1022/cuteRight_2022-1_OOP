@@ -33,6 +33,7 @@ public class Server {
         // HTTP Server.Server Context 설정
         httpServer.createContext("/", new RootHandler());
         httpServer.createContext("/login", new LoginHandler());
+        httpServer.createContext("/signin", new SignInHandler());
         httpServer.createContext("/main",new RootHandler());
         httpServer.createContext("/chatRoom", new ChatRoomHandler());
         httpServer.createContext("/chatMessage", new ChatMessageHandler());

@@ -11,7 +11,6 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import javafx.scene.layout.AnchorPane;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -20,18 +19,16 @@ import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
     @FXML private TextField idInput;
-    @FXML private PasswordField pwInput;
+    @FXML private PasswordField pwdInput;
     @FXML private Button loginBtn;
     @FXML private Button signUpBtn;
-
-    @FXML private AnchorPane ap;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        loginBtn.setOnAction(new EventHandler<ActionEvent>() {
+    	loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 String id = idInput.getText();
-                String pw = pwInput.getText();
+                String pw = pwdInput.getText();
 
                 System.out.println("아이디: " + id);
                 System.out.println("패스워드: " + pw);
@@ -55,13 +52,9 @@ public class LoginController implements Initializable {
                         UserInfo.setPw(pw);
                         System.out.println("로그인에 성공했습니다.");
 
-//                        Stage primaryStage = (Stage) ap.getScene().getWindow();
-//                        primaryStage.close();
-
                         // 현재 창을 종료한다.
                         Stage currStage = (Stage) idInput.getScene().getWindow();
                         currStage.close();
-
 
                         // 새 창을 띄운다.
                         Stage stage = new Stage();
@@ -75,20 +68,26 @@ public class LoginController implements Initializable {
                         alert.setHeaderText(null);
                         alert.setContentText("잘못된 입력 정보입니다.");
                         alert.showAndWait();
+                    } else if (http.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
+                        // 경고 메세지를 출력한다.
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setHeaderText(null);
+                        alert.setContentText("이미 로그인이 되어있습니다.");
+                        alert.showAndWait();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
+        
         signUpBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                Stage stage = new Stage();
                 try {
-                    Stage currStage = (Stage) idInput.getScene().getWindow();
-                    currStage.close();
-                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/SignIn.fxml"));
+                    // 새 창을 띄운다.
+                    Stage stage = new Stage();
+                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Signin.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     stage.show();

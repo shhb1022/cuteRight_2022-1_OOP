@@ -1,5 +1,6 @@
 package Server;
 
+import Server.Models.DAO;
 import Server.Models.UsersDTO;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
@@ -22,33 +23,34 @@ public class SignInHandler implements HttpHandler {
         try {
             // Write Response Body
             String method = exchange.getRequestMethod();
+            System.out.println(method);
             if(method.equals("POST")) {
+                System.out.println("get SignIn request");
                 InputStream is = exchange.getRequestBody();
                 BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-
                 JSONParser parser = new JSONParser();
                 JSONObject obj = (JSONObject) parser.parse(br);
-                UsersDTO user;
 
-//                obj.forEach((k, v)-> {
-//                    if()
-//                });
+                // user 생성
+                UsersDTO user = new UsersDTO();
+                user.setStd_id((int)(long) obj.get("std_id"));
+                user.setName((String) obj.get("name"));
+                user.setD_job((String) obj.get("d_job"));
+                user.setPwd((String)obj.get("pwd"));
+                user.setState((int)(long) obj.get("state"));
 
-                // Encoding to UTF-8
-//                ByteBuffer bb = Charset.forName("UTF-8").encode(msg);
-//                int contentLength = bb.limit();
-//                byte[] content = new byte[contentLength];
-//                bb.get(content, 0, contentLength);
+                System.out.println(user.toJSONString());
 
-                // Set Response Headers
-//                Headers headers = exchange.getResponseHeaders();
-//                headers.add("Content-Type", "application/text");
-//                headers.add("Content-Length", String.valueOf(contentLength));
-//
-//                // Send Response Headers
-//                exchange.sendResponseHeaders(200, contentLength);
-//
-//                respBody.write(content);
+                boolean success = DAO.addSignUp(user);
+                if(success) {
+                    // 응답코드 설정
+                    System.out.println("회원가입 완료");
+                    exchange.sendResponseHeaders(201,0);
+                } else {
+                    System.out.println("회원가입 실패");
+                    exchange.sendResponseHeaders(400, 0);
+                }
+
             }
             // Close Stream
             // 반드시, Response Header를 보낸 후에 닫아야함
@@ -60,6 +62,8 @@ public class SignInHandler implements HttpHandler {
             if( respBody != null ) {
                 respBody.close();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         } finally {
             exchange.close();
         }

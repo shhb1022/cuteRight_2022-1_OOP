@@ -61,7 +61,6 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-//                    SocketConnection.close();
                     // 현재 창을 종료한다.
                     Stage currStage = (Stage) logoutBtn.getScene().getWindow();
                     currStage.close();
@@ -75,18 +74,5 @@ public class MainController implements Initializable {
                 }
             }
         });
-
-
     }
-    public static String getResponseBody(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-        String line;
-        while((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        br.close();
-        return sb.toString();
-    }
-
 }
