@@ -40,24 +40,25 @@ public class CreateRoomController implements Initializable {
 
         ObservableList<Integer> comboNumList = FXCollections.observableArrayList(1, 2, 3, 4, 5, 6);
         setLimitPersonnel.setItems(comboNumList);
+        setLimitPersonnel.setValue(1);
 
-        try {
-            URL url = new URL("http://localhost:3000/createRoom");
-            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-            http.setRequestMethod("GET");
-
-            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String resBody = getResponseBody(http.getInputStream());
-                System.out.println(resBody);
-                JSONParser parser = new JSONParser();
-                JSONArray list = (JSONArray) parser.parse(resBody);
-                for (int i = 0; i < list.size(); i++) {
-                    JSONObject obj = (JSONObject) list.get(i);
-                }}
-
-            } catch(Exception e){
-                e.printStackTrace();
-            }
+//        try {
+//            URL url = new URL("http://localhost:3000/createRoom");
+//            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+//            http.setRequestMethod("GET");
+//
+//            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+//                String resBody = getResponseBody(http.getInputStream());
+//                System.out.println(resBody);
+//                JSONParser parser = new JSONParser();
+//                JSONArray list = (JSONArray) parser.parse(resBody);
+//                for (int i = 0; i < list.size(); i++) {
+//                    JSONObject obj = (JSONObject) list.get(i);
+//                }}
+//
+//            } catch(Exception e){
+//                e.printStackTrace();
+//            }
         //받아온걸 다시 list로 변환하는게 필요
         String[] friendList = {};
         usersDisplay.setItems(FXCollections.observableArrayList(friendList));
@@ -83,7 +84,10 @@ public class CreateRoomController implements Initializable {
             });
 
 
-        }
+        }}
+
+        //1차주석
+
 //    	createBtn.setOnAction(new EventHandler<ActionEvent>() {
 //            @Override
 //            public void handle(ActionEvent event) {
@@ -152,7 +156,6 @@ public class CreateRoomController implements Initializable {
 //            }
 //        });
 //   	usersList();
-        }
 
         //userslist Request
 //    void usersList() {

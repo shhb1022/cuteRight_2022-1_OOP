@@ -24,6 +24,10 @@ public class LoginController implements Initializable {
     @FXML private Button signUpBtn;
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        if(idInput.getText().equals("")) {
+            idInput.setText("학번(숫자)");
+        }
     	loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

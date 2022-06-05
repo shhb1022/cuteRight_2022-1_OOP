@@ -41,6 +41,17 @@ public class SignInController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        if(newIdInput.getText().equals("")) {
+            newIdInput.setText("학번9자리로 입력하세요.");
+        }
+        if(jobInput.getText().equals("")) {
+            jobInput.setText("예:프론트, 백엔드");
+        }
+
+
+
+        //아이디가 숫자 9자리가 아닌경우, 비밀번호가 없는 경우 예외처리해야함
     	signUpDoneBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -48,6 +59,32 @@ public class SignInController implements Initializable {
                 String std_id = newIdInput.getText();
                 String d_job = jobInput.getText();
                 String pwd = newPwdInput.getText();
+
+                if(name==""){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("이름을 입력하세요");
+                    alert.showAndWait();
+                    return;
+                }
+                if(std_id.length()!=9) {
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("학번 9자리를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
+                if(pwd==""){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("비밀번호를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
+
+                //signinhandler를 보면 200 or 400으로 밖에 전송을 안해서 옳은 예외처리가 불가능
+
+
 
                 System.out.println("이름: " + name);
                 System.out.println("아이디" + std_id);
