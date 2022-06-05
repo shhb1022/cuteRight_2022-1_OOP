@@ -374,13 +374,13 @@ public class DAO {
 		try {
 			con = makeConnection();
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT std_id,name,d_job FROM Users");
+			rs = stmt.executeQuery("SELECT name FROM Users");
 			
 			while(rs.next()) {
 				UsersDTO user = new UsersDTO();
-				user.setStd_id(rs.getInt("std_id"));
+				//user.setStd_id(rs.getInt("std_id"));
 				user.setName(rs.getString("name"));
-				user.setD_job(rs.getString("d_job"));
+				//user.setD_job(rs.getString("d_job"));
 				result.add(user);
 			}
 			
@@ -400,6 +400,42 @@ public class DAO {
 			}
 		}
 	}
+
+	//수정때문에 복사해둔거
+//	public static ArrayList<UsersDTO> getAllUsers(){
+//		Connection con = null;
+//		Statement stmt= null;
+//		ResultSet rs = null;
+//		ArrayList<UsersDTO> result = new ArrayList<UsersDTO>();
+//		try {
+//			con = makeConnection();
+//			stmt = con.createStatement();
+//			rs = stmt.executeQuery("SELECT std_id,name,d_job FROM Users");
+//
+//			while(rs.next()) {
+//				UsersDTO user = new UsersDTO();
+//				user.setStd_id(rs.getInt("std_id"));
+//				user.setName(rs.getString("name"));
+//				user.setD_job(rs.getString("d_job"));
+//				result.add(user);
+//			}
+//
+//			return result;
+//
+//		} catch (SQLException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//			return null;
+//		} finally {
+//			try {
+//				if(rs != null) rs.close();//5) 자원반납
+//				if(stmt != null) stmt.close();
+//				if(con != null) con.close();
+//			} catch (Exception e2) {
+//				e2.printStackTrace();
+//			}
+//		}
+//	}
 	
 	//방 생성 정보 추가
 	//room_id는 AI 설정해놓긴 했다만, 추가적인 작업 필요없나?

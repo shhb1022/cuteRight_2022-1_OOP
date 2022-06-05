@@ -38,6 +38,7 @@ public class Server {
         httpServer.createContext("/main",new RootHandler());
         httpServer.createContext("/chatRoom", new ChatRoomHandler());
         httpServer.createContext("/chatMessage", new ChatMessageHandler());
+        httpServer.createContext("/createRoom", new CreateRoomHandler());
     }
 
     // 서버 실행

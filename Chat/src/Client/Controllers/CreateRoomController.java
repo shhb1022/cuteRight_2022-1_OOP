@@ -33,34 +33,57 @@ public class CreateRoomController implements Initializable {
     @FXML private ListView usersDisplay;
     @FXML private Button backtoMainBtn2,createBtn;
 
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
 
-        ObservableList<Integer> comboNumList = FXCollections.observableArrayList(1,2,3,4,5,6);
+        ObservableList<Integer> comboNumList = FXCollections.observableArrayList(1, 2, 3, 4, 5, 6);
         setLimitPersonnel.setItems(comboNumList);
 
+        try {
+            URL url = new URL("http://localhost:3000/createRoom");
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("GET");
+
+            if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                String resBody = getResponseBody(http.getInputStream());
+                System.out.println(resBody);
+                JSONParser parser = new JSONParser();
+                JSONArray list = (JSONArray) parser.parse(resBody);
+                for (int i = 0; i < list.size(); i++) {
+                    JSONObject obj = (JSONObject) list.get(i);
+                }}
+
+            } catch(Exception e){
+                e.printStackTrace();
+            }
+        //받아온걸 다시 list로 변환하는게 필요
+        String[] friendList = {};
+        usersDisplay.setItems(FXCollections.observableArrayList(friendList));
 
 
+            //ObservableList<String> friendList = FXCollections
+            backtoMainBtn2.setOnAction(new EventHandler<ActionEvent>() {
+                public void handle(ActionEvent event) {
+                    try {
+                        // 현재 창을 종료한다.
+                        Stage currStage = (Stage) backtoMainBtn2.getScene().getWindow();
+                        currStage.close();
 
-
-        //ObservableList<String> friendList = FXCollections
-    	backtoMainBtn2.setOnAction(new EventHandler<ActionEvent>() {
-    		public void handle(ActionEvent event) {
-    			try {
-                	// 현재 창을 종료한다.
-                    Stage currStage = (Stage) backtoMainBtn2.getScene().getWindow();
-                    currStage.close();
-                    
-        			Stage stage = new Stage();
-                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
-                    Scene scene = new Scene(root);
-                    stage.setScene(scene);
-                    stage.show();
-    			} catch(Exception e) {
-                    e.printStackTrace();
+                        Stage stage = new Stage();
+                        Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
+                        stage.show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
-    		}
-    	});
+            });
+
+
+        }
 //    	createBtn.setOnAction(new EventHandler<ActionEvent>() {
 //            @Override
 //            public void handle(ActionEvent event) {
@@ -129,9 +152,9 @@ public class CreateRoomController implements Initializable {
 //            }
 //        });
 //   	usersList();
-    }
-    
-    //userslist Request
+        }
+
+        //userslist Request
 //    void usersList() {
 //    	 try {
 //    	URL url = new URL("http://localhost:3000/createroom");
@@ -153,37 +176,3 @@ public class CreateRoomController implements Initializable {
 //        	e.printStackTrace();
 //        	}
 //    }
-//    void startChatting() {
-//        try {
-//
-//            URL url = new URL("http://localhost:3000/chatMessage?room_id="+room_id);
-//            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-//            http.setRequestMethod("GET");
-//            http.setRequestProperty("Authorization", UserInfo.getId()+":"+UserInfo.getPw());
-//
-//            if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-//                String resBody = getResponseBody(http.getInputStream());
-//                System.out.println(resBody);
-//                JSONParser parser = new JSONParser();
-//                JSONArray list = (JSONArray)parser.parse(resBody);
-//                for(int i=0; i<list.size(); i++) {
-//                    JSONObject obj = (JSONObject) list.get(i);
-//                    Platform.runLater(()->displayText("["+obj.get("std_id")+"]" + obj.get("message")));
-//                }
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-    
-    public static String getResponseBody(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-        String line;
-        while((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        br.close();
-        return sb.toString();
-    }
-
-}
