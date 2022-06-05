@@ -102,6 +102,43 @@ public class DAO {
 	    }
 	    return false; //db 연결오류      
     }
+
+	//logout
+	public static boolean checkState2(int std_id) {
+		Connection con = null;
+		Statement stmt = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String SQL = "SELECT state FROM Users WHERE std_id = ?";
+		try {
+			con = makeConnection();
+			pstmt=con.prepareStatement(SQL);
+			pstmt.setInt(1, std_id);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				if(rs.getString(1).contentEquals("1")) {
+					return true;//state =1이므로 로그아웃 가능
+				}
+				else {
+					return false;//state=0 로그아웃 불가능
+				}
+			}
+			return false; //db에 아이디 존재하지 않음
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs != null) rs.close();//5) 자원반납
+				if(stmt != null) stmt.close();
+				if(con != null) con.close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
+		}
+		return false; //db 연결오류
+	}
+
 	   
 	//로그인 성공시 state=1으로 변경
 	public static int setLogin(int std_id) {
@@ -329,7 +366,7 @@ public class DAO {
 	//
 	//
 	//모든 user 정보 가져오기->방 생성 시 친구 선택할 때 필요
-	public ArrayList<UsersDTO> getAllUsers(){
+	public static ArrayList<UsersDTO> getAllUsers(){
 		Connection con = null;
 		Statement stmt= null;
 		ResultSet rs = null;

@@ -1,9 +1,8 @@
 package Client.Controllers;
 
-import Client.*;
+import Client.SocketConnection;
+import Client.UserInfo;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -14,39 +13,37 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import com.sun.net.httpserver.Headers;
-
 import java.io.*;
 import java.net.HttpURLConnection;
-import java.net.Socket;
 import java.net.URL;
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.ResourceBundle;
-
-import Client.Models.*;
-import Server.Models.ChatMessageDTO;
-import Server.Models.DAO;
-import Client.UserInfo;
 
 public class CreateRoomController implements Initializable {
     @FXML private TextField setTitle;
     @FXML private ComboBox setLimitPersonnel;
+   // ObservableList list = FXCollections.observableArrayList(1,2,3,4,5,6,7,8,9,10);
     @FXML private ListView usersDisplay;
     @FXML private Button backtoMainBtn2,createBtn;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+        ObservableList<Integer> comboNumList = FXCollections.observableArrayList(1,2,3,4,5,6);
+        setLimitPersonnel.setItems(comboNumList);
+
+
+
+
+
+        //ObservableList<String> friendList = FXCollections
     	backtoMainBtn2.setOnAction(new EventHandler<ActionEvent>() {
     		public void handle(ActionEvent event) {
     			try {
@@ -156,6 +153,27 @@ public class CreateRoomController implements Initializable {
 //        	e.printStackTrace();
 //        	}
 //    }
+//    void startChatting() {
+//        try {
+//
+//            URL url = new URL("http://localhost:3000/chatMessage?room_id="+room_id);
+//            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+//            http.setRequestMethod("GET");
+//            http.setRequestProperty("Authorization", UserInfo.getId()+":"+UserInfo.getPw());
+//
+//            if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+//                String resBody = getResponseBody(http.getInputStream());
+//                System.out.println(resBody);
+//                JSONParser parser = new JSONParser();
+//                JSONArray list = (JSONArray)parser.parse(resBody);
+//                for(int i=0; i<list.size(); i++) {
+//                    JSONObject obj = (JSONObject) list.get(i);
+//                    Platform.runLater(()->displayText("["+obj.get("std_id")+"]" + obj.get("message")));
+//                }
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
     
     public static String getResponseBody(InputStream is) throws IOException {
         StringBuilder sb = new StringBuilder();
