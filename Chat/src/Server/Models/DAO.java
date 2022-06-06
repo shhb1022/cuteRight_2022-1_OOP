@@ -397,247 +397,6 @@ public class DAO {
             e2.printStackTrace();
          }
       }
-
-<<<<<<< HEAD
-	}
-	//
-	//
-	//모든 user 정보 가져오기->방 생성 시 친구 선택할 때 필요
-	public static ArrayList<UsersDTO> getAllUsers(){
-		Connection con = null;
-		Statement stmt= null;
-		ResultSet rs = null;
-		ArrayList<UsersDTO> result = new ArrayList<UsersDTO>();
-		try {
-			con = makeConnection();
-			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT std_id,name,d_job FROM Users");
-			
-			while(rs.next()) {
-				UsersDTO user = new UsersDTO();
-				user.setStd_id(rs.getInt("std_id"));
-				user.setName(rs.getString("name"));
-				//user.setD_job(rs.getString("d_job"));
-				result.add(user);
-			}
-			
-			return result;
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} finally {
-			try {
-				if(rs != null) rs.close();//5) 자원반납
-				if(stmt != null) stmt.close();
-				if(con != null) con.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-	}
-	
-	//방 생성 정보 추가
-	//room_id는 AI 설정해놓긴 했다만, 추가적인 작업 필요없나?
-	//방을 생성한 leader에 대해 addMember 수행, Cur_Person 증가 수행(cur_person=1로 삽입 시 Cur_person 증가 수행은 필요 없음)
-	public static int addRoom(ChatRoomInfoDTO room) {
-		Connection con = null;
-		Statement stmt = null;
-		int generated_key = 0;
-		try {
-			con = makeConnection();
-			con.setAutoCommit(false);
-			stmt = con.createStatement();
-			String insert = "INSERT INTO ChatRoomInfo (title,limit_person,cur_person,leader_id) VALUES ";
-			insert+="('"+room.getTitle()+"','"+room.getLimit_person()+"','"+0+"','"+room.getLeader_id()+"')";
-			System.out.println(insert);
-			int i = stmt.executeUpdate(insert);
-
-			if (i == 1) {
-				ResultSet generated_keys = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='ChatRoomInfo'");
-				if (generated_keys.next()) {
-					generated_key = generated_keys.getInt(1);
-					System.out.println("레코드 추가 성공, room_id: "+ generated_key);
-					con.commit();
-				}
-			}
-			else 
-				System.out.println("레코드 추가 실패");	
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			try {
-				if(stmt != null) stmt.close();
-				if(con != null) con.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-			return generated_key;
-		}
-	}
-	
-	//user들의 join=1 상태 참가로 추가(채팅방 생성할 때 선택한 친구 추가하는 메서드로, 입장 신청과는 별개)
-	public static void addMember(int user_id,int room_id) {
-		Connection con = null;
-	    Statement stmt = null;
-	    try {
-			con = makeConnection();
-			stmt = con.createStatement();
-			String insert = "INSERT INTO ChatRoomJoin (room_id,std_id,member) VALUES ";
-			insert+="('"+room_id+"','"+user_id+"','"+1+"')";
-			System.out.println(insert);
-			int i = stmt.executeUpdate(insert);
-			if(i==1) {
-				System.out.println("레코드 추가 성공");
-				//Chat_Info에 cur_person증가는 따로 메소드로 뻄
-				//String update = "UPDATE ChatRoomInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
-				//int j = stmt.executeUpdate(update);
-				//if(j==1)System.out.println("레코드 갱신 성공");
-				//else System.out.println("레코드 갱신 실패");	
-			}
-			else 
-				System.out.println("레코드 추가 실패");	
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			try {
-				if(stmt != null) stmt.close();
-				if(con != null) con.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-
-	}
-	
-	//현재인원 증가
-	public static void increCur_person(int room_id) {
-		Connection con = null;
-	    Statement stmt = null;
-	    String update = "UPDATE ChatRoomInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
-	    try {
-	        con = makeConnection();
-	        stmt = con.createStatement();
-	        int i = stmt.executeUpdate(update);
-	        if(i==1)
-	            System.out.println("레코드 갱신 성공");
-	        else 
-	            System.out.println("레코드 갱신 실패");
-	    } catch (SQLException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	    }finally {
-	        try {
-	            if(stmt != null) stmt.close();
-	            if(con != null) con.close();
-	        } catch (Exception e2) {
-	            e2.printStackTrace();
-	        }
-	    }
-	}
-	
-	//현재인원 감소
-	public void decreCur_person(int room_id) {
-		Connection con = null;
-	    Statement stmt = null;
-	    String update = "UPDATE ChatRoomInfo SET cur_person=cur_person-1 WHERE room_id = "+room_id;
-	    try {
-	        con = makeConnection();
-	        stmt = con.createStatement();
-	        int i = stmt.executeUpdate(update);
-	        if(i==1)
-	            System.out.println("레코드 갱신 성공");
-	        else 
-	            System.out.println("레코드 갱신 실패");
-	    } catch (SQLException e) {
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	    }finally {
-	        try {
-	            if(stmt != null) stmt.close();
-	            if(con != null) con.close();
-	        } catch (Exception e2) {
-	            e2.printStackTrace();
-	        }
-	    }
-	}
-	
-	//방에 참가중인 모든 user(member=*) 정보 가져오기
-	public ArrayList<ChatRoomMemberDTO> getRoomMembers(int room_id){
-		Connection con = null;
-		Statement stmt= null;
-		ResultSet rs = null;
-		ArrayList<ChatRoomMemberDTO> result = new ArrayList<ChatRoomMemberDTO>();
-		try {
-			con = makeConnection();
-			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM Users INNER JOIN (SELECT * FROM ChatRoomJoin WHERE room_id="+room_id+")");
-			
-			while(rs.next()) {
-				ChatRoomMemberDTO user = new ChatRoomMemberDTO();
-				user.setStd_id(rs.getInt("std_id"));
-				user.setName(rs.getString("name"));
-				user.setD_job(rs.getString("d_job"));
-				user.setMember(rs.getInt("member"));
-				user.setState(rs.getInt("state"));
-				result.add(user);
-			}		
-			return result;
-			
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return null;
-		} finally {
-			try {
-				if(rs != null) rs.close();//5) 자원반납
-				if(stmt != null) stmt.close();
-				if(con != null) con.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-	}
-	
-	//user가 방에 입장 가능한지 확인
-	public boolean checkJoin(int user_id,int room_id) {
-	    Connection con = null;
-	    Statement stmt = null;
-	    PreparedStatement pstmt = null;
-	    ResultSet rs = null;
-	    String SQL ="SELECT member FROM ChatRoomJoin WHERE std_id="+user_id+"AND room_id="+room_id ;	    
-	    try {
-	        con = makeConnection();
-	        pstmt=con.prepareStatement(SQL);
-	        rs = pstmt.executeQuery();
-	        if(rs.next()) {
-	            if(rs.getString("member").contentEquals("1")) {
-	                return true;//입장 가능 상태
-	            }
-	            else {
-	                return false;//입장 불가 상태
-	            }
-	        }
-	    } catch (SQLException e) {
-	        // TODO Auto-generated catch block
-	        e.printStackTrace();
-	    }finally {
-	        try {
-	            if(rs != null) rs.close();//5) 자원반납
-	            if(stmt != null) stmt.close();
-	            if(con != null) con.close();
-	        } catch (Exception e2) {
-	            e2.printStackTrace();
-	        }
-	    }
-	    return false; //db 연결오류 	
-	}
-	
-}
-=======
    }
    //
    //
@@ -676,36 +435,46 @@ public class DAO {
          }
       }
    }
-   
-   //방 생성 정보 추가
-   //room_id는 AI 설정해놓긴 했다만, 추가적인 작업 필요없나?
-   //방을 생성한 leader에 대해 addMember 수행, Cur_Person 증가 수행(cur_person=1로 삽입 시 Cur_person 증가 수행은 필요 없음)
-   public static void addRoom(ChatRoomInfoDTO room) {
-      Connection con = null;
-      Statement stmt = null;
-      try {
-         con = makeConnection();
-         stmt = con.createStatement();
-         String insert = "INSERT INTO ChatRoomInfo (title,limit_person,cur_person,leader_id) VALUES ";
-         insert+="('"+room.getTitle()+"','"+room.getLimit_person()+"','"+0+"','"+room.getLeader_id()+"')";
-         System.out.println(insert);
-         int i = stmt.executeUpdate(insert);
-         if(i==1)
-            System.out.println("레코드 추가 성공");
-         else 
-            System.out.println("레코드 추가 실패");   
-      } catch (SQLException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }finally {
-         try {
-            if(stmt != null) stmt.close();
-            if(con != null) con.close();
-         } catch (Exception e2) {
-            e2.printStackTrace();
-         }
-      }
-   }
+
+    //방 생성 정보 추가
+    //room_id는 AI 설정해놓긴 했다만, 추가적인 작업 필요없나?
+    //방을 생성한 leader에 대해 addMember 수행, Cur_Person 증가 수행(cur_person=1로 삽입 시 Cur_person 증가 수행은 필요 없음)
+    public static int addRoom(ChatRoomInfoDTO room) {
+        Connection con = null;
+        Statement stmt = null;
+        int generated_key = 0;
+        try {
+            con = makeConnection();
+            con.setAutoCommit(false);
+            stmt = con.createStatement();
+            String insert = "INSERT INTO ChatRoomInfo (title,limit_person,cur_person,leader_id) VALUES ";
+            insert+="('"+room.getTitle()+"','"+room.getLimit_person()+"','"+0+"','"+room.getLeader_id()+"')";
+            System.out.println(insert);
+            int i = stmt.executeUpdate(insert);
+
+            if (i == 1) {
+                ResultSet generated_keys = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='ChatRoomInfo'");
+                if (generated_keys.next()) {
+                    generated_key = generated_keys.getInt(1);
+                    System.out.println("레코드 추가 성공, room_id: "+ generated_key);
+                    con.commit();
+                }
+            }
+            else
+                System.out.println("레코드 추가 실패");
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+            return generated_key;
+        }
+    }
    
    //user들의 join=1 상태 참가로 추가(채팅방 생성할 때 선택한 친구 추가하는 메서드로, 입장 신청과는 별개)
    public static void addMember(int user_id,int room_id) {
@@ -743,7 +512,7 @@ public class DAO {
    }
    
    //현재인원 증가
-   public void increCur_person(int room_id) {
+   public static void increCur_person(int room_id) {
       Connection con = null;
        Statement stmt = null;
        String update = "UPDATE ChatRoomInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
@@ -864,6 +633,4 @@ public class DAO {
        }
        return false; //db 연결오류    
    }
-   
 }
->>>>>>> f777e39857b8f1bdeca67a712a369e1364a42bb1
