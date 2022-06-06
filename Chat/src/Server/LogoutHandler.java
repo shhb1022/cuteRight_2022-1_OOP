@@ -23,7 +23,7 @@ public class LogoutHandler implements HttpHandler {
                 String author = headers.getFirst("Authorization");
                 int id = Integer.parseInt(author);
 
-                boolean checkstate =DAO.checkState2(id);
+                boolean checkstate = DAO.checkState(id);
 
                 if(checkstate) {
                         DAO.setLogout(id);

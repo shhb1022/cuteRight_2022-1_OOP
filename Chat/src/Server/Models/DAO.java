@@ -367,18 +367,27 @@ public class DAO {
 	//방 생성 정보 추가
 	//room_id는 AI 설정해놓긴 했다만, 추가적인 작업 필요없나?
 	//방을 생성한 leader에 대해 addMember 수행, Cur_Person 증가 수행(cur_person=1로 삽입 시 Cur_person 증가 수행은 필요 없음)
-	public static void addRoom(ChatRoomInfoDTO room) {
+	public static int addRoom(ChatRoomInfoDTO room) {
 		Connection con = null;
 		Statement stmt = null;
+		int generated_key = 0;
 		try {
 			con = makeConnection();
+			con.setAutoCommit(false);
 			stmt = con.createStatement();
 			String insert = "INSERT INTO ChatRoomInfo (title,limit_person,cur_person,leader_id) VALUES ";
 			insert+="('"+room.getTitle()+"','"+room.getLimit_person()+"','"+0+"','"+room.getLeader_id()+"')";
 			System.out.println(insert);
 			int i = stmt.executeUpdate(insert);
-			if(i==1)
-				System.out.println("레코드 추가 성공");
+
+			if (i == 1) {
+				ResultSet generated_keys = stmt.executeQuery("SELECT seq FROM sqlite_sequence WHERE name='ChatRoomInfo'");
+				if (generated_keys.next()) {
+					generated_key = generated_keys.getInt(1);
+					System.out.println("레코드 추가 성공, room_id: "+ generated_key);
+					con.commit();
+				}
+			}
 			else 
 				System.out.println("레코드 추가 실패");	
 		} catch (SQLException e) {
@@ -391,6 +400,7 @@ public class DAO {
 			} catch (Exception e2) {
 				e2.printStackTrace();
 			}
+			return generated_key;
 		}
 	}
 	
@@ -430,7 +440,7 @@ public class DAO {
 	}
 	
 	//현재인원 증가
-	public void increCur_person(int room_id) {
+	public static void increCur_person(int room_id) {
 		Connection con = null;
 	    Statement stmt = null;
 	    String update = "UPDATE ChatRoomInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;

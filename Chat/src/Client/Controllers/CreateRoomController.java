@@ -78,7 +78,7 @@ public class CreateRoomController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 String title = setTitle.getText();
-                String limit_person = setLimitPersonnel.getSelectionModel().getSelectedItem().toString();
+                String limit_person = setLimitPersonnel.getSelectionModel().getSelectedItem();
                 int leader_id = Integer.parseInt(UserInfo.getId());
 
                 System.out.println("title: " + title);
@@ -100,12 +100,16 @@ public class CreateRoomController implements Initializable {
                 	//json 처음에 방 정보를 처음에 추가하고 나머지는 추가할 유저 목록
                     JSONArray list = new JSONArray();
                     list.add(Room.toJSONObject());
-                    for(String user : userInvitation) {
-                    	JSONObject obj = new JSONObject();
-                        obj.put("std_id",user);
-                        list.add(obj);
-                    }
-                	                   
+
+                    // std_id를 담은 JSONArray 생성
+					JSONArray std_ids = new JSONArray();
+					std_ids.add(UserInfo.getId());
+					for(String user : userInvitation) {
+						std_ids.add(user);
+					}
+					list.add(std_ids);
+
+
                     ByteBuffer bb = StandardCharsets.UTF_8.encode(list.toJSONString());
                     int contentLength = bb.limit();
                     byte[] content = new byte[contentLength];
@@ -155,40 +159,26 @@ public class CreateRoomController implements Initializable {
     
     //유저 정보를 요청하고 리스트에 출력한다.
     void usersList() {
-    	 try {
-    		 URL url = new URL("http://localhost:3000/createRoom");
-    		 HttpURLConnection http = (HttpURLConnection) url.openConnection();
-    		 http.setRequestMethod("GET");
-    		 http.setRequestProperty("Authorization", UserInfo.getId()+":"+UserInfo.getPw());
-        
-    		 if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-    			 
-    			 String resBody = getResponseBody(http.getInputStream());
-    			 System.out.println(resBody);
-    			 
-    			 JSONParser parser = new JSONParser();
-    			 JSONArray list = (JSONArray)parser.parse(resBody);    		
-    			 for(int i=0; i<list.size(); i++) {
-    				 JSONObject obj = (JSONObject) list.get(i);
-    				 ListUsers.add(UserInfoBox(obj.get("std_id").toString(),obj.get("name").toString()));
-    				 }
-    			 usersDisplay.setItems(ListUsers);
-    			 }
-    		 } catch (Exception e) {
-    			 e.printStackTrace();
-    			 }
-    	 }
-    
+    	try {
+    		URL url = new URL("http://localhost:3000/createRoom");
+    		HttpURLConnection http = (HttpURLConnection) url.openConnection();
+    		http.setRequestMethod("GET");
+    		http.setRequestProperty("Authorization", UserInfo.getId()+":"+UserInfo.getPw());
 
-	public static String getResponseBody(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-        String line;
-        while((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        br.close();
-        return sb.toString();
+    		if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+    			InputStream is = http.getInputStream();
+				BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+    			JSONParser parser = new JSONParser();
+    			JSONArray list = (JSONArray)parser.parse(br);
+    			for(int i=0; i<list.size(); i++) {
+    				JSONObject obj = (JSONObject) list.get(i);
+    				ListUsers.add(UserInfoBox(obj.get("std_id").toString(),obj.get("name").toString()));
+    			}
+    			usersDisplay.setItems(ListUsers);
+    		}
+    	} catch (Exception e) {
+    		e.printStackTrace();
+    	}
     }
     
     public GridPane UserInfoBox(String std_id,String name) {
@@ -210,13 +200,11 @@ public class CreateRoomController implements Initializable {
     		public void handle(ActionEvent event) {
     	    	if(userCheck.isSelected()) {
     	    		userInvitation.add(std_id);
-    	    		
     	    	}else {
     	    		userInvitation.remove(std_id);
     	    	}
     		}
     	});
-
         return userInfoBox;
     }
 

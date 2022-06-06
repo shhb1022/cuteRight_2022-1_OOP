@@ -81,17 +81,18 @@ public class CreateRoomHandler implements HttpHandler {
                 
                 //System.out.println("title:"+Room.get("title")+" limit_person:"+Room.get("limit_person")+" leader_id:"+Room.get("leader_id"));
                 ChatRoomInfoDTO crateRoomDTO = new ChatRoomInfoDTO(0,title,limit_person,0,leader_id);
-                DAO.addRoom(crateRoomDTO);
-                System.out.println("success to create Room");
-                
-                for(int i=1; i<list.size(); i++) {
-                    JSONObject obj = (JSONObject) list.get(i);
-                    int std_id = Integer.parseInt(obj.get("std_id").toString());
-                    System.out.println("std_id:" +obj.get("std_id"));
-                    //DAO.addMember(std_id, i);
-                    // 맴버 어떻게 넣지...?
+                int room_id = DAO.addRoom(crateRoomDTO);
+                System.out.println("success to create Room, Room_id: "+room_id);
+
+                JSONArray std_ids = (JSONArray) list.get(1);
+                System.out.println(std_ids.toJSONString());
+                for(Object obj : std_ids) {
+                    int std_id = Integer.parseInt((String) obj);
+                    System.out.println("Add std_id: " +obj +" to "+room_id);
+                    DAO.addMember(std_id, room_id);
+                    DAO.increCur_person(room_id);
                 }
-                System.out.println("success to add frienduser");
+                System.out.println("success to add friend user");
                 exchange.sendResponseHeaders(201, 0);
             }
             // Close Stream
