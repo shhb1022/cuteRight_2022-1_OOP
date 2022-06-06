@@ -102,43 +102,6 @@ public class DAO {
 	    }
 	    return false; //db 연결오류      
     }
-
-	//logout
-	public static boolean checkState2(int std_id) {
-		Connection con = null;
-		Statement stmt = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		String SQL = "SELECT state FROM Users WHERE std_id = ?";
-		try {
-			con = makeConnection();
-			pstmt=con.prepareStatement(SQL);
-			pstmt.setInt(1, std_id);
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-				if(rs.getString(1).contentEquals("1")) {
-					return true;//state =1이므로 로그아웃 가능
-				}
-				else {
-					return false;//state=0 로그아웃 불가능
-				}
-			}
-			return false; //db에 아이디 존재하지 않음
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}finally {
-			try {
-				if(rs != null) rs.close();//5) 자원반납
-				if(stmt != null) stmt.close();
-				if(con != null) con.close();
-			} catch (Exception e2) {
-				e2.printStackTrace();
-			}
-		}
-		return false; //db 연결오류
-	}
-
 	   
 	//로그인 성공시 state=1으로 변경
 	public static int setLogin(int std_id) {
@@ -227,7 +190,7 @@ public class DAO {
 	    Statement stmt = null;
 	    PreparedStatement pstmt = null;
 	    ResultSet rs = null;
-	    String SQL = "SELECT ste_id FROM Users";
+	    String SQL = "SELECT std_id FROM Users";
 	    try {
 	        con = makeConnection();
 	        pstmt=con.prepareStatement(SQL);
@@ -374,11 +337,11 @@ public class DAO {
 		try {
 			con = makeConnection();
 			stmt = con.createStatement();
-			rs = stmt.executeQuery("SELECT name FROM Users");
+			rs = stmt.executeQuery("SELECT std_id,name,d_job FROM Users");
 			
 			while(rs.next()) {
 				UsersDTO user = new UsersDTO();
-				//user.setStd_id(rs.getInt("std_id"));
+				user.setStd_id(rs.getInt("std_id"));
 				user.setName(rs.getString("name"));
 				//user.setD_job(rs.getString("d_job"));
 				result.add(user);
@@ -400,54 +363,18 @@ public class DAO {
 			}
 		}
 	}
-
-	//수정때문에 복사해둔거
-//	public static ArrayList<UsersDTO> getAllUsers(){
-//		Connection con = null;
-//		Statement stmt= null;
-//		ResultSet rs = null;
-//		ArrayList<UsersDTO> result = new ArrayList<UsersDTO>();
-//		try {
-//			con = makeConnection();
-//			stmt = con.createStatement();
-//			rs = stmt.executeQuery("SELECT std_id,name,d_job FROM Users");
-//
-//			while(rs.next()) {
-//				UsersDTO user = new UsersDTO();
-//				user.setStd_id(rs.getInt("std_id"));
-//				user.setName(rs.getString("name"));
-//				user.setD_job(rs.getString("d_job"));
-//				result.add(user);
-//			}
-//
-//			return result;
-//
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//			return null;
-//		} finally {
-//			try {
-//				if(rs != null) rs.close();//5) 자원반납
-//				if(stmt != null) stmt.close();
-//				if(con != null) con.close();
-//			} catch (Exception e2) {
-//				e2.printStackTrace();
-//			}
-//		}
-//	}
 	
 	//방 생성 정보 추가
 	//room_id는 AI 설정해놓긴 했다만, 추가적인 작업 필요없나?
 	//방을 생성한 leader에 대해 addMember 수행, Cur_Person 증가 수행(cur_person=1로 삽입 시 Cur_person 증가 수행은 필요 없음)
-	public void addRoom(ChatRoomInfoDTO room) {
+	public static void addRoom(ChatRoomInfoDTO room) {
 		Connection con = null;
 		Statement stmt = null;
 		try {
 			con = makeConnection();
 			stmt = con.createStatement();
 			String insert = "INSERT INTO ChatRoomInfo (title,limit_person,cur_person,leader_id) VALUES ";
-			insert+="('"+room.getTitle()+"','"+"','"+room.getLimit_person()+"','"+0+"','"+room.getLeader_id()+"')";
+			insert+="('"+room.getTitle()+"','"+room.getLimit_person()+"','"+0+"','"+room.getLeader_id()+"')";
 			System.out.println(insert);
 			int i = stmt.executeUpdate(insert);
 			if(i==1)
@@ -468,7 +395,7 @@ public class DAO {
 	}
 	
 	//user들의 join=1 상태 참가로 추가(채팅방 생성할 때 선택한 친구 추가하는 메서드로, 입장 신청과는 별개)
-	public void addMember(int user_id,int room_id) {
+	public static void addMember(int user_id,int room_id) {
 		Connection con = null;
 	    Statement stmt = null;
 	    try {

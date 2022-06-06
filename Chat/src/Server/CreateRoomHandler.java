@@ -1,17 +1,23 @@
 package Server;
 
-import Server.Models.ChatMessageDTO;
-import Server.Models.DAO;
-import Server.Models.UsersDTO;
+import Server.Models.*;
+import javafx.application.Platform;
+
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.nio.ByteBuffer;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 
@@ -20,46 +26,81 @@ public class CreateRoomHandler implements HttpHandler {
     public void handle(HttpExchange exchange) throws IOException {
         // Initialize Response Body
         OutputStream respBody = exchange.getResponseBody();
+        InputStream requBody = exchange.getRequestBody();
 
         try {
             // Write Response Body
             String method = exchange.getRequestMethod();
             if(method.equals("GET")) {
-
-//                String query = exchange.getRequestURI().getQuery();
-//                String[] q  = query.split("=",2);
-
-                    ArrayList<UsersDTO> names =  DAO.getAllUsers();
-                    JSONArray list = new JSONArray();
-                    for(UsersDTO name : names) {
-                        JSONObject obj = new JSONObject();
-                        obj.put("name",name.getName());
-                        list.add(obj);
-                    }
-
-                    //이 부분도 추가해야하나??
-                    // Encoding to UTF-8
-                    ByteBuffer bb = StandardCharsets.UTF_8.encode(list.toJSONString());
-                    int contentLength = bb.limit();
-                    byte[] content = new byte[contentLength];
-                    bb.get(content, 0, contentLength);
-
-                    // Set Response Headers
-                    Headers headers = exchange.getResponseHeaders();
-                    headers.add("Content-Type", "application/json");
-                    headers.add("Content-Length", String.valueOf(contentLength));
-
-                    // Send Response Headers
-                    exchange.sendResponseHeaders(200, contentLength);
-
-                    respBody.write(content);
-                    System.out.println("success to submit messages");
+            	System.out.println("get userlist request");
+            	//유저 정보를 가져온다.
+                ArrayList<UsersDTO> allUsers =  DAO.getAllUsers();
+                
+                //유저 정보의 일부만 넘겨준다.
+                JSONArray list = new JSONArray();
+                for(UsersDTO user : allUsers) {
+                    JSONObject obj = new JSONObject();
+                    obj.put("std_id",user.getStd_id());
+                    obj.put("name", user.getName());
+                    list.add(obj);
                 }
+                //System.out.println(list.toString());
+                // Encoding to UTF-8
+                ByteBuffer bb = StandardCharsets.UTF_8.encode(list.toJSONString());
+                int contentLength = bb.limit();
+                byte[] content = new byte[contentLength];
+                bb.get(content, 0, contentLength);
+
+                // Set Response Headers
+                Headers headers = exchange.getResponseHeaders();
+                headers.add("Content-Type", "application/json");
+                headers.add("Content-Length", String.valueOf(contentLength));
+
+                // Send Response Headers
+                exchange.sendResponseHeaders(200, contentLength);
+
+                respBody.write(content);
+                System.out.println("success to submit usersInfo");
+            }
+            // 방 정보를 저장한다.
+            else if(method.equals("POST")) {
+            	// 요청 결과 가져오기
+                System.out.println("create Room request");
+                BufferedReader br = new BufferedReader(new InputStreamReader(requBody, "utf-8"));
+                //System.out.println(request);
+                
+                //json 변경
+                JSONParser parser = new JSONParser();
+                JSONArray list = (JSONArray)parser.parse(br);
+                JSONObject Room = (JSONObject) list.get(0);
+                
+                //형태 변환
+                String title = Room.get("title").toString();
+                int limit_person = Integer.parseInt(Room.get("limit_person").toString());
+                int leader_id = Integer.parseInt(Room.get("leader_id").toString());
+                
+                //System.out.println("title:"+Room.get("title")+" limit_person:"+Room.get("limit_person")+" leader_id:"+Room.get("leader_id"));
+                ChatRoomInfoDTO crateRoomDTO = new ChatRoomInfoDTO(0,title,limit_person,0,leader_id);
+                DAO.addRoom(crateRoomDTO);
+                System.out.println("success to create Room");
+                
+                for(int i=1; i<list.size(); i++) {
+                    JSONObject obj = (JSONObject) list.get(i);
+                    int std_id = Integer.parseInt(obj.get("std_id").toString());
+                    System.out.println("std_id:" +obj.get("std_id"));
+                    //DAO.addMember(std_id, i);
+                    // 맴버 어떻게 넣지...?
+                }
+                System.out.println("success to add frienduser");
+                exchange.sendResponseHeaders(201, 0);
+            }
             // Close Stream
             // 반드시, Response Header를 보낸 후에 닫아야함
             respBody.close();
+            requBody.close();
 
-        } catch ( IOException e ) {
+        } catch ( IOException | ParseException e ) {
+        	exchange.sendResponseHeaders(400, 0);
             e.printStackTrace();
 
             if( respBody != null ) {
@@ -68,5 +109,15 @@ public class CreateRoomHandler implements HttpHandler {
         } finally {
             exchange.close();
         }
+    }
+    public static String getRequestBody(InputStream is) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+        String line;
+        while((line = br.readLine()) != null) {
+        	sb.append(line.trim());
+        }
+        br.close();
+        return sb.toString();
     }
 }
