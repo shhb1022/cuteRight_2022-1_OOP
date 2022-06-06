@@ -32,7 +32,7 @@ public class ChatMessageHandler implements HttpHandler {
                 String[] q  = query.split("=",2);
                 if(q[0].equals("room_id")) {
                     room_id = q[1];
-                    ArrayList<ChatMessageDTO> messages =  DAO.allMessage(Integer.parseInt(room_id));
+                    ArrayList<ChatMessageDTO> messages =  DAO.getRoomMessage(Integer.parseInt(room_id));
                     JSONArray list = new JSONArray();
                     for(ChatMessageDTO msg : messages) {
                         JSONObject obj = new JSONObject();
