@@ -102,92 +102,92 @@ public class DAO {
        }
        return false; //db 연결오류      
     }
-      
-   //로그인 성공시 state=1으로 변경
-   public static int setLogin(int std_id) {
+
+    //로그인 성공시 state=1으로 변경
+    public static int setLogin(int std_id) {
         Connection con = null;
         Statement stmt = null;
-        String update = "UPDATE Users SET state = 1 WHERE std_id ="+std_id;
+        String update = "UPDATE Users SET state = 1 WHERE std_id = "+std_id;
         try {
-           con = makeConnection();
-           stmt = con.createStatement();
-           int i = stmt.executeUpdate(update);
-           if(i==1)
-              System.out.println("state=1 변경 성공");
-           else 
-              System.out.println("state=1 변경 실패");
+            con = makeConnection();
+            stmt = con.createStatement();
+            int i = stmt.executeUpdate(update);
+            if(i==1)
+                System.out.println("state=1 변경 성공");
+            else
+                System.out.println("state=1 변경 실패");
         } catch (SQLException e) {
-           // TODO Auto-generated catch block
-           e.printStackTrace();
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }finally {
-           try {
-              if(stmt != null) stmt.close();
-              if(con != null) con.close();
-           } catch (Exception e2) {
-              e2.printStackTrace();
-           }
+            try {
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
         }
         return -2;//db 오류
     }
-   //로그아웃 가능한 상태인지 확인
-   public static boolean checkState2(int std_id) {
-         Connection con = null;
-         Statement stmt = null;
-         PreparedStatement pstmt = null;
-         ResultSet rs = null;
-         String SQL = "SELECT state FROM Users WHERE std_id = ?";
-         try {
+    //로그아웃 가능한 상태인지 확인
+    public static boolean checkState2(int std_id) {
+        Connection con = null;
+        Statement stmt = null;
+        PreparedStatement pstmt = null;
+        ResultSet rs = null;
+        String SQL = "SELECT state FROM Users WHERE std_id = ?";
+        try {
             con = makeConnection();
             pstmt=con.prepareStatement(SQL);
             pstmt.setInt(1, std_id);
             rs = pstmt.executeQuery();
             if(rs.next()) {
-               if(rs.getString(1).contentEquals("1")) {
-                  return true;//state =1이므로 로그아웃 가능
-               }
-               else {
-                  return false;//state=0 로그아웃 불가능
-               }
+                if(rs.getString(1).contentEquals("1")) {
+                    return true;//state =1이므로 로그아웃 가능
+                }
+                else {
+                    return false;//state=0 로그아웃 불가능
+                }
             }
             return false; //db에 아이디 존재하지 않음
-         } catch (SQLException e) {
+        } catch (SQLException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
-         }finally {
+        }finally {
             try {
-               if(rs != null) rs.close();//5) 자원반납
-               if(stmt != null) stmt.close();
-               if(con != null) con.close();
+                if(rs != null) rs.close();//5) 자원반납
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
             } catch (Exception e2) {
-               e2.printStackTrace();
+                e2.printStackTrace();
             }
-         }
-         return false; //db 연결오류
-      }
-   
-   //로그아웃 state=0으로 변경
-   public static int setLogout(int std_id) {
+        }
+        return false; //db 연결오류
+    }
+
+    //로그아웃 state=0으로 변경
+    public static int setLogout(int std_id) {
         Connection con = null;
         Statement stmt = null;
-        String update = "UPDATE Users SET state = 0 WHERE std_id ="+std_id;
+        String update = "UPDATE Users SET state = 0 WHERE std_id = "+std_id;
         try {
-           con = makeConnection();
-           stmt = con.createStatement();
-           int i = stmt.executeUpdate(update);
-           if(i==1)
-              System.out.println("state=0 변경 성공");
-           else 
-              System.out.println("state=0 변경실패");
+            con = makeConnection();
+            stmt = con.createStatement();
+            int i = stmt.executeUpdate(update);
+            if(i==1)
+                System.out.println("state=0 변경 성공");
+            else
+                System.out.println("state=0 변경실패");
         } catch (SQLException e) {
-           // TODO Auto-generated catch block
-           e.printStackTrace();
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }finally {
-           try {
-              if(stmt != null) stmt.close();
-              if(con != null) con.close();
-           } catch (Exception e2) {
-              e2.printStackTrace();
-           }
+            try {
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
         }
         return -2;//db 오류
     }
@@ -259,51 +259,78 @@ public class DAO {
       // TODO Auto-generated method stub
       return null;
    }
-   
-   //내 채팅방 출력
-   public static ArrayList<ChatRoomInfoDTO> getMyRoom(int std_id){
-      Connection con = null;
-      Statement stmt= null;
-      ResultSet rs = null;
-      ArrayList<ChatRoomInfoDTO> result = new ArrayList<ChatRoomInfoDTO>();
-      try {
-         con = makeConnection();
-         stmt = con.createStatement();
-         rs = stmt.executeQuery("SELECT * FROM ChatRoomJoin WHERE std_id ="+ std_id);
-         
-         while(rs.next()) {
-            ChatRoomInfoDTO chatRoom = new ChatRoomInfoDTO();
-            
-            chatRoom.setRoom_id(rs.getInt("rood_id"));
-            chatRoom.setTitle(rs.getString("title"));
-            chatRoom.setLimit_person(rs.getInt("limit_person"));
-            chatRoom.setCur_person(rs.getInt("cur_person"));
-            chatRoom.setLeader_id(rs.getInt("leader_id"));
 
-            result.add(chatRoom);
-         }
-         return result;
-         
-      } catch (SQLException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-         return null;
-      } finally {
-         try {
-            if(rs != null) rs.close();
-            if(stmt != null) stmt.close();
-            if(con != null) con.close();
-         } catch (Exception e2) {
-            e2.printStackTrace();
-         }
-      }
-   }
+    //내채팅방 출력 이전에 std_id & member 값을 비교해서 room_id를 가져옴
+    public static ArrayList<Integer> getMyRoomId(int std_id){
+        Connection con = null;
+        Statement stmt= null;
+        ResultSet rs = null;
+        ArrayList<Integer> result = new ArrayList<Integer>();
+        try {
+            con = makeConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ChatRoomJoin WHERE std_id = "+ std_id + " AND member = 1");
+
+            while(rs.next()) {
+                result.add(rs.getInt("room_id"));
+            }
+            return result;
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if(rs != null) rs.close();
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
+
+    //getMyRoom메서드를 통해 room_id를 받은 후, 내 채팅방 상세 정보와 출력
+    public static ChatRoomInfoDTO getMyRoomInfo(int room_id){
+        Connection con = null;
+        Statement stmt= null;
+        ResultSet rs = null;
+        ChatRoomInfoDTO chatRoom = new ChatRoomInfoDTO();
+        try {
+            con = makeConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ChatRoomInfo WHERE room_id = "+ room_id);
+
+            while(rs.next()) {
+
+                chatRoom.setRoom_id(rs.getInt("room_id"));
+                chatRoom.setTitle(rs.getString("title"));
+                chatRoom.setLimit_person(rs.getInt("limit_person"));
+                chatRoom.setCur_person(rs.getInt("cur_person"));
+                chatRoom.setLeader_id(rs.getInt("leader_id"));
+            }
+            return chatRoom;
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if(rs != null) rs.close();
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
    
    //오픈 채팅 목록 출력출력
    //해당 user 정보를 포함한 ChatRoomJoin에사 member!=0인 값을 가져옴
-   //따라서 핸들러에서는 모든 ChatRoomInfo중에서 이 메서드에서 구한 리스트를 제외한 목록이 오픈 채팅 목록이 될 것
+   // 따라서 핸들러에서는 모든 ChatRoomInfo중에서 이 메서드에서 구한 리스트를 제외한 목록이 오픈 채팅 목록이 될 것
    //쿼리에서 차집합 처리를 시도하였으나 실패 ㅜ
-   public static ArrayList<ChatRoomInfoDTO> getOpenRoom(int std_id){
+   public ArrayList<ChatRoomInfoDTO> getOpenRoom(int std_id){
       Connection con = null;
       Statement stmt= null;
       ResultSet rs = null;
@@ -311,12 +338,12 @@ public class DAO {
       try {
          con = makeConnection();
          stmt = con.createStatement();
-         rs = stmt.executeQuery("("+"SELECT * FROM ChatRoomJoin,ChatRoomInfo WHERE ChatRoomJoin.std_id="+std_id+"AND ChatRoomJoin.member!="+0+"AND ChatRoomJoin.room_id=ChatRoomInfo.room_id)");
+         rs = stmt.executeQuery("SELECT * FROM ChatRoomInfo NATURAL INNER JOIN (SELECT * FROM ChatRoomJoin WHERE std_id = "+std_id+" AND ChatRoomJoin.member != "+0+")");
          
          while(rs.next()) {
             ChatRoomInfoDTO chatRoom = new ChatRoomInfoDTO();
             
-            chatRoom.setRoom_id(rs.getInt("rood_id"));
+            chatRoom.setRoom_id(rs.getInt("room_id"));
             chatRoom.setTitle(rs.getString("title"));
             chatRoom.setLimit_person(rs.getInt("limit_person"));
             chatRoom.setCur_person(rs.getInt("cur_person"));
@@ -350,12 +377,12 @@ public class DAO {
 	      try {
 	         con = makeConnection();
 	         stmt = con.createStatement();
-	         rs = stmt.executeQuery("(SELECT * FROM ChatRoomInfo)");
+	         rs = stmt.executeQuery("SELECT * FROM ChatRoomInfo");
 	         
 	         while(rs.next()) {
 	            ChatRoomInfoDTO chatRoom = new ChatRoomInfoDTO();
 	            
-	            chatRoom.setRoom_id(rs.getInt("rood_id"));
+	            chatRoom.setRoom_id(rs.getInt("room_id"));
 	            chatRoom.setTitle(rs.getString("title"));
 	            chatRoom.setLimit_person(rs.getInt("limit_person"));
 	            chatRoom.setCur_person(rs.getInt("cur_person"));
@@ -613,46 +640,46 @@ public class DAO {
        }
        return false; //db 연결오류    
    }
-   
-   //설계명세서 상의 이름으로 메서드 이름 변경_0607
-   // 채팅방 입장시 채팅내용 출력
-   public static ArrayList<ChatMessageDTO> getRoomMessage(int room_id) {
-      Connection con = null;
-      Statement stmt= null;
-      ResultSet rs = null;
-      ArrayList<ChatMessageDTO> result = new ArrayList<ChatMessageDTO>();
-      try {
-         con = makeConnection();
-         stmt = con.createStatement();
-         rs = stmt.executeQuery("SELECT * FROM ChatMessage WHERE room_id ="+room_id);
-         
-         while(rs.next()) {
-            ChatMessageDTO chat = new ChatMessageDTO();
-            
-            chat.setStd_id(rs.getInt("std_id"));
-            chat.setRoom_id(room_id);
-            chat.setMessage(rs.getString("message"));
-            chat.setTime(rs.getString("time"));
-         
-            result.add(chat);
-         }
-         
-         return result;
-         
-      } catch (SQLException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-         return null;
-      } finally {
-         try {
-            if(rs != null) rs.close();//5) 자원반납
-            if(stmt != null) stmt.close();
-            if(con != null) con.close();
-         } catch (Exception e2) {
-            e2.printStackTrace();
-         }
-      }
-   }
+
+    //설계명세서 상의 이름으로 메서드 이름 변경_0607
+    // 채팅방 입장시 채팅내용 출력
+    public static ArrayList<ChatMessageDTO> getRoomMessage(int room_id) {
+        Connection con = null;
+        Statement stmt= null;
+        ResultSet rs = null;
+        ArrayList<ChatMessageDTO> result = new ArrayList<ChatMessageDTO>();
+        try {
+            con = makeConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ChatMessage WHERE room_id = "+room_id);
+
+            while(rs.next()) {
+                ChatMessageDTO chat = new ChatMessageDTO();
+
+                chat.setStd_id(rs.getInt("std_id"));
+                chat.setRoom_id(room_id);
+                chat.setMessage(rs.getString("message"));
+                chat.setTime(rs.getString("time"));
+
+                result.add(chat);
+            }
+
+            return result;
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if(rs != null) rs.close();//5) 자원반납
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
    
    //설계명세서 상의 이름으로 메서드 이름 변경_0607
    // 받은 메시지를 db에 추가
@@ -717,86 +744,85 @@ public class DAO {
            }
        }
    }
-   
-   //입장수락, member=1로 변경
-   public static int setAccept(int std_id, int room_id) {
-       Connection con = null;
-       Statement stmt = null;
-       String update = "UPDATE ChatRoomJoin SET member = 1 WHERE std_id =" + std_id + "and room_id =" + room_id;
-       try {
-          con = makeConnection();
-          stmt = con.createStatement();
-          int i = stmt.executeUpdate(update);
-          if(i==1)
-             System.out.println("member=1 변경 성공");
-          else 
-             System.out.println("member=1 변경 실패");
-       } catch (SQLException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-       }finally {
-          try {
-             if(stmt != null) stmt.close();
-             if(con != null) con.close();
-          } catch (Exception e2) {
-             e2.printStackTrace();
-          }
-       }
-       return -2;//db 오류
-   }
-   
-   //입장거절&강제퇴장, member=2로 변경
-   public static int setForbid(int std_id, int room_id) {
-       Connection con = null;
-       Statement stmt = null;
-       String update = "UPDATE ChatRoomJoin SET member = 2 WHERE std_id =" + std_id + "and room_id =" + room_id;
-       try {
-          con = makeConnection();
-          stmt = con.createStatement();
-          int i = stmt.executeUpdate(update);
-          if(i==1)
-             System.out.println("member=2 변경 성공");
-          else 
-             System.out.println("member=2 변경 실패");
-       } catch (SQLException e) {
-          // TODO Auto-generated catch block
-          e.printStackTrace();
-       }finally {
-          try {
-             if(stmt != null) stmt.close();
-             if(con != null) con.close();
-          } catch (Exception e2) {
-             e2.printStackTrace();
-          }
-       }
-       return -2;//db 오류
-   }
-   
-   //
-   // 채팅 시 이름 출력때문에 있는듯? 
-   public static String stdName(int user_id){
-      Connection con = null;
-      Statement stmt = null;
-      ResultSet rs = null;
-      try {
-         con = makeConnection();
-         stmt = con.createStatement();
-         rs = stmt.executeQuery("SELECT name FROM Users WHERE std_id="+user_id);
-         return rs.getString("name");
-         
-      } catch (SQLException e) {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-         return null;
-      } finally {
-         try {
-            if(rs != null) rs.close();//5) 자원반납
-            if(stmt != null) stmt.close();
-            if(con != null) con.close();
-         } catch (Exception e2) {
-            e2.printStackTrace();
-         }
-      }
-   }
-   
+
+    //입장수락, member=1로 변경
+    public static int setAccept(int std_id, int room_id) {
+        Connection con = null;
+        Statement stmt = null;
+        String update = "UPDATE ChatRoomJoin SET member = 1 WHERE std_id = " + std_id + " and room_id = " + room_id;
+        try {
+            con = makeConnection();
+            stmt = con.createStatement();
+            int i = stmt.executeUpdate(update);
+            if(i==1)
+                System.out.println("member=1 변경 성공");
+            else
+                System.out.println("member=1 변경 실패");
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return -2;//db 오류
+    }
+
+    //입장거절&강제퇴장, member=2로 변경
+    public static int setForbid(int std_id, int room_id) {
+        Connection con = null;
+        Statement stmt = null;
+        String update = "UPDATE ChatRoomJoin SET member = 2 WHERE std_id = " + std_id + " and room_id = " + room_id;
+        try {
+            con = makeConnection();
+            stmt = con.createStatement();
+            int i = stmt.executeUpdate(update);
+            if(i==1)
+                System.out.println("member=2 변경 성공");
+            else
+                System.out.println("member=2 변경 실패");
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }finally {
+            try {
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+        return -2;//db 오류
+    }
+
+    //
+    // 채팅 시 이름 출력때문에 있는듯?
+    public static String stdName(int user_id){
+        Connection con = null;
+        Statement stmt = null;
+        ResultSet rs = null;
+        try {
+            con = makeConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT name FROM Users WHERE std_id= "+user_id);
+            return rs.getString("name");
+
+        } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+        } finally {
+            try {
+                if(rs != null) rs.close();//5) 자원반납
+                if(stmt != null) stmt.close();
+                if(con != null) con.close();
+            } catch (Exception e2) {
+                e2.printStackTrace();
+            }
+        }
+    }
 }

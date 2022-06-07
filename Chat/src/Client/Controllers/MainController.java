@@ -74,7 +74,7 @@ public class MainController implements Initializable {
                 		}
                 	}
                 	else if(selectedRoom.equals("전체채팅방")) {
-                		URL url = new URL("http://localhost:3000/?std_id-="+UserInfo.getId());
+                		URL url = new URL("http://localhost:3000/?std_id=-"+UserInfo.getId());
                 		HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 		http.setRequestMethod("GET");
                             

@@ -1,13 +1,17 @@
 package Server;
 
+import Server.Models.ChatRoomInfoDTO;
+import Server.Models.DAO;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
 import java.util.List;
 
 public class RootHandler implements HttpHandler {
@@ -21,13 +25,37 @@ public class RootHandler implements HttpHandler {
             // Write Response Body
             String method = exchange.getRequestMethod();
             if(method.equals("GET")) {
-                JSONObject js = new JSONObject();
-                js.put("hello", "word");
-                js.put("this", "is");
-                js.put("simple", "server");
+                // std_id 받아오기
+                String[] querys = exchange.getRequestURI().getQuery().split("=");
+                int id = Integer.parseInt(querys[1]);
+                System.out.println("id = "+ id);
+                DAO dao = new DAO();
+
+                // 받은 std_id가 0보다 작으면 오픈채팅, 0보다 크면 내 채팅방 목록을 가져온다.
+                JSONArray list = new JSONArray();
+                if(id > 0) {
+                    // 내 채팅방 목록 가져와서 json형식으로 변환
+                    ArrayList<Integer> room_ids = DAO.getMyRoomId(id);
+                    for(Integer room_id : room_ids) {
+                        ChatRoomInfoDTO room = DAO.getMyRoomInfo(room_id);
+                        System.out.println("room_id: " + room_id + " room: " + room.toJSONString());
+                        list.add(room.toJSONObject());
+                    }
+                } else {
+                    id = - id;
+                    ArrayList<ChatRoomInfoDTO> rooms = dao.getAllRoom(id);
+                    ArrayList<ChatRoomInfoDTO> roomToBeRemoved = dao.getOpenRoom(id);
+                    for(ChatRoomInfoDTO room : roomToBeRemoved) {
+                        rooms.removeIf(e->(e.getRoom_id()==room.getRoom_id()));
+                    }
+                    for (ChatRoomInfoDTO room : rooms) {
+                        list.add(room.toJSONObject());
+                    }
+                }
+                System.out.println(list.toJSONString());
 
                 // Encoding to UTF-8
-                ByteBuffer bb = Charset.forName("UTF-8").encode(js.toJSONString());
+                ByteBuffer bb = Charset.forName("UTF-8").encode(list.toJSONString());
                 int contentLength = bb.limit();
                 byte[] content = new byte[contentLength];
                 bb.get(content, 0, contentLength);
