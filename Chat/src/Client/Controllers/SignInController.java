@@ -43,10 +43,10 @@ public class SignInController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         if(newIdInput.getText().equals("")) {
-            newIdInput.setText("학번9자리로 입력하세요.");
+            newIdInput.setPromptText("학번9자리로 입력하세요.");
         }
         if(jobInput.getText().equals("")) {
-            jobInput.setText("예:프론트, 백엔드");
+            jobInput.setPromptText("예:프론트, 백엔드");
         }
 
 

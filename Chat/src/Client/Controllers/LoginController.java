@@ -26,7 +26,7 @@ public class LoginController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         if(idInput.getText().equals("")) {
-            idInput.setText("학번(숫자)");
+            idInput.setPromptText("학번(숫자)");
         }
     	loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
