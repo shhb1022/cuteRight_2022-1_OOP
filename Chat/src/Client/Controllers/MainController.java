@@ -20,6 +20,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
+import javax.swing.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +40,31 @@ public class MainController implements Initializable {
 
     public void initialize(URL location, ResourceBundle resources) {
 
-        ObservableList<String> list = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
-        chooseRoomList.setItems(list);
+        ObservableList<String> roomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
+        chooseRoomList.setItems(roomList);
         chooseRoomList.getSelectionModel().selectFirst();
+
+//        chooseRoomList.setOnAction(new EventHandler<ActionEvent>() {
+//            @Override
+//            public void handle(ActionEvent event) {
+//                try {
+//                    String selectedRoom = (String) chooseRoomList.getValue();
+//
+//                    URL url = new URL("http://localhost:3000/main");
+//                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
+//                    http.setRequestMethod("GET");
+//
+//                    Stage currStage = (Stage) createRoomBtn.getScene().getWindow();
+//                    currStage.close();
+//
+//                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/CreateRoom.fxml"));
+//                    Scene scene = new Scene(root);
+//
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        });
 
 
 
