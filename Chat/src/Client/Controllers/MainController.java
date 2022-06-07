@@ -16,6 +16,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +41,9 @@ public class MainController implements Initializable {
 
         ObservableList<String> list = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
         chooseRoomList.setItems(list);
+        chooseRoomList.getSelectionModel().selectFirst();
+
+
 
     	createRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -92,6 +98,8 @@ public class MainController implements Initializable {
             }
         });
     }
+
+
 
 //    public static String getResponseBody(InputStream is) throws IOException {
 //        StringBuilder sb = new StringBuilder();

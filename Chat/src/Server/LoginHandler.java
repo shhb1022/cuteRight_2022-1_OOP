@@ -35,12 +35,12 @@ public class LoginHandler implements HttpHandler {
                 if(lg == 1) {
                 	exchange.sendResponseHeaders(200, 0);
                 	//로그아웃 미완성이므로 재로그인 편하게 하기 위한 임시
-//                	if(checkstate) {
-//                		DAO.setLogin(id);
-//                        exchange.sendResponseHeaders(200, 0);
-//                	} else {
-//                		exchange.sendResponseHeaders(409, 0);
-//                	}
+                	if(checkstate) {
+                		DAO.setLogin(id);
+                        exchange.sendResponseHeaders(200, 0);
+                	} else {
+                		exchange.sendResponseHeaders(409, 0);
+                	}
                 } else if (lg == 0 || lg == -1){
                     exchange.sendResponseHeaders(400, 0);
                 }
