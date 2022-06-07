@@ -163,6 +163,7 @@ public class MainController implements Initializable {
         GridPane RoomInfoBox = new GridPane();
         Label roomTitle = new Label();
         Button in = new Button();
+        in.setText("입장");
 
         
         roomTitle.setText(title);
