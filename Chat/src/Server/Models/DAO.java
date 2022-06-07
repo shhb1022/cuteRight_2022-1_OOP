@@ -341,6 +341,45 @@ public class DAO {
       }
    }
    
+   //전체 채팅방 목록 가져오기(오픈채팅방 목록 구하기 위함)
+   public static ArrayList<ChatRoomInfoDTO> getAllRoom(int std_id){
+	      Connection con = null;
+	      Statement stmt= null;
+	      ResultSet rs = null;
+	      ArrayList<ChatRoomInfoDTO> result = new ArrayList<ChatRoomInfoDTO>();
+	      try {
+	         con = makeConnection();
+	         stmt = con.createStatement();
+	         rs = stmt.executeQuery("(SELECT * FROM ChatRoomInfo)");
+	         
+	         while(rs.next()) {
+	            ChatRoomInfoDTO chatRoom = new ChatRoomInfoDTO();
+	            
+	            chatRoom.setRoom_id(rs.getInt("rood_id"));
+	            chatRoom.setTitle(rs.getString("title"));
+	            chatRoom.setLimit_person(rs.getInt("limit_person"));
+	            chatRoom.setCur_person(rs.getInt("cur_person"));
+	            chatRoom.setLeader_id(rs.getInt("leader_id"));
+
+	            result.add(chatRoom);
+	         }
+	         return result;
+	         
+	      } catch (SQLException e) {
+	         // TODO Auto-generated catch block
+	         e.printStackTrace();
+	         return null;
+	      } finally {
+	         try {
+	            if(rs != null) rs.close();
+	            if(stmt != null) stmt.close();
+	            if(con != null) con.close();
+	         } catch (Exception e2) {
+	            e2.printStackTrace();
+	         }
+	      }
+	   }
+   
    //모든 user 정보 가져오기->방 생성 시 친구 선택할 때 필요
    public static ArrayList<UsersDTO> getAllUsers(){
       Connection con = null;
