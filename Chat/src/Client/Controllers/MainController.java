@@ -13,8 +13,11 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -32,39 +35,64 @@ import java.util.ResourceBundle;
 public class MainController implements Initializable {
 
     @FXML private ComboBox chooseRoomList;
-
-
     @FXML private ListView roomDisplay;
-
     @FXML private Button logoutBtn, createRoomBtn;
+    
+    ObservableList<GridPane>roomList = FXCollections.observableArrayList();
+    ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
 
-    public void initialize(URL location, ResourceBundle resources) {
+	@SuppressWarnings("unchecked")
+	public void initialize(URL location, ResourceBundle resources) {
 
-        ObservableList<String> roomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
-        chooseRoomList.setItems(roomList);
+        chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();
 
-//        chooseRoomList.setOnAction(new EventHandler<ActionEvent>() {
-//            @Override
-//            public void handle(ActionEvent event) {
-//                try {
-//                    String selectedRoom = (String) chooseRoomList.getValue();
-//
-//                    URL url = new URL("http://localhost:3000/main");
-//                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
-//                    http.setRequestMethod("GET");
-//
-//                    Stage currStage = (Stage) createRoomBtn.getScene().getWindow();
-//                    currStage.close();
-//
-//                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/CreateRoom.fxml"));
-//                    Scene scene = new Scene(root);
-//
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        });
+        chooseRoomList.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                String selectedRoom = (String) chooseRoomList.getValue();
+                try {
+                	if(selectedRoom.equals("내 채팅방")) {
+                		URL url = new URL("http://localhost:3000/?std_id="+UserInfo.getId());
+                        HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                        http.setRequestMethod("GET");
+                        
+                        if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                			InputStream is = http.getInputStream();
+            				BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                			JSONParser parser = new JSONParser();
+                			JSONArray list = (JSONArray)parser.parse(br);
+                			for(int i=0; i<list.size(); i++) {
+                				JSONObject obj = (JSONObject) list.get(i);
+                				roomList.add(RoomBox(obj.get("title").toString()));
+                			}
+                			roomDisplay.setItems(roomList);
+                		}
+                	}
+                        else if(selectedRoom.equals("전체채팅방")) {
+                        	URL url = new URL("http://localhost:3000/?std_id-="+UserInfo.getId());
+                            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                            http.setRequestMethod("GET");
+                            
+                            if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    			InputStream is = http.getInputStream();
+                				BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                    			JSONParser parser = new JSONParser();
+                    			JSONArray list = (JSONArray)parser.parse(br);
+                    			for(int i=0; i<list.size(); i++) {
+                    				JSONObject obj = (JSONObject) list.get(i);
+                    				roomList.add(RoomBox(obj.get("title").toString()));
+                    			}
+                    			roomDisplay.setItems(roomList);
+                        }
+                	}
+                    
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
 
 
@@ -120,9 +148,22 @@ public class MainController implements Initializable {
                 }
             }
         });
+        
     }
+        
 
+    public GridPane RoomBox(String title) {
+        GridPane RoomInfoBox = new GridPane();
+        Label roomTitle = new Label();
 
+        
+        roomTitle.setText(title);
+        
+        RoomInfoBox.add(roomTitle, 1, 0);
+
+        return RoomInfoBox;
+    }
+        
 
 //    public static String getResponseBody(InputStream is) throws IOException {
 //        StringBuilder sb = new StringBuilder();
