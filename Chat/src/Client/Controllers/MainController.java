@@ -37,12 +37,17 @@ public class MainController implements Initializable {
     @FXML private ComboBox chooseRoomList;
     @FXML private ListView roomDisplay;
     @FXML private Button logoutBtn, createRoomBtn;
-    
+
     ObservableList<GridPane> roomList = FXCollections.observableArrayList();
-    ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
+    
 
 	@SuppressWarnings("unchecked")
 	public void initialize(URL location, ResourceBundle resources) {
+
+
+        ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
+        chooseRoomList.setItems(requestRoomList);
+        chooseRoomList.getSelectionModel().selectFirst();
 
         chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();
@@ -157,11 +162,13 @@ public class MainController implements Initializable {
     public GridPane RoomBox(String title) {
         GridPane RoomInfoBox = new GridPane();
         Label roomTitle = new Label();
+        Button in = new Button();
 
         
         roomTitle.setText(title);
         
         RoomInfoBox.add(roomTitle, 1, 0);
+        RoomInfoBox.add(in, 2,1);
 
         return RoomInfoBox;
     }
