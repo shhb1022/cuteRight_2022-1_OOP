@@ -49,7 +49,9 @@ public class RootHandler implements HttpHandler {
                         rooms.removeIf(e->(e.getRoom_id()==room.getRoom_id()));
                     }
                     for (ChatRoomInfoDTO room : rooms) {
-                        list.add(room.toJSONObject());
+                        if(room.getCur_person() < room.getLimit_person()) {
+                            list.add(room.toJSONObject());
+                        }
                     }
                 }
                 System.out.println(list.toJSONString());
