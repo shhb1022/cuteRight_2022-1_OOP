@@ -49,8 +49,6 @@ public class MainController implements Initializable {
         chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();
 
-        chooseRoomList.setItems(requestRoomList);
-        chooseRoomList.getSelectionModel().selectFirst();
 
         chooseRoomList.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -170,6 +168,29 @@ public class MainController implements Initializable {
         
         RoomInfoBox.add(roomTitle, 1, 0);
         RoomInfoBox.add(in, 2,1);
+
+        //ChatRoomController랑 조정해서 구현
+        in.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                Stage stage = new Stage();
+                try {
+                    // 현재 창을 종료한다.
+                    Stage currStage = (Stage) in.getScene().getWindow();
+                    currStage.close();
+                    // 새 창을 띄운다.
+                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/ChatRoom.fxml"));
+                    Scene scene = new Scene(root);
+                    stage.setScene(scene);
+                    stage.show();
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+
 
         return RoomInfoBox;
     }
