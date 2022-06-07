@@ -38,7 +38,7 @@ public class MainController implements Initializable {
     @FXML private ListView roomDisplay;
     @FXML private Button logoutBtn, createRoomBtn;
     
-    ObservableList<GridPane>roomList = FXCollections.observableArrayList();
+    ObservableList<GridPane> roomList = FXCollections.observableArrayList();
     ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
 
 	@SuppressWarnings("unchecked")
@@ -62,6 +62,7 @@ public class MainController implements Initializable {
             				BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
                 			JSONParser parser = new JSONParser();
                 			JSONArray list = (JSONArray)parser.parse(br);
+                			roomList.clear();
                 			for(int i=0; i<list.size(); i++) {
                 				JSONObject obj = (JSONObject) list.get(i);
                 				roomList.add(RoomBox(obj.get("title").toString()));
@@ -69,21 +70,22 @@ public class MainController implements Initializable {
                 			roomDisplay.setItems(roomList);
                 		}
                 	}
-                        else if(selectedRoom.equals("전체채팅방")) {
-                        	URL url = new URL("http://localhost:3000/?std_id-="+UserInfo.getId());
-                            HttpURLConnection http = (HttpURLConnection) url.openConnection();
-                            http.setRequestMethod("GET");
+                	else if(selectedRoom.equals("전체채팅방")) {
+                		URL url = new URL("http://localhost:3000/?std_id-="+UserInfo.getId());
+                		HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                		http.setRequestMethod("GET");
                             
-                            if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    			InputStream is = http.getInputStream();
-                				BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-                    			JSONParser parser = new JSONParser();
-                    			JSONArray list = (JSONArray)parser.parse(br);
-                    			for(int i=0; i<list.size(); i++) {
-                    				JSONObject obj = (JSONObject) list.get(i);
-                    				roomList.add(RoomBox(obj.get("title").toString()));
-                    			}
-                    			roomDisplay.setItems(roomList);
+                		if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                			InputStream is = http.getInputStream();
+                			BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                			JSONParser parser = new JSONParser();
+                			JSONArray list = (JSONArray)parser.parse(br);
+                			roomList.clear();
+                			for(int i=0; i<list.size(); i++) {
+                				JSONObject obj = (JSONObject) list.get(i);
+                				roomList.add(RoomBox(obj.get("title").toString()));
+                				}
+                			roomDisplay.setItems(roomList);
                         }
                 	}
                     
