@@ -49,6 +49,35 @@ public class MainController implements Initializable {
         chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();
 
+        String selectedRoom = (String) chooseRoomList.getValue();
+        try {
+            if (selectedRoom.equals("내 채팅방")) {
+                URL url = new URL("http://localhost:3000/?std_id=" + UserInfo.getId());
+                HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                http.setRequestMethod("GET");
+
+                if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    InputStream is = http.getInputStream();
+                    BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                    JSONParser parser = new JSONParser();
+                    JSONArray list = (JSONArray) parser.parse(br);
+                    roomList.clear();
+                    for (int i = 0; i < list.size(); i++) {
+                        JSONObject obj = (JSONObject) list.get(i);
+                        roomList.add(RoomBox(obj.get("title").toString()));
+                    }
+                    roomDisplay.setItems(roomList);
+                }
+            }
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+
 
         chooseRoomList.setOnAction(new EventHandler<ActionEvent>() {
             @Override
