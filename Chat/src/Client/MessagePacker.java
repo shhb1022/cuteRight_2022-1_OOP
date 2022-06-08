@@ -7,6 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.sql.PreparedStatement;
 
 
 public class MessagePacker {
@@ -67,8 +68,8 @@ public class MessagePacker {
     }
 
     public String getMessage() { return (String) body.get("message"); }
-    public String getStdId() { return (String) body.get("std_Id"); }
-    public String getRoomId() { return (String) body.get("room_Id"); }
+    public String getStdId() { return (String) body.get("std_id"); }
+    public String getRoomId() { return (String) body.get("room_id"); }
 
     public static byte[] intToByteArray(int value, int lengthDiv) {
         byte[] byteArray = new byte[lengthDiv];
@@ -95,5 +96,9 @@ public class MessagePacker {
                     (b[3] & 0xFF) << 24;
         }
         return byteInt;
+    }
+
+    public String toString() {
+        return body.toJSONString();
     }
 }

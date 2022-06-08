@@ -20,6 +20,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class ChattingServer {
+    private static final ChattingServer singleton = new ChattingServer();
+    public static ChattingServer getInstance() {
+        return singleton;
+    }
     ExecutorService executorService;
     ServerSocket serverSocket;
     private HashMap<Integer, Vector<Client>> connections = new HashMap<Integer, Vector<Client>>();

@@ -7,6 +7,7 @@ import com.sun.net.httpserver.HttpHandler;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 public class ChatRoomHandler implements HttpHandler {
     @Override
@@ -27,6 +28,11 @@ public class ChatRoomHandler implements HttpHandler {
             	
             	if(check) {
             		exchange.sendResponseHeaders(200, 0);
+            		// 채팅 서버에 방이 없다면 추가
+                    ChattingServer instance = ChattingServer.getInstance();
+            		if(!instance.hasConnection(room_id)) {
+            		    instance.addRoom(room_id);
+                    }
             	}else {
             		exchange.sendResponseHeaders(400,0);
             	}

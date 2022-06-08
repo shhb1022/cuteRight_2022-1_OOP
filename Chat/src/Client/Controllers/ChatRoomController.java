@@ -36,14 +36,14 @@ public class ChatRoomController implements Initializable {
     ObservableList<GridPane> items = FXCollections.observableArrayList();
 
     Socket socket = null;
-    int std_id = Integer.parseInt(UserInfo.getId());
-    // 임시
-    int room_id = Integer.parseInt(UserInfo.getRoom_id());
+    int std_id;
+    int room_id;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addTextLimiter(txtInput, 256);
         std_id = Integer.parseInt(UserInfo.getId());
+        room_id = Integer.parseInt(UserInfo.getRoom_id());
 
         txtInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override

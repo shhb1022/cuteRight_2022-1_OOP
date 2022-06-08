@@ -68,8 +68,8 @@ public class MessagePacker {
     }
 
     public String getMessage() { return (String) body.get("message"); }
-    public int getStdId() { return Integer.parseInt((String) body.get("std_Id")); }
-    public int getRoomId() { return Integer.parseInt((String) body.get("room_Id")); }
+    public int getStdId() { return Integer.parseInt((String) body.get("std_id")); }
+    public int getRoomId() { return Integer.parseInt((String) body.get("room_id")); }
 
     private static byte[] intToByteArray(int value, int lengthDiv) {
         byte[] byteArray = new byte[lengthDiv];
@@ -97,4 +97,6 @@ public class MessagePacker {
         }
         return byteInt;
     }
+
+    public String toString() { return body.toJSONString(); }
 }

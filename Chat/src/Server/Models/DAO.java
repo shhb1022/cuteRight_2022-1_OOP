@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -692,8 +693,8 @@ public class DAO {
          String insert = "INSERT INTO ChatMessage (std_id, room_id, message, time) VALUES ";
          
          //받은 시간
-         LocalTime now = LocalTime.now();
-         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+         LocalDateTime now = LocalDateTime.now();
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
          String formatedNow = now.format(formatter);
          
          insert+="('"+Chat.getStd_id()+"','"+Chat.getRoom_id()+"','"+Chat.getMessage()+"','"+formatedNow+"')";

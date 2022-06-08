@@ -29,7 +29,8 @@ public class Server {
     private void createServer(String host, int port) throws IOException {
         // HTTP Server.Server 생성
         this.httpServer = HttpServer.create(new InetSocketAddress(host, port), DEFAULT_BACKLOG);
-        this.chattingServer = new ChattingServer();
+        // 싱글톤 패턴
+        this.chattingServer = ChattingServer.getInstance();
         // HTTP Server.Server Context 설정
         httpServer.createContext("/", new RootHandler());
         httpServer.createContext("/login", new LoginHandler());
