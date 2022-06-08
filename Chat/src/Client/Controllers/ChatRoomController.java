@@ -36,9 +36,9 @@ public class ChatRoomController implements Initializable {
     ObservableList<GridPane> items = FXCollections.observableArrayList();
 
     Socket socket = null;
-    int std_id;
+    int std_id = Integer.parseInt(UserInfo.getId());
     // 임시
-    int room_id = 5;
+    int room_id = Integer.parseInt(UserInfo.getRoom_id());
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -62,12 +62,13 @@ public class ChatRoomController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
+                	UserInfo.setRoom_id(null);
                     SocketConnection.close();
                     // 현재 창을 종료한다.
                     Stage currStage = (Stage) backBtn.getScene().getWindow();
                     currStage.close();
                     // 새 창을 띄운다.
-                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Login.fxml"));
+                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     stage.show();

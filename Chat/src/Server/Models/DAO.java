@@ -613,7 +613,7 @@ public class DAO {
        Statement stmt = null;
        PreparedStatement pstmt = null;
        ResultSet rs = null;
-       String SQL ="SELECT member FROM ChatRoomJoin WHERE std_id="+user_id+"AND room_id="+room_id ;       
+       String SQL ="SELECT member FROM ChatRoomJoin WHERE std_id="+user_id+" AND room_id="+room_id ;       
        try {
            con = makeConnection();
            pstmt=con.prepareStatement(SQL);

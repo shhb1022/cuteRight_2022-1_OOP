@@ -15,22 +15,21 @@ public class ChatRoomHandler implements HttpHandler {
         OutputStream respBody = exchange.getResponseBody();
 
         try {
-            // Write Response Body
+        	// Write Response Body
             String method = exchange.getRequestMethod();
-            Headers headers = exchange.getResponseHeaders();
             if(method.equals("GET")) {
-                String query = exchange.getRequestURI().getQuery();
-                String[] author = exchange.getRequestHeaders().get("Authorization").get(0).split(":");
-                int id = Integer.parseInt(author[0]);
-                String password = author[1];
-
-                int lg = DAO.checkLogin(id, password);
-
-                if(lg == 1) {
-                    exchange.sendResponseHeaders(200, 0);
-                } else if (lg == 0 || lg == -1){
-                    exchange.sendResponseHeaders(400, 0);
-                }
+            	String[] querys = exchange.getRequestURI().getQuery().split("=|&");
+            	int room_id = Integer.parseInt(querys[1]);
+            	int std_id = Integer.parseInt(querys[3]);
+            	DAO dao = new DAO();
+            	
+            	boolean check = dao.checkJoin(std_id, room_id);
+            	
+            	if(check) {
+            		exchange.sendResponseHeaders(200, 0);
+            	}else {
+            		exchange.sendResponseHeaders(400,0);
+            	}
             }
             // Close Stream
             // 반드시, Response Header를 보낸 후에 닫아야함

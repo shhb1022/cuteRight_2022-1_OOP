@@ -12,6 +12,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
@@ -43,6 +45,8 @@ public class MainController implements Initializable {
 
 	@SuppressWarnings("unchecked")
 	public void initialize(URL location, ResourceBundle resources) {
+
+
         ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
         chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();
@@ -62,7 +66,7 @@ public class MainController implements Initializable {
                     roomList.clear();
                     for (int i = 0; i < list.size(); i++) {
                         JSONObject obj = (JSONObject) list.get(i);
-                        roomList.add(RoomBox(obj.get("title").toString()));
+                        roomList.add(MyRoomBox(obj.get("title").toString(),obj.get("room_id").toString()));
                     }
                     roomDisplay.setItems(roomList);
                 }
@@ -95,7 +99,7 @@ public class MainController implements Initializable {
                 			roomList.clear();
                 			for(int i=0; i<list.size(); i++) {
                 				JSONObject obj = (JSONObject) list.get(i);
-                				roomList.add(RoomBox(obj.get("title").toString()));
+                				roomList.add(MyRoomBox(obj.get("title").toString(),obj.get("room_id").toString()));
                 			}
                 			roomDisplay.setItems(roomList);
                 		}
@@ -113,7 +117,7 @@ public class MainController implements Initializable {
                 			roomList.clear();
                 			for(int i=0; i<list.size(); i++) {
                 				JSONObject obj = (JSONObject) list.get(i);
-                				roomList.add(RoomBox(obj.get("title").toString()));
+                				roomList.add(OpenRoomBox(obj.get("title").toString(),obj.get("room_id").toString()));
                 				}
                 			roomDisplay.setItems(roomList);
                         }
@@ -184,16 +188,77 @@ public class MainController implements Initializable {
     }
         
 
-    public GridPane RoomBox(String title) {
+    public GridPane MyRoomBox(String title, String room_id) {
         GridPane RoomInfoBox = new GridPane();
         Label roomTitle = new Label();
+        Label roomId = new Label();
+        roomId.setPrefWidth(50);
         Button in = new Button();
         in.setText("입장");
 
         
         roomTitle.setText(title);
+        roomId.setText(room_id);
         
         RoomInfoBox.add(roomTitle, 1, 0);
+        RoomInfoBox.add(roomId,0,0);
+        RoomInfoBox.add(in, 2,1);
+
+        //버튼을 누르면 입장 가능한지 확인을 요청하고 http_ok가 들어오면 입장을 한다.
+        in.setOnAction(new EventHandler<ActionEvent>() {
+            public void handle(ActionEvent event) {
+                try {
+                	URL url = new URL("http://localhost:3000/chatRoom?room_id="+room_id+"&std_id="+UserInfo.getId());
+                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                    http.setRequestMethod("GET");
+                    
+                    if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+            			UserInfo.setRoom_id(room_id);
+            			
+            			// 현재 창을 종료한다.
+                        Stage currStage = (Stage) in.getScene().getWindow();
+                        currStage.close();
+
+                        // 새 창을 띄운다.
+                        Stage stage = new Stage();
+                        Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/ChatRoom.fxml"));
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
+                        stage.show();
+            		}
+                    else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    	Alert alert = new Alert(AlertType.INFORMATION);
+                    	alert.setHeaderText(null);
+                        alert.setContentText("입장할 수 없는 방 입니다.(갱신이 필요합니다.)");
+                        alert.showAndWait();
+                    }
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
+
+
+            }
+        });
+
+
+
+        return RoomInfoBox;
+    }
+    
+    public GridPane OpenRoomBox(String title, String room_id) {
+        GridPane RoomInfoBox = new GridPane();
+        Label roomTitle = new Label();
+        Label roomId = new Label();
+        roomId.setPrefWidth(50);
+        Button in = new Button();
+        in.setText("입장 신청");
+
+        
+        roomTitle.setText(title);
+        roomId.setText(room_id);
+        
+        RoomInfoBox.add(roomTitle, 1, 0);
+        RoomInfoBox.add(roomId,0,0);
         RoomInfoBox.add(in, 2,1);
 
         //ChatRoomController랑 조정해서 구현
@@ -201,14 +266,7 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-                    // 현재 창을 종료한다.
-                    Stage currStage = (Stage) in.getScene().getWindow();
-                    currStage.close();
-                    // 새 창을 띄운다.
-                    Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/ChatRoom.fxml"));
-                    Scene scene = new Scene(root);
-                    stage.setScene(scene);
-                    stage.show();
+                    System.out.println("입장 신청 완료");
                 } catch (Exception e){
                     e.printStackTrace();
                 }
