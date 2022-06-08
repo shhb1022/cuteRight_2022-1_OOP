@@ -220,26 +220,26 @@ public class DAO {
            }
        }
    }
-   //회원가입시 중복아이디 검사 미작동..
+   //회원가입시 중복아이디 검사 수정 완료-0608
    public static boolean checkDuplicate(int std_id) {
        Connection con = null;
        Statement stmt = null;
        PreparedStatement pstmt = null;
        ResultSet rs = null;
-       String SQL = "SELECT std_id FROM Users";
+       String SQL = "SELECT ifnull(max(std_id),0) std_id FROM Users WHERE std_id = ?";
        try {
            con = makeConnection();
            pstmt=con.prepareStatement(SQL);
-           //pstmt.setInt(1, std_id);
+           pstmt.setInt(1, std_id);
            rs = pstmt.executeQuery();
            if(rs.next()) {
-               if(rs.getString("std_id").contentEquals(toString(std_id))) {
-                   return false;//이미 회원가입된 학번
-               }
-               else {
-                   return true;//중복된 아이디 없으므로 회원가입 가능 상태
-               }
+              if(rs.getString(1).contentEquals("0")) {
+                  return true; //중복된 아이디 없으므로 회원가입 가능 상태
+              }
            }
+           else {
+             return false;//이미 회원가입된 학번
+           }           
        } catch (SQLException e) {
            // TODO Auto-generated catch block
            e.printStackTrace();

@@ -49,9 +49,7 @@ public class SignInController implements Initializable {
             jobInput.setPromptText("예:프론트, 백엔드");
         }
 
-
-
-        //아이디가 숫자 9자리가 아닌경우, 비밀번호가 없는 경우 예외처리해야함
+        //아이디가 숫자 9자리가 아닌경우, 비밀번호가 없는 경우 예외처리해야함 => 예외처리 완료
     	signUpDoneBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
@@ -59,6 +57,7 @@ public class SignInController implements Initializable {
                 String std_id = newIdInput.getText();
                 String d_job = jobInput.getText();
                 String pwd = newPwdInput.getText();
+                boolean isNumeric =  std_id.matches("[+-]?\\d*(\\.\\d+)?");
 
                 if(name==""){
                     Alert alert = new Alert(AlertType.INFORMATION);
@@ -67,10 +66,17 @@ public class SignInController implements Initializable {
                     alert.showAndWait();
                     return;
                 }
-                if(std_id.length()!=9) {
+                if(std_id.length()!=9) { //std_id에 입력한 값이 9자리인지 확인
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setHeaderText(null);
                     alert.setContentText("학번 9자리를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
+                if(!isNumeric) { //std_id에 입력한 값이 숫자인지 확인
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("아이디에 숫자를 입력하세요.");
                     alert.showAndWait();
                     return;
                 }
@@ -81,13 +87,18 @@ public class SignInController implements Initializable {
                     alert.showAndWait();
                     return;
                 }
+                if(d_job==""){ //희망직무도 not null이라 추가
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("희망직무를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
 
-                //signinhandler를 보면 200 or 400으로 밖에 전송을 안해서 옳은 예외처리가 불가능
-
-
+                //signinhandler를 보면 200 or 400으로 밖에 전송을 안해서 옳은 예외처리가 불가능 => 회원가입 예외처리 완료 0608
 
                 System.out.println("이름: " + name);
-                System.out.println("아이디" + std_id);
+                System.out.println("아이디: " + std_id);
                 System.out.println("직업: " + d_job);
                 System.out.println("패스워드: " + pwd); 
                 
@@ -123,19 +134,17 @@ public class SignInController implements Initializable {
                         Stage currStage = (Stage) signUpDoneBtn.getScene().getWindow();
                         currStage.close();
 
-                        // 새 창을 띄운다.
-                        Stage stage = new Stage();
-                        Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Login.fxml"));
-                        Scene scene = new Scene(root);
-                        stage.setScene(scene);
-                        stage.show();
-                		
+						/* 새 창 띄우는 부분 주석처리 0608-sh
+						 * // 새 창을 띄운다. Stage stage = new Stage(); Parent root = (Parent)
+						 * FXMLLoader.load(getClass().getResource("/Client/Views/Login.fxml")); Scene
+						 * scene = new Scene(root); stage.setScene(scene); stage.show();
+						 */
                 		}
                 	else if (http.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
                 		// 경고 메세지를 출력한다.
                 		Alert alert = new Alert(AlertType.INFORMATION);                            
                 		alert.setHeaderText(null);
-                		alert.setContentText("아이디가 중복됩니다.");
+                		alert.setContentText("중복된 아이디입니다.");
                 		alert.showAndWait();
                 		}
                 	else if (http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
