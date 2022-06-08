@@ -85,7 +85,7 @@ public class MessagePacker {
         return byteArray;
     }
 
-    private static int byteArrayToInt(byte[] b, int lengthDiv) {
+    public static int byteArrayToInt(byte[] b, int lengthDiv) {
         int byteInt = 0;
         if (lengthDiv == 2) {
             byteInt = ((b[1] & 0xFF) << 8) | (b[0] & 0xFF);

@@ -115,6 +115,8 @@ public class ChatRoomController implements Initializable {
             // 소켓을 연결한다.
             SocketConnection.connect();
             socket = SocketConnection.socket;
+            byte[] data = MessagePacker.intToByteArray(room_id, 2);
+            send(data);
 
             URL url = new URL("http://localhost:3000/chatMessage?room_id="+room_id);
             HttpURLConnection http = (HttpURLConnection) url.openConnection();

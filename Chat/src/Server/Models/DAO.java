@@ -693,7 +693,7 @@ public class DAO {
          
          //받은 시간
          LocalTime now = LocalTime.now();
-         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
+         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
          String formatedNow = now.format(formatter);
          
          insert+="('"+Chat.getStd_id()+"','"+Chat.getRoom_id()+"','"+Chat.getMessage()+"','"+formatedNow+"')";

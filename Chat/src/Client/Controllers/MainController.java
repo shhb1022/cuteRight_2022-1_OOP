@@ -43,8 +43,6 @@ public class MainController implements Initializable {
 
 	@SuppressWarnings("unchecked")
 	public void initialize(URL location, ResourceBundle resources) {
-
-
         ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
         chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();

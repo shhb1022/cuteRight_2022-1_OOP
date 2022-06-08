@@ -70,7 +70,7 @@ public class MessagePacker {
     public String getStdId() { return (String) body.get("std_Id"); }
     public String getRoomId() { return (String) body.get("room_Id"); }
 
-    private static byte[] intToByteArray(int value, int lengthDiv) {
+    public static byte[] intToByteArray(int value, int lengthDiv) {
         byte[] byteArray = new byte[lengthDiv];
         if (lengthDiv == 2){
             byteArray[0] = (byte) value;
