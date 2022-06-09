@@ -40,7 +40,13 @@ public class AdmissionHandler implements HttpHandler {
             if(method.equals("PROPOSAL")) {
                 dao.addRequest(std_id, room_id);
             } else if (method.equals("ACCEPT")) {
-                dao.setAccept(std_id, room_id);
+               //제한인원>현재인원일 때만 입장 수락 가능
+               if(dao.checkAccept(room_id)) {
+                    dao.setAccept(std_id, room_id);
+               }
+               else { //리더에게 '제한인원이 꽉 차서 입장수락 불가능한 상태~' 안내 팝업 출력
+                  exchange.sendResponseHeaders(409, 0); 
+               }
             } else if (method.equals("REFUSE")) {
                 dao.setForbid(std_id, room_id);
             }
