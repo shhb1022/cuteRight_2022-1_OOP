@@ -36,12 +36,13 @@ public class AdmissionHandler implements HttpHandler {
             System.out.println("std_id = "+ std_id + " Room_id = "+room_id);
 
             String method = exchange.getRequestMethod();
+            DAO dao = new DAO();
             if(method.equals("PROPOSAL")) {
-                DAO.addRequest(std_id, room_id);
+                dao.addRequest(std_id, room_id);
             } else if (method.equals("ACCEPT")) {
-                DAO.setAccept(std_id, room_id);
+                dao.setAccept(std_id, room_id);
             } else if (method.equals("REFUSE")) {
-                DAO.setForbid(std_id, room_id);
+                dao.setForbid(std_id, room_id);
             }
             // Send Response Headers
             exchange.sendResponseHeaders(200, 0);
