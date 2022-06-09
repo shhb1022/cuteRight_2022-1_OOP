@@ -229,8 +229,9 @@ public class MainController implements Initializable {
                     else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
                     	Alert alert = new Alert(AlertType.INFORMATION);
                     	alert.setHeaderText(null);
-                        alert.setContentText("입장할 수 없는 방 입니다.(갱신이 필요합니다.)");
+                        alert.setContentText("입장할 수 없는 방 입니다.");
                         alert.showAndWait();
+                        //자동 갱신 필요
                     }
                 } catch (Exception e){
                     e.printStackTrace();
@@ -261,13 +262,28 @@ public class MainController implements Initializable {
         RoomInfoBox.add(roomId,0,0);
         RoomInfoBox.add(in, 2,1);
 
-        //ChatRoomController랑 조정해서 구현
+        //입장 신청 (메소드 오류 발생)
         in.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
-
                 try {
-                    System.out.println("입장 신청 완료");
+                    URL url = new URL("http://localhost:3000/admission?std_id="+UserInfo.getId()+"&room_id="+room_id);
+                    HttpURLConnection http = (HttpURLConnection)url.openConnection();
+                    http.setRequestMethod("PROPOSAL");
+                    
+                    if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                    	Alert alert = new Alert(AlertType.INFORMATION);
+                    	alert.setHeaderText(null);
+                    	alert.setContentText(room_id+"의 입장 신청이 완료되었습니다");
+                    	alert.showAndWait();
+                    	//자동갱신 필요
+                    }
+                    else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+                    	Alert alert = new Alert(AlertType.INFORMATION);
+                    	alert.setHeaderText(null);
+                    	alert.setContentText("오류가 발생했습니다.");
+                    	alert.showAndWait();
+                    }
                 } catch (Exception e){
                     e.printStackTrace();
                 }
