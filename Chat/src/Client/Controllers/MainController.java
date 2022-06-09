@@ -269,7 +269,7 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-                    URL url = new URL("http://localhost:3000/chatRoom1234?room_id="+room_id+"&std_id="+UserInfo.getId());
+                    URL url = new URL("http://localhost:3000/chatRoom?room_id="+room_id+"&std_id="+UserInfo.getId());
                     HttpURLConnection http = (HttpURLConnection)url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Admission","PROPOSAL");
@@ -290,8 +290,6 @@ public class MainController implements Initializable {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-
-
             }
         });
 
