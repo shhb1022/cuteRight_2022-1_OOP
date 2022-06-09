@@ -137,6 +137,7 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
+                	//이 부분에 요청이 왜 필요한가요?
                     URL url = new URL("http://localhost:3000/main");
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
@@ -211,6 +212,7 @@ public class MainController implements Initializable {
                 	URL url = new URL("http://localhost:3000/chatRoom?room_id="+room_id+"&std_id="+UserInfo.getId());
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
+                    http.setRequestProperty("Admission","ENTRANCE");
                     
                     if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
             			UserInfo.setRoom_id(room_id);
@@ -267,14 +269,15 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-                    URL url = new URL("http://localhost:3000/admission?std_id="+UserInfo.getId()+"&room_id="+room_id);
+                    URL url = new URL("http://localhost:3000/chatRoom1234?room_id="+room_id+"&std_id="+UserInfo.getId());
                     HttpURLConnection http = (HttpURLConnection)url.openConnection();
-                    http.setRequestMethod("PROPOSAL");
+                    http.setRequestMethod("GET");
+                    http.setRequestProperty("Admission","PROPOSAL");
                     
                     if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     	Alert alert = new Alert(AlertType.INFORMATION);
                     	alert.setHeaderText(null);
-                    	alert.setContentText(room_id+"의 입장 신청이 완료되었습니다");
+                    	alert.setContentText(room_id+" 방의 입장 신청이 완료되었습니다");
                     	alert.showAndWait();
                     	//자동갱신 필요
                     }
