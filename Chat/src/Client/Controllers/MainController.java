@@ -265,6 +265,7 @@ public class MainController implements Initializable {
         in.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
+
                 try {
                     System.out.println("입장 신청 완료");
                 } catch (Exception e){

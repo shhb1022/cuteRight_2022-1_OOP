@@ -22,7 +22,7 @@ public class DAO {
          System.out.println("드라이버 적재 성공");
          con = DriverManager.getConnection("jdbc:sqlite:Chat_Server.db");
          System.out.println("데이터베이스 연결 성공");
-         
+
       } catch (ClassNotFoundException e) {
          System.out.println("드라이버를 찾을 수 없습니다.");
       } catch (SQLException e) {
@@ -30,10 +30,10 @@ public class DAO {
       }
       return con;
    }
-   
-   //로그인 id,pwd 비교해서 로그인-> select하고 동시에 update하는게 복잡한것 같아서 
+
+   //로그인 id,pwd 비교해서 로그인-> select하고 동시에 update하는게 복잡한것 같아서
    //로그인 성공시 state=1로 변경은 로그인 핸들러부분에서 lg=1이면 dao.setLogin(std_id) 이거 한번 더 실행시키는 방식이 좋아보임,,
-   public static int checkLogin(int std_id, String pwd) {
+   public int checkLogin(int std_id, String pwd) {
        Connection con = null;
        //Statement stmt = null;
        PreparedStatement pstmt = null;
@@ -69,7 +69,7 @@ public class DAO {
    }
       
    //로그인 가능한 상태인지 확인
-   public static boolean checkState(int std_id) {
+   public boolean checkState(int std_id) {
        Connection con = null;
        Statement stmt = null;
        PreparedStatement pstmt = null;
@@ -105,7 +105,7 @@ public class DAO {
     }
 
     //로그인 성공시 state=1으로 변경
-    public static int setLogin(int std_id) {
+    public int setLogin(int std_id) {
         Connection con = null;
         Statement stmt = null;
         String update = "UPDATE Users SET state = 1 WHERE std_id = "+std_id;
@@ -131,7 +131,7 @@ public class DAO {
         return -2;//db 오류
     }
     //로그아웃 가능한 상태인지 확인
-    public static boolean checkState2(int std_id) {
+    public boolean checkState2(int std_id) {
         Connection con = null;
         Statement stmt = null;
         PreparedStatement pstmt = null;
@@ -167,7 +167,7 @@ public class DAO {
     }
 
     //로그아웃 state=0으로 변경
-    public static int setLogout(int std_id) {
+    public int setLogout(int std_id) {
         Connection con = null;
         Statement stmt = null;
         String update = "UPDATE Users SET state = 0 WHERE std_id = "+std_id;
@@ -193,7 +193,7 @@ public class DAO {
         return -2;//db 오류
     }
    //회원가입
-   public static boolean addSignUp(UsersDTO Users) {
+   public boolean addSignUp(UsersDTO Users) {
        Connection con = null;
        Statement stmt = null;
        try {
@@ -221,7 +221,7 @@ public class DAO {
        }
    }
    //회원가입시 중복아이디 검사 수정 완료-0608
-   public static boolean checkDuplicate(int std_id) {
+   public boolean checkDuplicate(int std_id) {
        Connection con = null;
        Statement stmt = null;
        PreparedStatement pstmt = null;
@@ -256,13 +256,13 @@ public class DAO {
    }
 
    //checkDuplicate에서 std_id string으로 사용하기 위한 사전작업
-   private static StringBuffer toString(int std_id) {
+   private StringBuffer toString(int std_id) {
       // TODO Auto-generated method stub
       return null;
    }
 
     //내채팅방 출력 이전에 std_id & member 값을 비교해서 room_id를 가져옴
-    public static ArrayList<Integer> getMyRoomId(int std_id){
+    public ArrayList<Integer> getMyRoomId(int std_id){
         Connection con = null;
         Statement stmt= null;
         ResultSet rs = null;
@@ -293,7 +293,7 @@ public class DAO {
     }
 
     //getMyRoom메서드를 통해 room_id를 받은 후, 내 채팅방 상세 정보와 출력
-    public static ChatRoomInfoDTO getMyRoomInfo(int room_id){
+    public ChatRoomInfoDTO getMyRoomInfo(int room_id){
         Connection con = null;
         Statement stmt= null;
         ResultSet rs = null;
@@ -370,7 +370,7 @@ public class DAO {
    }
    
    //전체 채팅방 목록 가져오기(오픈채팅방 목록 구하기 위함)
-   public static ArrayList<ChatRoomInfoDTO> getAllRoom(int std_id){
+   public ArrayList<ChatRoomInfoDTO> getAllRoom(int std_id){
 	      Connection con = null;
 	      Statement stmt= null;
 	      ResultSet rs = null;
@@ -409,7 +409,7 @@ public class DAO {
 	   }
    
    //모든 user 정보 가져오기->방 생성 시 친구 선택할 때 필요
-   public static ArrayList<UsersDTO> getAllUsers(){
+   public ArrayList<UsersDTO> getAllUsers(){
       Connection con = null;
       Statement stmt= null;
       ResultSet rs = null;
@@ -447,7 +447,7 @@ public class DAO {
     //방 생성 정보 추가
     //room_id는 AI 설정해놓긴 했다만, 추가적인 작업 필요없나?
     //방을 생성한 leader에 대해 addMember 수행, Cur_Person 증가 수행(cur_person=1로 삽입 시 Cur_person 증가 수행은 필요 없음)
-    public static int addRoom(ChatRoomInfoDTO room) {
+    public int addRoom(ChatRoomInfoDTO room) {
         Connection con = null;
         Statement stmt = null;
         int generated_key = 0;
@@ -485,7 +485,7 @@ public class DAO {
     }
    
    //user들의 join=1 상태 참가로 추가(채팅방 생성할 때 선택한 친구 추가하는 메서드로, 입장 신청과는 별개)
-   public static void addMember(int user_id,int room_id) {
+   public void addMember(int user_id,int room_id) {
       Connection con = null;
        Statement stmt = null;
        try {
@@ -520,7 +520,7 @@ public class DAO {
    }
    
    //현재인원 증가
-   public static void increCur_person(int room_id) {
+   public void increCur_person(int room_id) {
       Connection con = null;
        Statement stmt = null;
        String update = "UPDATE ChatRoomInfo SET cur_person=cur_person+1 WHERE room_id = "+room_id;
@@ -644,7 +644,7 @@ public class DAO {
 
     //설계명세서 상의 이름으로 메서드 이름 변경_0607
     // 채팅방 입장시 채팅내용 출력
-    public static ArrayList<ChatMessageDTO> getRoomMessage(int room_id) {
+    public ArrayList<ChatMessageDTO> getRoomMessage(int room_id) {
         Connection con = null;
         Statement stmt= null;
         ResultSet rs = null;
@@ -684,7 +684,7 @@ public class DAO {
    
    //설계명세서 상의 이름으로 메서드 이름 변경_0607
    // 받은 메시지를 db에 추가
-   public static void addMessage(ChatMessageDTO Chat){
+   public void addMessage(ChatMessageDTO Chat){
       Connection con = null;
       Statement stmt = null;
       try {
@@ -718,7 +718,7 @@ public class DAO {
       }
    }
    //입장신청, member=0으로 추가
-   public static boolean addRequest(int std_id, int room_id) {
+   public boolean addRequest(int std_id, int room_id) {
 	   Connection con = null;
        Statement stmt = null;
        try {
@@ -747,7 +747,7 @@ public class DAO {
    }
 
     //입장수락, member=1로 변경
-    public static int setAccept(int std_id, int room_id) {
+    public int setAccept(int std_id, int room_id) {
         Connection con = null;
         Statement stmt = null;
         String update = "UPDATE ChatRoomJoin SET member = 1 WHERE std_id = " + std_id + " and room_id = " + room_id;
@@ -774,7 +774,7 @@ public class DAO {
     }
 
     //입장거절&강제퇴장, member=2로 변경
-    public static int setForbid(int std_id, int room_id) {
+    public int setForbid(int std_id, int room_id) {
         Connection con = null;
         Statement stmt = null;
         String update = "UPDATE ChatRoomJoin SET member = 2 WHERE std_id = " + std_id + " and room_id = " + room_id;
@@ -802,7 +802,7 @@ public class DAO {
 
     //
     // 채팅 시 이름 출력때문에 있는듯?
-    public static String stdName(int user_id){
+    public String stdName(int user_id){
         Connection con = null;
         Statement stmt = null;
         ResultSet rs = null;

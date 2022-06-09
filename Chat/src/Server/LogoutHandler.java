@@ -19,14 +19,15 @@ public class LogoutHandler implements HttpHandler {
             // Write Response Body
             String method = exchange.getRequestMethod();
             Headers headers = exchange.getRequestHeaders();
+            DAO dao = new DAO();
             if(method.equals("GET")) {
                 String author = headers.getFirst("Authorization");
                 int id = Integer.parseInt(author);
 
-                boolean checkstate = DAO.checkState2(id);
+                boolean checkstate = dao.checkState2(id);
 
                 if(checkstate) {
-                        DAO.setLogout(id);
+                        dao.setLogout(id);
                         exchange.sendResponseHeaders(200, 0);
                     } else {
                         exchange.sendResponseHeaders(409, 0);

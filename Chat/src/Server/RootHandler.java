@@ -24,20 +24,20 @@ public class RootHandler implements HttpHandler {
         try {
             // Write Response Body
             String method = exchange.getRequestMethod();
+            DAO dao = new DAO();
             if(method.equals("GET")) {
                 // std_id 받아오기
                 String[] querys = exchange.getRequestURI().getQuery().split("=");
                 int id = Integer.parseInt(querys[1]);
                 System.out.println("id = "+ id);
-                DAO dao = new DAO();
 
                 // 받은 std_id가 0보다 작으면 오픈채팅, 0보다 크면 내 채팅방 목록을 가져온다.
                 JSONArray list = new JSONArray();
                 if(id > 0) {
                     // 내 채팅방 목록 가져와서 json형식으로 변환
-                    ArrayList<Integer> room_ids = DAO.getMyRoomId(id);
+                    ArrayList<Integer> room_ids = dao.getMyRoomId(id);
                     for(Integer room_id : room_ids) {
-                        ChatRoomInfoDTO room = DAO.getMyRoomInfo(room_id);
+                        ChatRoomInfoDTO room = dao.getMyRoomInfo(room_id);
                         System.out.println("room_id: " + room_id + " room: " + room.toJSONString());
                         list.add(room.toJSONObject());
                     }

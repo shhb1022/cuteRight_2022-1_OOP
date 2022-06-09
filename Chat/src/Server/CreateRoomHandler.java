@@ -27,6 +27,7 @@ public class CreateRoomHandler implements HttpHandler {
         // Initialize Response Body
         OutputStream respBody = exchange.getResponseBody();
         InputStream requBody = exchange.getRequestBody();
+        DAO dao = new DAO();
 
         try {
             // Write Response Body
@@ -34,7 +35,7 @@ public class CreateRoomHandler implements HttpHandler {
             if(method.equals("GET")) {
             	System.out.println("get userlist request");
             	//유저 정보를 가져온다.
-                ArrayList<UsersDTO> allUsers =  DAO.getAllUsers();
+                ArrayList<UsersDTO> allUsers =  dao.getAllUsers();
                 
                 //유저 정보의 일부만 넘겨준다.
                 JSONArray list = new JSONArray();
@@ -81,7 +82,7 @@ public class CreateRoomHandler implements HttpHandler {
                 
                 //System.out.println("title:"+Room.get("title")+" limit_person:"+Room.get("limit_person")+" leader_id:"+Room.get("leader_id"));
                 ChatRoomInfoDTO crateRoomDTO = new ChatRoomInfoDTO(0,title,limit_person,0,leader_id);
-                int room_id = DAO.addRoom(crateRoomDTO);
+                int room_id = dao.addRoom(crateRoomDTO);
                 System.out.println("success to create Room, Room_id: "+room_id);
 
                 JSONArray std_ids = (JSONArray) list.get(1);
@@ -89,8 +90,8 @@ public class CreateRoomHandler implements HttpHandler {
                 for(Object obj : std_ids) {
                     int std_id = Integer.parseInt((String) obj);
                     System.out.println("Add std_id: " +obj +" to "+room_id);
-                    DAO.addMember(std_id, room_id);
-                    DAO.increCur_person(room_id);
+                    dao.addMember(std_id, room_id);
+                    dao.increCur_person(room_id);
                 }
                 System.out.println("success to add friend user");
                 exchange.sendResponseHeaders(201, 0);

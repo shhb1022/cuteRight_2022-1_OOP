@@ -26,13 +26,14 @@ public class ChatMessageHandler implements HttpHandler {
             String method = exchange.getRequestMethod();
             if(method.equals("GET")) {
                 String room_id;
+                DAO dao = new DAO();
                 // 일단 room id가 쿼리로 들어왔을 때만 전제한다.
                 // Url 쿼리에서 room_id를 받아온다.
                 String query = exchange.getRequestURI().getQuery();
                 String[] q  = query.split("=",2);
                 if(q[0].equals("room_id")) {
                     room_id = q[1];
-                    ArrayList<ChatMessageDTO> messages =  DAO.getRoomMessage(Integer.parseInt(room_id));
+                    ArrayList<ChatMessageDTO> messages =  dao.getRoomMessage(Integer.parseInt(room_id));
                     JSONArray list = new JSONArray();
                     for(ChatMessageDTO msg : messages) {
                         JSONObject obj = new JSONObject();

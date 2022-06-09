@@ -39,13 +39,15 @@ public class SignInHandler implements HttpHandler {
 				user.setPwd((String) obj.get("pwd"));
 				user.setState((int) (long) obj.get("state"));
 
+				DAO dao = new DAO();
+
 				System.out.println(user.toJSONString());
 
-				boolean flag = DAO.checkDuplicate(user.getStd_id());
+				boolean flag = dao.checkDuplicate(user.getStd_id());
 
 				//flag를 통해 아이디 중복체크 통과했을 때만 회원 정보 db에 보냄
 				if (flag) {
-					boolean success = DAO.addSignUp(user);
+					boolean success = dao.addSignUp(user);
 					if (success) {
 						// 응답코드 설정
 						System.out.println("회원가입 완료");
@@ -64,7 +66,6 @@ public class SignInHandler implements HttpHandler {
 				 * System.out.println("회원가입 완료"); exchange.sendResponseHeaders(201,0); } else {
 				 * System.out.println("회원가입 실패"); exchange.sendResponseHeaders(400, 0); }
 				 */
-
 			}
 			// Close Stream
 			// 반드시, Response Header를 보낸 후에 닫아야함
