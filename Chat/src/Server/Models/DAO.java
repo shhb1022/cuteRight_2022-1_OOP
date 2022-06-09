@@ -371,42 +371,42 @@ public class DAO {
    
    //전체 채팅방 목록 가져오기(오픈채팅방 목록 구하기 위함)
    public ArrayList<ChatRoomInfoDTO> getAllRoom(int std_id){
-	      Connection con = null;
-	      Statement stmt= null;
-	      ResultSet rs = null;
-	      ArrayList<ChatRoomInfoDTO> result = new ArrayList<ChatRoomInfoDTO>();
-	      try {
-	         con = makeConnection();
-	         stmt = con.createStatement();
-	         rs = stmt.executeQuery("SELECT * FROM ChatRoomInfo");
-	         
-	         while(rs.next()) {
-	            ChatRoomInfoDTO chatRoom = new ChatRoomInfoDTO();
-	            
-	            chatRoom.setRoom_id(rs.getInt("room_id"));
-	            chatRoom.setTitle(rs.getString("title"));
-	            chatRoom.setLimit_person(rs.getInt("limit_person"));
-	            chatRoom.setCur_person(rs.getInt("cur_person"));
-	            chatRoom.setLeader_id(rs.getInt("leader_id"));
+         Connection con = null;
+         Statement stmt= null;
+         ResultSet rs = null;
+         ArrayList<ChatRoomInfoDTO> result = new ArrayList<ChatRoomInfoDTO>();
+         try {
+            con = makeConnection();
+            stmt = con.createStatement();
+            rs = stmt.executeQuery("SELECT * FROM ChatRoomInfo");
+            
+            while(rs.next()) {
+               ChatRoomInfoDTO chatRoom = new ChatRoomInfoDTO();
+               
+               chatRoom.setRoom_id(rs.getInt("room_id"));
+               chatRoom.setTitle(rs.getString("title"));
+               chatRoom.setLimit_person(rs.getInt("limit_person"));
+               chatRoom.setCur_person(rs.getInt("cur_person"));
+               chatRoom.setLeader_id(rs.getInt("leader_id"));
 
-	            result.add(chatRoom);
-	         }
-	         return result;
-	         
-	      } catch (SQLException e) {
-	         // TODO Auto-generated catch block
-	         e.printStackTrace();
-	         return null;
-	      } finally {
-	         try {
-	            if(rs != null) rs.close();
-	            if(stmt != null) stmt.close();
-	            if(con != null) con.close();
-	         } catch (Exception e2) {
-	            e2.printStackTrace();
-	         }
-	      }
-	   }
+               result.add(chatRoom);
+            }
+            return result;
+            
+         } catch (SQLException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+            return null;
+         } finally {
+            try {
+               if(rs != null) rs.close();
+               if(stmt != null) stmt.close();
+               if(con != null) con.close();
+            } catch (Exception e2) {
+               e2.printStackTrace();
+            }
+         }
+      }
    
    //모든 user 정보 가져오기->방 생성 시 친구 선택할 때 필요
    public ArrayList<UsersDTO> getAllUsers(){
@@ -719,7 +719,7 @@ public class DAO {
    }
    //입장신청, member=0으로 추가
    public boolean addRequest(int std_id, int room_id) {
-	   Connection con = null;
+      Connection con = null;
        Statement stmt = null;
        try {
            con = makeConnection();
@@ -744,6 +744,41 @@ public class DAO {
                e2.printStackTrace();
            }
        }
+   }
+   //입장수락 전, 제한인원>현재인원이면 true 반환
+   public boolean checkAccept(int room_id) {
+      Connection con = null;
+       Statement stmt = null;
+       PreparedStatement pstmt = null;
+       ResultSet rs = null;
+       String SQL = "SELECT limit_person, cur_person FROM ChatRoomInfo WHERE room_id = ?";
+       try {
+           con = makeConnection();
+           pstmt=con.prepareStatement(SQL);
+           pstmt.setInt(1, room_id);
+           rs = pstmt.executeQuery();
+           if(rs.next()) {
+               if(rs.getInt(1) > rs.getInt(2)) {
+                   return true;//입장수락 가능
+               }
+               else {
+                   return false;//제한인원이 꽉 찼으므로 입장수락 불가능
+               }
+           }
+           return false; //db에 아이디 존재하지 않음
+       } catch (SQLException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+       }finally {
+           try {
+               if(rs != null) rs.close();//5) 자원반납
+               if(stmt != null) stmt.close();
+               if(con != null) con.close();
+           } catch (Exception e2) {
+               e2.printStackTrace();
+           }
+       }
+       return false; //db 연결오류
    }
 
     //입장수락, member=1로 변경
