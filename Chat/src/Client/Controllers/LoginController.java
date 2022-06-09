@@ -28,14 +28,37 @@ public class LoginController implements Initializable {
         if(idInput.getText().equals("")) {
             idInput.setPromptText("학번(숫자)");
         }
-    	loginBtn.setOnAction(new EventHandler<ActionEvent>() {
+       loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 String id = idInput.getText();
                 String pw = pwdInput.getText();
+                boolean isNumeric =  id.matches("[+-]?\\d*(\\.\\d+)?");
 
                 System.out.println("아이디: " + id);
                 System.out.println("패스워드: " + pw);
+                
+                if(id==""){ //id 입력했는지 확인
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("비밀번호를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
+                if(!isNumeric) { //id에 입력한 값이 숫자인지 확인
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("아이디에 숫자를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
+                if(pw==""){ //비밀번호 입력했는지 확인
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("비밀번호를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
 
                 // 서버와 연결
                 try {
