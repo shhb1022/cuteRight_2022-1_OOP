@@ -34,7 +34,7 @@
       </Label>
       <HBox layoutX="81.0" layoutY="336.0" prefHeight="41.0" prefWidth="244.0">
          <children>
-            <PasswordField prefHeight="26.0" prefWidth="231.0" />
+            <PasswordField fx:id="pwdInput" prefHeight="26.0" prefWidth="231.0" />
          </children>
       </HBox>
       <Label layoutX="81.0" layoutY="308.0" prefHeight="27.0" prefWidth="70.0" text="비밀번호">
