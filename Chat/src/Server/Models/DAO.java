@@ -644,45 +644,45 @@ public class DAO {
        return false; //db 연결오류    
    }
 
-    //설계명세서 상의 이름으로 메서드 이름 변경_0607
-    // 채팅방 입장시 채팅내용 출력
-    public ArrayList<ChatMessageDTO> getRoomMessage(int room_id) {
-        Connection con = null;
-        Statement stmt= null;
-        ResultSet rs = null;
-        ArrayList<ChatMessageDTO> result = new ArrayList<ChatMessageDTO>();
-        try {
-            con = makeConnection();
-            stmt = con.createStatement();
-            rs = stmt.executeQuery("SELECT * FROM ChatMessage WHERE room_id = "+room_id);
+ //설계명세서 상의 이름으로 메서드 이름 변경_0607
+   // 채팅방 입장시 채팅내용 출력
+   public ArrayList<ChatMessageDTO> getRoomMessage(int room_id) {
+       Connection con = null;
+       Statement stmt= null;
+       ResultSet rs = null;
+       ArrayList<ChatMessageDTO> result = new ArrayList<ChatMessageDTO>();
+       try {
+           con = makeConnection();
+           stmt = con.createStatement();
+           rs = stmt.executeQuery("SELECT * FROM Users,ChatMessage NATURAL INNER JOIN (SELECT * FROM ChatMessage WHERE room_id = "+room_id+") WHERE Users.std_id=ChatMessage.std_id");
 
-            while(rs.next()) {
-                ChatMessageDTO chat = new ChatMessageDTO();
+           while(rs.next()) {
+               ChatMessageDTO chat = new ChatMessageDTO();
+               chat.setStd_id(rs.getInt("std_id"));
+               chat.setRoom_id(room_id);
+               chat.setName(rs.getString("name"));
+               chat.setMessage(rs.getString("message"));
+               chat.setTime(rs.getString("time"));
 
-                chat.setStd_id(rs.getInt("std_id"));
-                chat.setRoom_id(room_id);
-                chat.setMessage(rs.getString("message"));
-                chat.setTime(rs.getString("time"));
+               result.add(chat);
+           }
 
-                result.add(chat);
-            }
+           return result;
 
-            return result;
-
-        } catch (SQLException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            return null;
-        } finally {
-            try {
-                if(rs != null) rs.close();//5) 자원반납
-                if(stmt != null) stmt.close();
-                if(con != null) con.close();
-            } catch (Exception e2) {
-                e2.printStackTrace();
-            }
-        }
-    }
+       } catch (SQLException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+           return null;
+       } finally {
+           try {
+               if(rs != null) rs.close();//5) 자원반납
+               if(stmt != null) stmt.close();
+               if(con != null) con.close();
+           } catch (Exception e2) {
+               e2.printStackTrace();
+           }
+       }
+   }
    
    //설계명세서 상의 이름으로 메서드 이름 변경_0607
    // 받은 메시지를 db에 추가

@@ -116,7 +116,7 @@ public class ChattingServer {
 
                             // ChatMessageDTO를 DB에 저장
                             DAO dao = new DAO();
-                            ChatMessageDTO chat = new ChatMessageDTO(packet.getStdId(), packet.getRoomId(), packet.getMessage());
+                            ChatMessageDTO chat = new ChatMessageDTO(packet.getStdId(), packet.getRoomId(), packet.getName(), packet.getMessage());
                             dao.addMessage(chat);
 
                             // 모든 클라이언트에 send

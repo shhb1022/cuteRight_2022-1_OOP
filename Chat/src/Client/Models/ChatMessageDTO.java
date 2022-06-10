@@ -6,19 +6,22 @@ public class ChatMessageDTO {
 
 	int std_id;
 	int room_id;
+	String name;
 	String message;
 	String time;
 	
-	public ChatMessageDTO(int std_id, int room_id, String message) {
+	public ChatMessageDTO(int std_id, int room_id, String name, String message) {
 		this.std_id = std_id;
 		this.room_id = room_id;
+		this.name=name;
 		this.message = message;
 		this.time = null;
 	}
 	
-	public ChatMessageDTO(int std_id, int room_id, String message, String time) {
+	public ChatMessageDTO(int std_id, int room_id, String name, String message, String time) {
 		this.std_id = std_id;
 		this.room_id = room_id;
+		this.name=name;
 		this.message = message;
 		this.time = time;
 	}
@@ -47,6 +50,14 @@ public class ChatMessageDTO {
 		this.room_id = room_id;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	public String getMessage() {
 		return message;
 	}
@@ -67,6 +78,7 @@ public class ChatMessageDTO {
 		JSONObject obj = new JSONObject();
 		obj.put("std_id", this.std_id);
 		obj.put("room_id", this.room_id);
+		obj.put("name", this.name);
 		obj.put("message", this.message);
 		obj.put("time", this.time);
 		return obj;
