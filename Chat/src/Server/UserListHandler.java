@@ -27,7 +27,7 @@ public class UserListHandler implements HttpHandler {
             String method = exchange.getRequestMethod();
             DAO dao = new DAO();
             if(method.equals("GET")) {
-                // std_id 받아오기
+                // room_id 받아오기
                 String[] querys = exchange.getRequestURI().getQuery().split("=");
                 int room_id = Integer.parseInt(querys[1]);
                 System.out.println("room_id = "+ room_id);
