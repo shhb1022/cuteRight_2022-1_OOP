@@ -53,10 +53,12 @@ public class ChatRoomController implements Initializable {
             @Override
             public void handle(KeyEvent k) {
                 if(k.getCode().equals(KeyCode.ENTER)) {
-                    // 채팅 메세지를 전송한다.
-                    MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(),chatInput.getText());
-                    send(packet.getPacket());
-                    chatInput.clear();
+                	//빈값이 아닌경우 채팅 메세지를 전송한다
+                	if(chatInput.getText().length() != 0) {
+                		MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), chatInput.getText());
+                        send(packet.getPacket());
+                        chatInput.clear();
+                	}
                 }
             }
         });
