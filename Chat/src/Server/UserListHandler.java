@@ -1,19 +1,16 @@
 package Server;
 
-import Server.Models.ChatRoomInfoDTO;
 import Server.Models.ChatRoomMemberDTO;
 import Server.Models.DAO;
 import com.sun.net.httpserver.Headers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.io.*;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-import java.util.List;
 
 public class UserListHandler implements HttpHandler {
 
@@ -27,12 +24,12 @@ public class UserListHandler implements HttpHandler {
             String method = exchange.getRequestMethod();
             DAO dao = new DAO();
             if(method.equals("GET")) {
-                // std_id 받아오기
+                // room_id 받아오기
                 String[] querys = exchange.getRequestURI().getQuery().split("=");
                 int room_id = Integer.parseInt(querys[1]);
                 System.out.println("room_id = "+ room_id);
 
-                // 받은 std_id가 0보다 작으면 오픈채팅, 0보다 크면 내 채팅방 목록을 가져온다.
+                // 방과 관련된 유저의 정보를 가져온다.
                 JSONArray list = new JSONArray();
                 ArrayList<ChatRoomMemberDTO> members = dao.getRoomMembers(room_id);
                 for(ChatRoomMemberDTO member : members) {

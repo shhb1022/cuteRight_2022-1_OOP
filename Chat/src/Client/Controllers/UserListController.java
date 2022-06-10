@@ -12,7 +12,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -21,26 +20,16 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import Client.*;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
-import javafx.stage.Stage;
 
 import Client.Models.*;
 
 public class UserListController implements Initializable {
-//    Socket socket = null;
     @FXML private Button backBtn2;
     @FXML private ListView entranceDisplay,watingDisplay;
     ObservableList<GridPane> ListEntrance = FXCollections.observableArrayList();
@@ -78,8 +67,10 @@ public class UserListController implements Initializable {
     			JSONParser parser = new JSONParser();
     			JSONArray list = (JSONArray)parser.parse(br);
     			
+    			//리스트 초기화
     			ListEntrance.clear();
     			ListWating.clear();
+    			
     			for(int i=0; i<list.size(); i++) {
     				JSONObject obj = (JSONObject) list.get(i);
     				
@@ -93,6 +84,7 @@ public class UserListController implements Initializable {
     				
     				ChatRoomMemberDTO member =new ChatRoomMemberDTO(std_id,room_id,member_S,name,d_job,state);
     				
+    				//1이면 접속인원 0이면 대기인원 나머지는 무시
     				if(member.getMember().equals("1")) {
     					ListEntrance.add(EntranceInfoBox(member));
     				}else if(member.getMember().equals("0")) {
@@ -107,6 +99,7 @@ public class UserListController implements Initializable {
     	}
     }
     
+    //접속유저
     public GridPane EntranceInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
         Label userState = new Label();
@@ -131,16 +124,11 @@ public class UserListController implements Initializable {
         userInfoBox.add(userJob, 3, 0);
         userInfoBox.add(banBtn, 4, 0);
         
-        //내가 방장이거나 member 이름이 갖지 않다면 활성화
-        System.out.println(Status.getCurrentRoom().getLeader_id());
-        System.out.println(Integer.parseInt(Status.getId()));
-        System.out.println(member.getStd_id());
+        //내가 방장이거나 member의 이름 나와 갖지 않다면 활성화
         if((Status.getCurrentRoom().getLeader_id() == Integer.parseInt(Status.getId())) && !(member.getStd_id().equals(Status.getId()))) {
-        	System.out.println("버튼 활성화");
         	banBtn.setDisable(false);
         }
         else {
-        	System.out.println("버튼 비활성화");
         	banBtn.setDisable(true);
         }
         
@@ -156,16 +144,14 @@ public class UserListController implements Initializable {
 					if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
-						alert.setContentText(Status.getId()+"가 방에서 퇴장 당하였습니다");
+						alert.setContentText(member.getName()+"가 방에서 퇴장 당하였습니다");
 						alert.showAndWait();
-						//재갱신
 					}
 					else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
 						alert.setContentText("오류가 발생하였습니다.");
 						alert.showAndWait();
-						//재갱신
 					}
 					
 				} catch (Exception e) {
@@ -179,6 +165,7 @@ public class UserListController implements Initializable {
         return userInfoBox;
     }
     
+    //대기 유저
     public GridPane WatingInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
         Label userState = new Label();
@@ -207,15 +194,11 @@ public class UserListController implements Initializable {
         userInfoBox.add(refuseBtn, 5, 0);
         
         //내가 방장이면 활성화
-        System.out.println(Status.getCurrentRoom().getLeader_id());
-        System.out.println(Integer.parseInt(Status.getId()));
         if(Status.getCurrentRoom().getLeader_id() == Integer.parseInt(Status.getId())) {
-        	System.out.println("버튼 활성화");
         	acceptBtn.setDisable(false);
         	refuseBtn.setDisable(false);
         }
         else {
-        	System.out.println("버튼 비활성화");
         	acceptBtn.setDisable(true);
         	refuseBtn.setDisable(true);
         }
@@ -232,16 +215,14 @@ public class UserListController implements Initializable {
 					if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
-						alert.setContentText(Status.getId()+"를(을) 수락하였습니다.");
+						alert.setContentText(member.getName()+"를(을) 수락하였습니다.");
 						alert.showAndWait();
-						//재갱신
 					}
 					else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
 						alert.setContentText("오류가 발생하였습니다.");
 						alert.showAndWait();
-						//재갱신
 					}
 					
 				} catch (Exception e) {
@@ -251,6 +232,7 @@ public class UserListController implements Initializable {
     			roomUsersList();
     		}
     	});
+        
         refuseBtn.setOnAction(new EventHandler<ActionEvent>() {
     		public void handle(ActionEvent event) {
     			System.out.println(member.getName()+" 거절");
@@ -263,7 +245,7 @@ public class UserListController implements Initializable {
 					if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
-						alert.setContentText(Status.getId()+"를(을) 거절하였습니다.");
+						alert.setContentText(member.getName()+"를(을) 거절하였습니다.");
 						alert.showAndWait();
 						//재갱신
 					}
