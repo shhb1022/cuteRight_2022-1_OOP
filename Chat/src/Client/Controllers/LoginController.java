@@ -1,6 +1,6 @@
 package Client.Controllers;
 
-import Client.UserInfo;
+import Client.Status;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -75,8 +75,8 @@ public class LoginController implements Initializable {
                     System.out.println("getResponseMessage():" + http.getResponseMessage());
                     if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
                         // 유저 정보를 저장한다.
-                        UserInfo.setId(id);
-                        UserInfo.setPw(pw);
+                        Status.setId(id);
+                        Status.setPw(pw);
                         System.out.println("로그인에 성공했습니다.");
 
                         // 현재 창을 종료한다.

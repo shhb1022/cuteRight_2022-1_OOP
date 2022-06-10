@@ -1,6 +1,7 @@
 package Client.Controllers;
 
 import Client.*;
+import Client.Models.ChatRoomInfoDTO;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -30,42 +31,42 @@ import java.util.ResourceBundle;
 
 public class ChatRoomController implements Initializable {
     @FXML private TextArea txtDisplay;
-    @FXML private TextField txtInput;
-    @FXML private Button backBtn, sendBtn, connBtn;
+    @FXML private TextField chatInput,title;
+    @FXML private Button backtoMainBtn, sendBtn, userListBtn;
     @FXML private ListView contactList, waitingList;
     ObservableList<GridPane> items = FXCollections.observableArrayList();
 
     Socket socket = null;
     int std_id;
-    int room_id;
+    ChatRoomInfoDTO currentRoom;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        addTextLimiter(txtInput, 256);
-        std_id = Integer.parseInt(UserInfo.getId());
-        room_id = Integer.parseInt(UserInfo.getRoom_id());
+        addTextLimiter(chatInput, 256);
+        std_id = Integer.parseInt(Status.getId());
+        currentRoom = Status.getCurrentRoom();
 
-        txtInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
+        chatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent k) {
                 if(k.getCode().equals(KeyCode.ENTER)) {
                     // 채팅 메세지를 전송한다.
-                    MessagePacker packet = new MessagePacker(std_id, room_id,txtInput.getText());
+                    MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(),chatInput.getText());
                     send(packet.getPacket());
-                    txtInput.clear();
+                    chatInput.clear();
                 }
             }
         });
 
-        backBtn.setOnAction(new EventHandler<ActionEvent>() {
+        backtoMainBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-                	UserInfo.setRoom_id(null);
+                	Status.setCurrentRoom(null);;
                     SocketConnection.close();
                     // 현재 창을 종료한다.
-                    Stage currStage = (Stage) backBtn.getScene().getWindow();
+                    Stage currStage = (Stage) backtoMainBtn.getScene().getWindow();
                     currStage.close();
                     // 새 창을 띄운다.
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
@@ -81,18 +82,29 @@ public class ChatRoomController implements Initializable {
         sendBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                MessagePacker packet = new MessagePacker(std_id, room_id, txtInput.getText());
+                MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), chatInput.getText());
                 send(packet.getPacket());
-                txtInput.clear();
+                chatInput.clear();
             }
         });
 
-        connBtn.setOnAction(new EventHandler<ActionEvent>() {
+        userListBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-//                Protocol packet = new Protocol();
-//                send(packet.getPacket());
-//            	contactList.setItems(items);
+            	System.out.println("userlist display");
+            	Stage stage = new Stage();
+                // 새 창을 띄운다.
+				try {
+	                Parent root;
+					root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Friend.fxml"));
+	                Scene scene = new Scene(root);
+	                stage.setScene(scene);
+                    stage.show();
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
             }
         });
 
@@ -116,13 +128,13 @@ public class ChatRoomController implements Initializable {
             // 소켓을 연결한다.
             SocketConnection.connect();
             socket = SocketConnection.socket;
-            byte[] data = MessagePacker.intToByteArray(room_id, 2);
+            byte[] data = MessagePacker.intToByteArray(currentRoom.getRoom_id(), 2);
             send(data);
 
-            URL url = new URL("http://localhost:3000/chatMessage?room_id="+room_id);
+            URL url = new URL("http://localhost:3000/chatMessage?room_id="+currentRoom.getRoom_id());
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod("GET");
-            http.setRequestProperty("Authorization", UserInfo.getId()+":"+UserInfo.getPw());
+            http.setRequestProperty("Authorization", Status.getId()+":"+Status.getPw());
 
             if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 String resBody = getResponseBody(http.getInputStream());

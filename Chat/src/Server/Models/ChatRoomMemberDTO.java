@@ -6,14 +6,14 @@ import org.json.simple.JSONObject;
 //현재 방에서 학생들의 목록을 보여줄때 사용
 public class ChatRoomMemberDTO {
 
-	private int room_id;
-	private int std_id;
-	private int member;
+	private String room_id;
+	private String std_id;
+	private String member;
 	private String name;
 	private String d_job;
-	private int state;
+	private String state;
 	
-	public ChatRoomMemberDTO(int std_id, int room_id, int member, String name, String d_job, int state) {
+	public ChatRoomMemberDTO(String std_id, String room_id, String member, String name, String d_job, String state) {
 		this.std_id = std_id;
 		this.room_id = room_id;
 		this.member = member;
@@ -24,36 +24,31 @@ public class ChatRoomMemberDTO {
 	
 	
 	public ChatRoomMemberDTO() {
-		this.std_id = 0;
-		this.room_id = 0;
-		this.member = 0;
-		this.name = null;
-		this.d_job = null;
-		this.state = 0;
-		
+		// TODO Auto-generated constructor stub
 	}
-	
-	public int getStd_id() {
+
+
+	public String getStd_id() {
 		return std_id;
 	}
 	
-	public void setStd_id(int std_id) {
+	public void setStd_id(String std_id) {
 		this.std_id = std_id;
 	}
 	
-	public int getRoom_id() {
+	public String getRoom_id() {
 		return room_id;
 	}
 	
-	public void setRoom_id(int room_id) {
+	public void setRoom_id(String room_id) {
 		this.room_id = room_id;
 	}
 	
-	public int getMember() {
+	public String getMember() {
 		return member;
 	}
 	
-	public void setMember(int member) {
+	public void setMember(String member) {
 		this.member = member;
 	}
 
@@ -73,11 +68,11 @@ public class ChatRoomMemberDTO {
 		this.d_job = d_job;
 	}
 	
-	public int getState() {
+	public String getState() {
 		return state;
 	}
 	
-	public void setState(int state) {
+	public void setState(String state) {
 		this.state = state;
 	}
 

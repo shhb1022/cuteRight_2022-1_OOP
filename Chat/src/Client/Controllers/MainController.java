@@ -1,7 +1,8 @@
 package Client.Controllers;
 
 import Client.SocketConnection;
-import Client.UserInfo;
+import Client.Status;
+import Client.Models.ChatRoomInfoDTO;
 import Server.Models.UsersDTO;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -54,7 +55,7 @@ public class MainController implements Initializable {
         String selectedRoom = (String) chooseRoomList.getValue();
         try {
             if (selectedRoom.equals("내 채팅방")) {
-                URL url = new URL("http://localhost:3000/?std_id=" + UserInfo.getId());
+                URL url = new URL("http://localhost:3000/?std_id=" + Status.getId());
                 HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 http.setRequestMethod("GET");
 
@@ -65,8 +66,14 @@ public class MainController implements Initializable {
                     JSONArray list = (JSONArray) parser.parse(br);
                     roomList.clear();
                     for (int i = 0; i < list.size(); i++) {
-                        JSONObject obj = (JSONObject) list.get(i);
-                        roomList.add(MyRoomBox(obj.get("title").toString(),obj.get("room_id").toString()));
+                    	JSONObject obj = (JSONObject) list.get(i);
+        				int room_id = Integer.parseInt(obj.get("room_id").toString());
+        				String title = obj.get("title").toString();
+        				int limit_person = Integer.parseInt(obj.get("limit_person").toString());
+        				int cur_person = Integer.parseInt(obj.get("cur_person").toString());
+        				int leader_id = Integer.parseInt(obj.get("leader_id").toString());
+        				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
+        				roomList.add(MyRoomBox(room));
                     }
                     roomDisplay.setItems(roomList);
                 }
@@ -75,19 +82,13 @@ public class MainController implements Initializable {
             e.printStackTrace();
         }
 
-
-
-
-
-
-
         chooseRoomList.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 String selectedRoom = (String) chooseRoomList.getValue();
                 try {
                 	if(selectedRoom.equals("내 채팅방")) {
-                		URL url = new URL("http://localhost:3000/?std_id="+UserInfo.getId());
+                		URL url = new URL("http://localhost:3000/?std_id="+Status.getId());
                         HttpURLConnection http = (HttpURLConnection) url.openConnection();
                         http.setRequestMethod("GET");
                         
@@ -99,13 +100,22 @@ public class MainController implements Initializable {
                 			roomList.clear();
                 			for(int i=0; i<list.size(); i++) {
                 				JSONObject obj = (JSONObject) list.get(i);
-                				roomList.add(MyRoomBox(obj.get("title").toString(),obj.get("room_id").toString()));
+                				
+                				int room_id = Integer.parseInt(obj.get("room_id").toString());
+                				String title = obj.get("title").toString();
+                				int limit_person = Integer.parseInt(obj.get("limit_person").toString());
+                				int cur_person = Integer.parseInt(obj.get("cur_person").toString());
+                				int leader_id = Integer.parseInt(obj.get("leader_id").toString());
+                				
+                				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
+                				System.out.println(room.toJSONString());
+                				roomList.add(MyRoomBox(room));
                 			}
                 			roomDisplay.setItems(roomList);
                 		}
                 	}
                 	else if(selectedRoom.equals("전체채팅방")) {
-                		URL url = new URL("http://localhost:3000/?std_id=-"+UserInfo.getId());
+                		URL url = new URL("http://localhost:3000/?std_id=-"+Status.getId());
                 		HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 		http.setRequestMethod("GET");
                             
@@ -117,7 +127,16 @@ public class MainController implements Initializable {
                 			roomList.clear();
                 			for(int i=0; i<list.size(); i++) {
                 				JSONObject obj = (JSONObject) list.get(i);
-                				roomList.add(OpenRoomBox(obj.get("title").toString(),obj.get("room_id").toString()));
+                				
+                				int room_id = Integer.parseInt(obj.get("room_id").toString());
+                				String title = obj.get("title").toString();
+                				int limit_person = Integer.parseInt(obj.get("limit_person").toString());
+                				int cur_person = Integer.parseInt(obj.get("cur_person").toString());
+                				int leader_id = Integer.parseInt(obj.get("leader_id").toString());
+                				
+                				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
+                				System.out.println(room.toJSONString());
+                				roomList.add(OpenRoomBox(room));
                 				}
                 			roomDisplay.setItems(roomList);
                         }
@@ -130,18 +149,11 @@ public class MainController implements Initializable {
             }
         });
 
-
-
     	createRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-                	//이 부분에 요청이 왜 필요한가요?
-                    URL url = new URL("http://localhost:3000/main");
-                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
-                    http.setRequestMethod("GET");
-
                     Stage currStage = (Stage) createRoomBtn.getScene().getWindow();
                     currStage.close();
 
@@ -165,7 +177,7 @@ public class MainController implements Initializable {
                     URL url = new URL("http://localhost:3000/logout");
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
-                    http.setRequestProperty("Authorization", UserInfo.getId());
+                    http.setRequestProperty("Authorization", Status.getId());
 
                     // 응답 코드 테스트중
                     System.out.println("getResponseCode():" + http.getResponseCode());
@@ -189,7 +201,7 @@ public class MainController implements Initializable {
     }
         
 
-    public GridPane MyRoomBox(String title, String room_id) {
+    public GridPane MyRoomBox(ChatRoomInfoDTO room) {
         GridPane RoomInfoBox = new GridPane();
         Label roomTitle = new Label();
         Label roomId = new Label();
@@ -198,8 +210,8 @@ public class MainController implements Initializable {
         in.setText("입장");
 
         
-        roomTitle.setText(title);
-        roomId.setText(room_id);
+        roomTitle.setText(room.getTitle());
+        roomId.setText(Integer.toString(room.getRoom_id()));
         
         RoomInfoBox.add(roomTitle, 1, 0);
         RoomInfoBox.add(roomId,0,0);
@@ -209,13 +221,13 @@ public class MainController implements Initializable {
         in.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 try {
-                	URL url = new URL("http://localhost:3000/chatRoom?room_id="+room_id+"&std_id="+UserInfo.getId());
+                	URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Admission","ENTRANCE");
                     
                     if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            			UserInfo.setRoom_id(room_id);
+            			Status.setCurrentRoom(room);
             			
             			// 현재 창을 종료한다.
                         Stage currStage = (Stage) in.getScene().getWindow();
@@ -248,7 +260,7 @@ public class MainController implements Initializable {
         return RoomInfoBox;
     }
     
-    public GridPane OpenRoomBox(String title, String room_id) {
+    public GridPane OpenRoomBox(ChatRoomInfoDTO room) {
         GridPane RoomInfoBox = new GridPane();
         Label roomTitle = new Label();
         Label roomId = new Label();
@@ -257,8 +269,8 @@ public class MainController implements Initializable {
         in.setText("입장 신청");
 
         
-        roomTitle.setText(title);
-        roomId.setText(room_id);
+        roomTitle.setText(room.getTitle());
+        roomId.setText(Integer.toString(room.getRoom_id()));
         
         RoomInfoBox.add(roomTitle, 1, 0);
         RoomInfoBox.add(roomId,0,0);
@@ -269,7 +281,7 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-                    URL url = new URL("http://localhost:3000/chatRoom?room_id="+room_id+"&std_id="+UserInfo.getId());
+                    URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
                     HttpURLConnection http = (HttpURLConnection)url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Admission","PROPOSAL");
@@ -277,7 +289,7 @@ public class MainController implements Initializable {
                     if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
                     	Alert alert = new Alert(AlertType.INFORMATION);
                     	alert.setHeaderText(null);
-                    	alert.setContentText(room_id+" 방의 입장 신청이 완료되었습니다");
+                    	alert.setContentText(room.getRoom_id()+" 방의 입장 신청이 완료되었습니다");
                     	alert.showAndWait();
                     	//자동갱신 필요
                     }

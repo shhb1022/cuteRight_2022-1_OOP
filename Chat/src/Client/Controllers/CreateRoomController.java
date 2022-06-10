@@ -38,7 +38,7 @@ import java.util.Vector;
 import Client.Models.*;
 import Server.Models.ChatMessageDTO;
 import Server.Models.DAO;
-import Client.UserInfo;
+import Client.Status;
 
 public class CreateRoomController implements Initializable {
     @FXML private TextField setTitle;
@@ -79,7 +79,7 @@ public class CreateRoomController implements Initializable {
             public void handle(ActionEvent event) {
                 String title = setTitle.getText();
                 String limit_person = setLimitPersonnel.getSelectionModel().getSelectedItem();
-                int leader_id = Integer.parseInt(UserInfo.getId());
+                int leader_id = Integer.parseInt(Status.getId());
 
                 System.out.println("title: " + title);
                 System.out.println("limit_person: " + limit_person);
@@ -103,7 +103,7 @@ public class CreateRoomController implements Initializable {
 
                     // std_id를 담은 JSONArray 생성
 					JSONArray std_ids = new JSONArray();
-					std_ids.add(UserInfo.getId());
+					std_ids.add(Status.getId());
 					for(String user : userInvitation) {
 						std_ids.add(user);
 					}
@@ -163,7 +163,7 @@ public class CreateRoomController implements Initializable {
     		URL url = new URL("http://localhost:3000/createRoom");
     		HttpURLConnection http = (HttpURLConnection) url.openConnection();
     		http.setRequestMethod("GET");
-    		http.setRequestProperty("Authorization", UserInfo.getId()+":"+UserInfo.getPw());
+    		http.setRequestProperty("Authorization", Status.getId()+":"+Status.getPw());
 
     		if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
     			InputStream is = http.getInputStream();
