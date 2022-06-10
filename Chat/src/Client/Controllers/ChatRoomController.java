@@ -15,6 +15,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
@@ -46,7 +47,8 @@ public class ChatRoomController implements Initializable {
         std_id = Integer.parseInt(Status.getId());
         currentRoom = Status.getCurrentRoom();
         title.setText(currentRoom.getTitle());
-
+        txtDisplay.setWrapText(true);
+        
         chatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent k) {
@@ -83,9 +85,11 @@ public class ChatRoomController implements Initializable {
         sendBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), chatInput.getText());
-                send(packet.getPacket());
-                chatInput.clear();
+            	if(chatInput.getText().length() != 0) {
+            		MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), chatInput.getText());
+                    send(packet.getPacket());
+                    chatInput.clear();
+            	}
             }
         });
 
