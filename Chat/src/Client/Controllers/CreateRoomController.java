@@ -80,6 +80,14 @@ public class CreateRoomController implements Initializable {
                 String title = setTitle.getText();
                 String limit_person = setLimitPersonnel.getSelectionModel().getSelectedItem();
                 int leader_id = Integer.parseInt(Status.getId());
+                
+                if(title==""){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("방 제목을 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
 
                 System.out.println("title: " + title);
                 System.out.println("limit_person: " + limit_person);
