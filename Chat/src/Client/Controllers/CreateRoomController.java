@@ -172,6 +172,7 @@ public class CreateRoomController implements Initializable {
     			JSONArray list = (JSONArray)parser.parse(br);
     			for(int i=0; i<list.size(); i++) {
     				JSONObject obj = (JSONObject) list.get(i);
+    				if(Status.getId().equals(obj.get("std_id").toString()))continue;
     				ListUsers.add(UserInfoBox(obj.get("std_id").toString(),obj.get("name").toString()));
     			}
     			usersDisplay.setItems(ListUsers);
