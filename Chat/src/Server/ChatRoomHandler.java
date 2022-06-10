@@ -51,6 +51,7 @@ public class ChatRoomHandler implements HttpHandler {
             	else if(request.equals("ACCEPT")) {
                     if(dao.checkAccept(room_id)) {
                         dao.setAccept(std_id, room_id);
+                        dao.increCur_person(room_id);
                         exchange.sendResponseHeaders(200, 0);
                     }
                     else { //리더에게 '제한인원이 꽉 차서 입장수락 불가능한 상태~' 안내 팝업 출력
@@ -59,6 +60,11 @@ public class ChatRoomHandler implements HttpHandler {
             	}
             	else if(request.equals("REFUSE")) {
                     dao.setForbid(std_id, room_id);
+                    exchange.sendResponseHeaders(200, 0);
+            	}
+            	else if(request.equals("BAN")) {
+                    dao.setForbid(std_id, room_id);
+                    dao.decreCur_person(room_id);
                     exchange.sendResponseHeaders(200, 0);
             	}
             }

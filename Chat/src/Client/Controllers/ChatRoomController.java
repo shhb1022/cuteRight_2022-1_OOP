@@ -45,6 +45,7 @@ public class ChatRoomController implements Initializable {
         addTextLimiter(chatInput, 256);
         std_id = Integer.parseInt(Status.getId());
         currentRoom = Status.getCurrentRoom();
+        title.setText(currentRoom.getTitle());
 
         chatInput.setOnKeyPressed(new EventHandler<KeyEvent>() {
             @Override

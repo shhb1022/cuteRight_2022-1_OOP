@@ -72,9 +72,9 @@ public class UserListController implements Initializable {
     		http.setRequestMethod("GET");
 
     		if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+    			
     			InputStream is = http.getInputStream();
-				BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-				
+    			BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
     			JSONParser parser = new JSONParser();
     			JSONArray list = (JSONArray)parser.parse(br);
     			
@@ -83,8 +83,15 @@ public class UserListController implements Initializable {
     			for(int i=0; i<list.size(); i++) {
     				JSONObject obj = (JSONObject) list.get(i);
     				
-    				ChatRoomMemberDTO member =new ChatRoomMemberDTO(obj.get("std_id").toString(),null,obj.get("member").toString(),
-    						obj.get("name").toString(),obj.get("d_job").toString(),obj.get("state").toString());
+    				String std_id = obj.get("std_id").toString();
+    				String room_id = obj.get("room_id").toString();
+    				String member_S = obj.get("member").toString();
+    				String name = obj.get("name").toString();
+    				String d_job = obj.get("d_job").toString();
+    				String state = obj.get("state").toString();
+
+    				
+    				ChatRoomMemberDTO member =new ChatRoomMemberDTO(std_id,room_id,member_S,name,d_job,state);
     				
     				if(member.getMember().equals("1")) {
     					ListEntrance.add(EntranceInfoBox(member));
@@ -105,11 +112,11 @@ public class UserListController implements Initializable {
         Label userState = new Label();
         userState.setPrefWidth(20);
         Label userStd_id = new Label();
-        userStd_id.setPrefWidth(60);
+        userStd_id.setPrefWidth(50);
         Label userName = new Label();
-        userName.setPrefWidth(60);
+        userName.setPrefWidth(50);
         Label userJob = new Label();
-        userJob.setPrefWidth(60);
+        userJob.setPrefWidth(50);
         Button banBtn = new Button();
         
         userState.setText(member.getState());
@@ -123,6 +130,19 @@ public class UserListController implements Initializable {
         userInfoBox.add(userName, 2, 0);
         userInfoBox.add(userJob, 3, 0);
         userInfoBox.add(banBtn, 4, 0);
+        
+        //내가 방장이거나 member 이름이 갖지 않다면 활성화
+        System.out.println(Status.getCurrentRoom().getLeader_id());
+        System.out.println(Integer.parseInt(Status.getId()));
+        System.out.println(member.getStd_id());
+        if((Status.getCurrentRoom().getLeader_id() == Integer.parseInt(Status.getId())) && !(member.getStd_id().equals(Status.getId()))) {
+        	System.out.println("버튼 활성화");
+        	banBtn.setDisable(false);
+        }
+        else {
+        	System.out.println("버튼 비활성화");
+        	banBtn.setDisable(true);
+        }
         
         banBtn.setOnAction(new EventHandler<ActionEvent>() {
     		public void handle(ActionEvent event) {
@@ -158,16 +178,17 @@ public class UserListController implements Initializable {
         
         return userInfoBox;
     }
+    
     public GridPane WatingInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
         Label userState = new Label();
         userState.setPrefWidth(20);
         Label userStd_id = new Label();
-        userStd_id.setPrefWidth(60);
+        userStd_id.setPrefWidth(50);
         Label userName = new Label();
-        userName.setPrefWidth(60);
+        userName.setPrefWidth(50);
         Label userJob = new Label();
-        userJob.setPrefWidth(60);
+        userJob.setPrefWidth(50);
         Button acceptBtn = new Button();
         Button refuseBtn = new Button();
         
@@ -184,6 +205,20 @@ public class UserListController implements Initializable {
         userInfoBox.add(userJob, 3, 0);
         userInfoBox.add(acceptBtn, 4, 0);
         userInfoBox.add(refuseBtn, 5, 0);
+        
+        //내가 방장이면 활성화
+        System.out.println(Status.getCurrentRoom().getLeader_id());
+        System.out.println(Integer.parseInt(Status.getId()));
+        if(Status.getCurrentRoom().getLeader_id() == Integer.parseInt(Status.getId())) {
+        	System.out.println("버튼 활성화");
+        	acceptBtn.setDisable(false);
+        	refuseBtn.setDisable(false);
+        }
+        else {
+        	System.out.println("버튼 비활성화");
+        	acceptBtn.setDisable(true);
+        	refuseBtn.setDisable(true);
+        }
         
         acceptBtn.setOnAction(new EventHandler<ActionEvent>() {
     		public void handle(ActionEvent event) {
@@ -216,7 +251,6 @@ public class UserListController implements Initializable {
     			roomUsersList();
     		}
     	});
-        
         refuseBtn.setOnAction(new EventHandler<ActionEvent>() {
     		public void handle(ActionEvent event) {
     			System.out.println(member.getName()+" 거절");
@@ -245,9 +279,10 @@ public class UserListController implements Initializable {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-    			
+    			roomUsersList();
     		}
     	});
+        
         return userInfoBox;
     }
     

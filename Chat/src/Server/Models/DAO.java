@@ -581,10 +581,11 @@ public class DAO {
          con = makeConnection();
          stmt = con.createStatement();
          rs = stmt.executeQuery("SELECT Users.std_id, Users.name, Users.d_job, Users.state, roomjoin.room_id, roomjoin.member FROM Users INNER JOIN"
-         		+ "(SELECT * FROM ChatRoomJoin WHERE ChatRoomJoin.room_id="+room_id+") roomjoin ON Users.std_id=ChatRoomJoin.std_id");
+         		+ "(SELECT * FROM ChatRoomJoin WHERE ChatRoomJoin.room_id="+room_id+") roomjoin ON Users.std_id=roomjoin.std_id");
          
          while(rs.next()) {
             ChatRoomMemberDTO user = new ChatRoomMemberDTO();
+            user.setRoom_id(rs.getString("room_id"));
             user.setStd_id(rs.getString("std_id"));
             user.setName(rs.getString("name"));
             user.setD_job(rs.getString("d_job"));
