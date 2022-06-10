@@ -45,8 +45,13 @@ public class ChatRoomHandler implements HttpHandler {
                 	}
             	}
             	else if(request.equals("PROPOSAL")) {
-                    dao.addRequest(std_id, room_id);
-                    exchange.sendResponseHeaders(200, 0);
+            		if(dao.checkRequest(std_id, room_id)) {
+            			dao.addRequest(std_id, room_id);
+                        exchange.sendResponseHeaders(200, 0);
+            		}
+            		else {
+                		exchange.sendResponseHeaders(403, 0);
+            		}
             	}
             	else if(request.equals("ACCEPT")) {
                     if(dao.checkAccept(room_id)) {

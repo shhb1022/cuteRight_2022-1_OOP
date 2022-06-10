@@ -719,6 +719,44 @@ public class DAO {
          }
       }
    }
+   
+   //입장신청 전, 이미 입장신청했었는지 확인
+   public boolean checkRequest(int std_id, int room_id) {
+       Connection con = null;
+       Statement stmt = null;
+       PreparedStatement pstmt = null;
+       ResultSet rs = null;
+       String SQL = "SELECT ifnull(max(std_id),0) std_id FROM ChatRoomJoin WHERE std_id = ? AND room_id = ?";
+       try {
+           con = makeConnection();
+           pstmt=con.prepareStatement(SQL);
+           pstmt.setInt(1, std_id);
+           pstmt.setInt(2, room_id);
+           rs = pstmt.executeQuery();
+           if(rs.next()) {
+              if(rs.getString(1).contentEquals("0")) {
+                  return true; //입장신청 가능 상태
+              }
+           }
+           else {
+             return false;//이미 입장신청 했음
+           }           
+       } catch (SQLException e) {
+           // TODO Auto-generated catch block
+           e.printStackTrace();
+       }finally {
+           try {
+               if(rs != null) rs.close();//5) 자원반납
+               if(stmt != null) stmt.close();
+               if(con != null) con.close();
+           } catch (Exception e2) {
+               e2.printStackTrace();
+           }
+       }
+       return false; //db 연결오류      
+   }
+   
+   
    //입장신청, member=0으로 추가
    public boolean addRequest(int std_id, int room_id) {
       Connection con = null;

@@ -293,6 +293,12 @@ public class MainController implements Initializable {
                     	alert.showAndWait();
                     	//자동갱신 필요
                     }
+                    else if(http.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
+                    	Alert alert = new Alert(AlertType.INFORMATION);
+                    	alert.setHeaderText(null);
+                    	alert.setContentText("이미 입장 신청 된 방입니다.");
+                    	alert.showAndWait();
+                    }
                     else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
                     	Alert alert = new Alert(AlertType.INFORMATION);
                     	alert.setHeaderText(null);
