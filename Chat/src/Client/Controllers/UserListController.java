@@ -6,6 +6,9 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -30,20 +33,18 @@ import javafx.scene.layout.GridPane;
 import Client.Models.*;
 
 public class UserListController implements Initializable {
-    @FXML private Button backBtn2;
-    @FXML private ListView entranceDisplay,watingDisplay;
+    @FXML private ImageView backBtn2;
+    @FXML private ListView entranceDisplay,waitingDisplay;
 
     ObservableList<GridPane> ListEntrance = FXCollections.observableArrayList();
     ObservableList<GridPane> ListWating = FXCollections.observableArrayList();
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-
     	
-        backBtn2.setOnAction(new EventHandler<ActionEvent>() {
+        backBtn2.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(MouseEvent event) {
                 try {
                     Stage stage = (Stage) backBtn2.getScene().getWindow();
                     stage.close();
@@ -95,7 +96,7 @@ public class UserListController implements Initializable {
     				}
     			}
     			entranceDisplay.setItems(ListEntrance);
-    			watingDisplay.setItems(ListWating);
+    			waitingDisplay.setItems(ListWating);
     		}
     	} catch (Exception e) {
     		e.printStackTrace();
