@@ -128,10 +128,10 @@ public class ChattingServer {
                     } catch (Exception e) {
                         try {
                             e.printStackTrace();
-                            connections.remove(Client.this);
+                            connections.get(room_id).remove(Client.this);
                             System.out.println("클라이언트 통신 안됨");
                             socket.close();
-                        } catch (IOException e2) {}
+                        } catch (IOException e2) { }
                     }
                 }
             };
@@ -146,9 +146,9 @@ public class ChattingServer {
             } catch (Exception e) {
                 try {
                     System.out.println("클라이언트 통신 안됨");
-                    connections.remove(Client.this);
+                    connections.get(room_id).remove(Client.this);
                     socket.close();
-                } catch (IOException e2) {}
+                } catch (IOException e2) { }
             }
         }
     }
@@ -156,10 +156,5 @@ public class ChattingServer {
     public void addRoom(int room_id) {
         connections.put(room_id, new Vector<Client>());
     }
-    public boolean hasConnection(int room_id) {
-        if(connections.get(room_id) == null) {
-            return false;
-        }
-        return true;
-    }
+    public boolean hasConnection(int room_id) { return connections.get(room_id) != null; }
 }

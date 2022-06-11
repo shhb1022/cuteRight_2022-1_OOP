@@ -39,6 +39,7 @@ public class Client extends Application{
             http.setRequestProperty("Authorization", Status.getId());
 
             if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                Status.reset();
                 System.out.println("성공적으로 로그아웃 했습니다!");
             }
         }

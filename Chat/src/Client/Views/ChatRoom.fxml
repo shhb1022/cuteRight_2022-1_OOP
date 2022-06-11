@@ -12,7 +12,7 @@ xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:contr
       <HBox prefHeight="38.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="backtoMainBtn" mnemonicParsing="false" prefHeight="46.0" prefWidth="52.0" text="&lt;--" />
-            <TextField fx:id="title" alignment="CENTER" prefHeight="38.0" prefWidth="301.0" text="방제" />
+            <TextField fx:id="title" alignment="CENTER" prefHeight="38.0" prefWidth="301.0" text="방제" editable="false"/>
             <Button fx:id="userListBtn" mnemonicParsing="false" prefHeight="46.0" prefWidth="50.0" text="친구" />
          </children>
       </HBox>
@@ -26,6 +26,6 @@ xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:contr
       </HBox>
    </bottom>
    <center>
-      <TextArea fx:id="txtDisplay" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="txtDisplay" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" editable="false" />
    </center>
 </BorderPane>

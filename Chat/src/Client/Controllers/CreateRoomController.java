@@ -87,10 +87,17 @@ public class CreateRoomController implements Initializable {
                     alert.setContentText("방 제목을 입력하세요.");
                     alert.showAndWait();
                     return;
+                }if(userInvitation.size() + 1 > Integer.parseInt(limit_person)){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("초대 인원이 최대 인원을 초과하였습니다.");
+                    alert.showAndWait();
+                    return;
                 }
 
-                System.out.println("title: " + title);
-                System.out.println("limit_person: " + limit_person);
+                //System.out.println("title: " + title);
+                //System.out.println("limit_person: " + limit_person);
+                //System.out.println("add_person: " + userInvitation.size());
                 for(int i=0;i<userInvitation.size();i++) {
                 	System.out.println("userInvitation: " + userInvitation.get(i));
                 }
