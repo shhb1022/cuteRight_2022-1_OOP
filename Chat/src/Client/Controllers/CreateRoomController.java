@@ -62,9 +62,19 @@ public class CreateRoomController implements Initializable {
 		ObservableList<String> comboNumList = FXCollections.observableArrayList(limit_personList);
 		setLimitPersonnel.setItems(comboNumList);
 		setLimitPersonnel.getSelectionModel().selectFirst();
+<<<<<<< HEAD
     	
     	backToMainBtn2.setOnMouseClicked(new EventHandler<MouseEvent>() {
     		public void handle(MouseEvent event) {
+=======
+		if(setTitle.getText().equals("")) {
+	         setTitle.setPromptText("16자 이내로 입력해주세요");
+	       }
+
+		
+    	backtoMainBtn2.setOnAction(new EventHandler<ActionEvent>() {
+    		public void handle(ActionEvent event) {
+>>>>>>> c8d1d82ebb26c32add649a7b90b26ac800aeae87
     			try {
                 	// 현재 창을 종료한다.
                     Stage currStage = (Stage) backToMainBtn2.getScene().getWindow();
@@ -95,7 +105,16 @@ public class CreateRoomController implements Initializable {
                     alert.setContentText("방 제목을 입력하세요.");
                     alert.showAndWait();
                     return;
-                }if(userInvitation.size() + 1 > Integer.parseInt(limit_person)){
+                }
+                if(title.length()>16) { //방 제목 글자수 제한 20
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("16자 이내의 방 제목을 입력해주세요.");
+                    alert.showAndWait();
+                    return;
+                }
+
+                if(userInvitation.size() + 1 > Integer.parseInt(limit_person)){
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setHeaderText(null);
                     alert.setContentText("초대 인원이 최대 인원을 초과하였습니다.");
