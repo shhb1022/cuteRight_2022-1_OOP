@@ -38,6 +38,7 @@
 
 .purple-outline2{
     -fx-border-color: #C49BFD;
+    -fx-border-radius: 30;
 }
 
 .blue-outline{
