@@ -42,7 +42,10 @@
    <bottom>
       <HBox prefHeight="50.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="chatInput" prefHeight="50.0" prefWidth="350.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" />
+            <TextField fx:id="chatInput" prefHeight="50.0" prefWidth="350.0" styleClass="purple-outline3" stylesheets="@../Values/style.css">
+               <font>
+                  <Font size="16.0" />
+               </font></TextField>
             <ImageView fx:id="sendBtn" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@img/paper-plane.png" />
@@ -55,6 +58,9 @@
       </HBox>
    </bottom>
    <center>
-      <TextArea fx:id="txtDisplay" editable="false" prefHeight="378.0" prefWidth="400.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="txtDisplay" editable="false" prefHeight="378.0" prefWidth="400.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="14.0" />
+         </font></TextArea>
    </center>
 </BorderPane>
