@@ -36,10 +36,7 @@ public class ChatMessageHandler implements HttpHandler {
                     ArrayList<ChatMessageDTO> messages =  dao.getRoomMessage(Integer.parseInt(room_id));
                     JSONArray list = new JSONArray();
                     for(ChatMessageDTO msg : messages) {
-                        JSONObject obj = new JSONObject();
-                        obj.put("std_id",msg.getStd_id());
-                        obj.put("message", msg.getMessage());
-                        list.add(obj);
+                        list.add(msg.toJSONObject());
                     }
 
                     // Encoding to UTF-8

@@ -13,10 +13,11 @@ import java.nio.charset.StandardCharsets;
 public class MessagePacker {
     private JSONObject body;
 
-    public MessagePacker(int std_id, int room_id, String message) {
+    public MessagePacker(int std_id, int room_id, String name ,String message) {
         body = new JSONObject();
         body.put("std_id", String.valueOf(std_id));
         body.put("room_id", String.valueOf(room_id));
+        body.put("name", name);
         body.put("message", message);
     }
 
@@ -70,6 +71,7 @@ public class MessagePacker {
     public String getMessage() { return (String) body.get("message"); }
     public int getStdId() { return Integer.parseInt((String) body.get("std_id")); }
     public int getRoomId() { return Integer.parseInt((String) body.get("room_id")); }
+    public String getName() { return (String) body.get("name"); }
 
     private static byte[] intToByteArray(int value, int lengthDiv) {
         byte[] byteArray = new byte[lengthDiv];

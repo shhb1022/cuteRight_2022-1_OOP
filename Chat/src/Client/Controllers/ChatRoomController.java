@@ -28,6 +28,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 public class ChatRoomController implements Initializable {
@@ -39,12 +40,14 @@ public class ChatRoomController implements Initializable {
 
     Socket socket = null;
     int std_id;
+    String name;
     ChatRoomInfoDTO currentRoom;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addTextLimiter(chatInput, 256);
         std_id = Integer.parseInt(Status.getId());
+        name = Status.getName();
         currentRoom = Status.getCurrentRoom();
         title.setText(currentRoom.getTitle());
         txtDisplay.setWrapText(true);
@@ -55,7 +58,7 @@ public class ChatRoomController implements Initializable {
                 if(k.getCode().equals(KeyCode.ENTER)) {
                 	//빈값이 아닌경우 채팅 메세지를 전송한다
                 	if(chatInput.getText().length() != 0) {
-                		MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), chatInput.getText());
+                		MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), name, chatInput.getText());
                         send(packet.getPacket());
                         chatInput.clear();
                 	}
@@ -88,7 +91,7 @@ public class ChatRoomController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
             	if(chatInput.getText().length() != 0) {
-            		MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), chatInput.getText());
+            		MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), name, chatInput.getText());
                     send(packet.getPacket());
                     chatInput.clear();
             	}
@@ -144,13 +147,13 @@ public class ChatRoomController implements Initializable {
             http.setRequestProperty("Authorization", Status.getId()+":"+Status.getPw());
 
             if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                String resBody = getResponseBody(http.getInputStream());
-                System.out.println(resBody);
+                BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream(), StandardCharsets.UTF_8));
                 JSONParser parser = new JSONParser();
-                JSONArray list = (JSONArray)parser.parse(resBody);
+                JSONArray list = (JSONArray)parser.parse(br);
+                System.out.println(list.toJSONString());
                 for(int i=0; i<list.size(); i++) {
                     JSONObject obj = (JSONObject) list.get(i);
-                    Platform.runLater(()->displayText("["+obj.get("std_id")+"]" + obj.get("message")));
+                    Platform.runLater(()->displayText("["+obj.get("name")+"] " + obj.get("message")));
                 }
             }
         } catch (Exception e) {
@@ -178,7 +181,7 @@ public class ChatRoomController implements Initializable {
                 MessagePacker packet = MessagePacker.unpack(inputStream);
 
                 String msg = packet.getMessage();
-                Platform.runLater(()->displayText("["+packet.getStdId()+"]" + msg));
+                Platform.runLater(()->displayText("["+packet.getName()+"] " + msg));
             } catch (Exception e) {
                 Platform.runLater(()->displayText("[서버 통신 안됨]"));
                 e.printStackTrace();
@@ -229,16 +232,4 @@ public class ChatRoomController implements Initializable {
         userInfoBox.add(ejectBtn, 0, 2);
         return userInfoBox;
     }
-
-    public static String getResponseBody(InputStream is) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-        String line;
-        while((line = br.readLine()) != null) {
-            sb.append(line).append("\n");
-        }
-        br.close();
-        return sb.toString();
-    }
-
 }

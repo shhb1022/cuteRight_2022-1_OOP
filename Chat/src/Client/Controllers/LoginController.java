@@ -15,6 +15,7 @@ import javafx.stage.Stage;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -74,9 +75,14 @@ public class LoginController implements Initializable {
                     // 응답 메시지 구하기
                     System.out.println("getResponseMessage():" + http.getResponseMessage());
                     if (http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                        BufferedReader br = new BufferedReader(new InputStreamReader(http.getInputStream(), StandardCharsets.UTF_8));
+                        String name = br.readLine();
+                        br.close();
+                        System.out.println("name = "+ name);
                         // 유저 정보를 저장한다.
                         Status.setId(id);
                         Status.setPw(pw);
+                        Status.setName(name);
                         System.out.println("로그인에 성공했습니다.");
 
                         // 현재 창을 종료한다.

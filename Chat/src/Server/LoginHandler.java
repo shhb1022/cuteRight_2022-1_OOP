@@ -37,7 +37,10 @@ public class LoginHandler implements HttpHandler {
 //                	exchange.sendResponseHeaders(200, 0);
                     if(checkstate2) {
                         dao.setLogin(id);
+                        String content = dao.stdName(id);
                         exchange.sendResponseHeaders(200, 0);
+                        respBody.write(content.getBytes(StandardCharsets.UTF_8));
+                        System.out.println("success to submit Std_name = " + content);
                     } else {
                         exchange.sendResponseHeaders(409, 0);
                     }
