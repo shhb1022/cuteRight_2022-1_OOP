@@ -20,8 +20,8 @@ public class Status {
         Status.name = name;
     }
 
-    public static void setCurrentRoom(ChatRoomInfoDTO currentRoom) {
-        Status.cur_room = currentRoom;
+    public static void setCurrentRoom(ChatRoomInfoDTO cur_room) {
+        Status.cur_room = cur_room;
     }
 
     public static String getId() {
@@ -38,6 +38,13 @@ public class Status {
 
     public static ChatRoomInfoDTO getCurrentRoom() {
         return cur_room;
+    }
+    
+    public static void reset() {
+    	id = null;
+    	pw = null;
+    	name = null;
+    	cur_room = null;
     }
 
 }

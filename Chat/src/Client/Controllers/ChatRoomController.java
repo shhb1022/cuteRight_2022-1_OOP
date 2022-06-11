@@ -37,7 +37,8 @@ public class ChatRoomController implements Initializable {
     @FXML private Button backtoMainBtn, sendBtn, userListBtn;
     @FXML private ListView contactList, waitingList;
     ObservableList<GridPane> items = FXCollections.observableArrayList();
-
+    
+    Stage userlistStage = new Stage();
     Socket socket = null;
     int std_id;
     String name;
@@ -74,8 +75,10 @@ public class ChatRoomController implements Initializable {
                 	Status.setCurrentRoom(null);;
                     SocketConnection.close();
                     // 현재 창을 종료한다.
+                    // userlist도 종료한다.
                     Stage currStage = (Stage) backtoMainBtn.getScene().getWindow();
                     currStage.close();
+                    userlistStage.close();
                     // 새 창을 띄운다.
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
                     Scene scene = new Scene(root);
@@ -97,19 +100,18 @@ public class ChatRoomController implements Initializable {
             	}
             }
         });
-
+        
         userListBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
             	System.out.println("userlist display");
-            	Stage stage = new Stage();
-                // 새 창을 띄운다.
 				try {
+	                // 새 창을 띄운다.
 	                Parent root;
 					root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Friend.fxml"));
 	                Scene scene = new Scene(root);
-	                stage.setScene(scene);
-                    stage.show();
+	                userlistStage.setScene(scene);
+	                userlistStage.show();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
