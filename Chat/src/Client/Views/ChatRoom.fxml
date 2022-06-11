@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controllers.ChatRoomController">
    <top>
@@ -21,23 +21,40 @@
                   <Image url="@img/arrow-left.png" />
                </image>
             </ImageView>
-            <TextField fx:id="title" alignment="CENTER" editable="false" prefHeight="42.0" prefWidth="301.0" text="방제">
+            <TextField fx:id="title" alignment="CENTER" editable="false" prefHeight="42.0" prefWidth="301.0" styleClass="transparent-background" stylesheets="@../Values/style.css" text="방제">
                <HBox.margin>
-                  <Insets top="5.0" />
-               </HBox.margin></TextField>
-            <Button fx:id="userListBtn" mnemonicParsing="false" prefHeight="46.0" prefWidth="50.0" text="친구" />
+                  <Insets />
+               </HBox.margin>
+               <font>
+                  <Font size="27.0" />
+               </font></TextField>
+            <ImageView fx:id="userListBtn" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+               <HBox.margin>
+                  <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
+               </HBox.margin>
+               <image>
+                  <Image url="@img/add-friend.png" />
+               </image>
+            </ImageView>
          </children>
       </HBox>
    </top>
    <bottom>
-      <HBox prefHeight="37.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="50.0" prefWidth="400.0" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="chatInput" prefHeight="44.0" prefWidth="350.0" />
-            <Button fx:id="sendBtn" mnemonicParsing="false" prefHeight="41.0" prefWidth="51.0" text="전송" />
+            <TextField fx:id="chatInput" prefHeight="50.0" prefWidth="350.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" />
+            <ImageView fx:id="sendBtn" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@img/paper-plane.png" />
+               </image>
+               <HBox.margin>
+                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+               </HBox.margin>
+            </ImageView>
          </children>
       </HBox>
    </bottom>
    <center>
-      <TextArea fx:id="txtDisplay" editable="false" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="txtDisplay" editable="false" prefHeight="378.0" prefWidth="400.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

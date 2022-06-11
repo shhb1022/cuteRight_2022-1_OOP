@@ -16,8 +16,10 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -35,7 +37,8 @@ import java.util.ResourceBundle;
 public class ChatRoomController implements Initializable {
     @FXML private TextArea txtDisplay;
     @FXML private TextField chatInput,title;
-    @FXML private Button backtoMainBtn, sendBtn, userListBtn;
+    @FXML private ImageView backToMainBtn, userListBtn, sendBtn;
+
     @FXML private ListView contactList, waitingList;
     ObservableList<GridPane> items = FXCollections.observableArrayList();
 
@@ -67,15 +70,15 @@ public class ChatRoomController implements Initializable {
             }
         });
 
-        backtoMainBtn.setOnAction(new EventHandler<ActionEvent>() {
+        backToMainBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(MouseEvent event) {
                 Stage stage = new Stage();
                 try {
                 	Status.setCurrentRoom(null);;
                     SocketConnection.close();
                     // 현재 창을 종료한다.
-                    Stage currStage = (Stage) backtoMainBtn.getScene().getWindow();
+                    Stage currStage = (Stage) backToMainBtn.getScene().getWindow();
                     currStage.close();
                     // 새 창을 띄운다.
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
@@ -89,9 +92,9 @@ public class ChatRoomController implements Initializable {
             }
         });
 
-        sendBtn.setOnAction(new EventHandler<ActionEvent>() {
+        sendBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(MouseEvent event) {
             	if(chatInput.getText().length() != 0) {
             		MessagePacker packet = new MessagePacker(std_id, currentRoom.getRoom_id(), name, chatInput.getText());
                     send(packet.getPacket());
@@ -100,9 +103,9 @@ public class ChatRoomController implements Initializable {
             }
         });
 
-        userListBtn.setOnAction(new EventHandler<ActionEvent>() {
+        userListBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(MouseEvent event) {
             	System.out.println("userlist display");
             	Stage stage = new Stage();
                 // 새 창을 띄운다.
@@ -113,6 +116,7 @@ public class ChatRoomController implements Initializable {
                     stage.initModality(Modality.NONE);
                     stage.initOwner((Stage) userListBtn.getScene().getWindow());
 	                stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
