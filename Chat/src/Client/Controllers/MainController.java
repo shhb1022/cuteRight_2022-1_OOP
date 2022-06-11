@@ -20,8 +20,11 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -41,7 +44,7 @@ public class MainController implements Initializable {
 
     @FXML private ComboBox chooseRoomList;
     @FXML private ListView roomDisplay;
-    @FXML private Button logoutBtn, createRoomBtn;
+    @FXML private ImageView logoutBtn, createRoomBtn;
 
 
 
@@ -56,8 +59,8 @@ public class MainController implements Initializable {
         ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
         chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();
-
         String selectedRoom = (String) chooseRoomList.getValue();
+
         try {
             if (selectedRoom.equals("내 채팅방")) {
                 URL url = new URL("http://localhost:3000/?std_id=" + Status.getId());
@@ -154,9 +157,9 @@ public class MainController implements Initializable {
             }
         });
 
-    	createRoomBtn.setOnAction(new EventHandler<ActionEvent>() {
+    	createRoomBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(MouseEvent event) {
                 Stage stage = new Stage();
                 try {
                     Stage currStage = (Stage) createRoomBtn.getScene().getWindow();
@@ -165,6 +168,7 @@ public class MainController implements Initializable {
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/CreateRoom.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -172,9 +176,10 @@ public class MainController implements Initializable {
             }
         });
 
-        logoutBtn.setOnAction(new EventHandler<ActionEvent>() {
+
+        logoutBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
-            public void handle(ActionEvent event) {
+            public void handle(MouseEvent event) {
 //                String id = UserInfo.getId();
 //                String pw = UserInfo.getPw(); //굳이??
                 Stage stage = new Stage();
@@ -195,6 +200,7 @@ public class MainController implements Initializable {
                         Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Login.fxml"));
                         Scene scene = new Scene(root);
                         stage.setScene(scene);
+                        stage.setResizable(false);
                         stage.show();
                     }
                 } catch (Exception e) {
@@ -208,24 +214,40 @@ public class MainController implements Initializable {
     public AnchorPane MyRoomBox2(ChatRoomInfoDTO room) {
         Label roomTitle = new Label();
         roomTitle.setText(room.getTitle());
+        roomTitle.setFont(new Font("System", 20));
         Button in = new Button();
         in.setText("입장");
+        Image img = new Image("/Client/Views/img/messenger.png");
+        ImageView view = new ImageView(img);
+        view.setFitHeight(40);
+        view.setFitWidth(47);
+
+
         AnchorPane RoomInfoBox = new AnchorPane(roomTitle);
 
-        AnchorPane.setTopAnchor(roomTitle, 15.0);
-        AnchorPane.setLeftAnchor(roomTitle,15.0);
-        AnchorPane.setBottomAnchor(roomTitle, 55.0);
+        AnchorPane.setTopAnchor(roomTitle, 18.0);
+        AnchorPane.setLeftAnchor(roomTitle,70.0);
+        //AnchorPane.setBottomAnchor(roomTitle, 55.0);
 
-        AnchorPane.setTopAnchor(in,50.0);
-        AnchorPane.setLeftAnchor(in,350.0);
+        AnchorPane.setTopAnchor(view,10.0);
+        AnchorPane.setLeftAnchor(view, 10.0);
+        AnchorPane.setBottomAnchor(view, 10.0);
+        //AnchorPane.setRightAnchor(view,70.0);
+
+        RoomInfoBox.getChildren().add(view);
+
+        AnchorPane.setTopAnchor(in,41.0);
+        AnchorPane.setLeftAnchor(in,330.0);
         AnchorPane.setBottomAnchor(in,5.0);
-        AnchorPane.setRightAnchor(in,25.0);
+        AnchorPane.setRightAnchor(in,10.0);
 
         RoomInfoBox.getChildren().add(in);
 
+        RoomInfoBox.setMaxHeight(70);
+        RoomInfoBox.setMaxWidth(400);
 
-        RoomInfoBox.setMinHeight(75);
-        RoomInfoBox.setMinWidth(350);
+
+
 
         in.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {

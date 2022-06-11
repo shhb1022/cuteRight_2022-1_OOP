@@ -40,8 +40,17 @@
     -fx-border-color: #C49BFD;
     -fx-border-radius: 30;
 }
+.purple-outline3{
+    -fx-border-color: #C49BFD;
+}
+
 
 .blue-outline{
     -fx-border-color: #4256FF;
     -fx-border-radius: 30;
+}
+
+.combo-box{
+    -fx-font-size: 24;
+    -fx-text-alignment: center
 }

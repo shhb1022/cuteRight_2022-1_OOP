@@ -67,6 +67,7 @@ public class CreateRoomController implements Initializable {
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+					stage.setResizable(false);
                     stage.show();
     			} catch(Exception e) {
                     e.printStackTrace();

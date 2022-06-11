@@ -94,6 +94,7 @@ public class LoginController implements Initializable {
                         Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
                         Scene scene = new Scene(root);
                         stage.setScene(scene);
+                        stage.setResizable(false);
                         stage.show();
                     } else if (http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         // 경고 메세지를 출력한다.
@@ -123,6 +124,7 @@ public class LoginController implements Initializable {
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Signin.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 } catch (Exception e) {
                     e.printStackTrace();

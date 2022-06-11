@@ -81,6 +81,7 @@ public class ChatRoomController implements Initializable {
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
+                    stage.setResizable(false);
                     stage.show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -109,9 +110,9 @@ public class ChatRoomController implements Initializable {
 	                Parent root;
 					root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Friend.fxml"));
 	                Scene scene = new Scene(root);
-	                stage.setScene(scene);
                     stage.initModality(Modality.NONE);
                     stage.initOwner((Stage) userListBtn.getScene().getWindow());
+	                stage.setScene(scene);
                     stage.show();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
