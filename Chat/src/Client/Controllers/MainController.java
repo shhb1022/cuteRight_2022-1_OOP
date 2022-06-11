@@ -344,28 +344,41 @@ public class MainController implements Initializable {
 //
 //        return RoomInfoBox;
 //    }
-    
+
     public AnchorPane OpenRoomBox2(ChatRoomInfoDTO room) {
         Label roomTitle = new Label();
         roomTitle.setText(room.getTitle());
+        roomTitle.setFont(new Font("System", 20));
         Button in = new Button();
         in.setText("입장");
+        Image img = new Image("/Client/Views/img/chat.png");
+        ImageView view = new ImageView(img);
+        view.setFitHeight(40);
+        view.setFitWidth(47);
+
+
         AnchorPane RoomInfoBox = new AnchorPane(roomTitle);
 
-        AnchorPane.setTopAnchor(roomTitle, 15.0);
-        AnchorPane.setLeftAnchor(roomTitle,15.0);
-        AnchorPane.setBottomAnchor(roomTitle, 55.0);
+        AnchorPane.setTopAnchor(roomTitle, 18.0);
+        AnchorPane.setLeftAnchor(roomTitle,70.0);
+        //AnchorPane.setBottomAnchor(roomTitle, 55.0);
 
-        AnchorPane.setTopAnchor(in,50.0);
-        AnchorPane.setLeftAnchor(in,350.0);
+        AnchorPane.setTopAnchor(view,10.0);
+        AnchorPane.setLeftAnchor(view, 10.0);
+        AnchorPane.setBottomAnchor(view, 10.0);
+        //AnchorPane.setRightAnchor(view,70.0);
+
+        RoomInfoBox.getChildren().add(view);
+
+        AnchorPane.setTopAnchor(in,41.0);
+        AnchorPane.setLeftAnchor(in,330.0);
         AnchorPane.setBottomAnchor(in,5.0);
-        AnchorPane.setRightAnchor(in,25.0);
+        AnchorPane.setRightAnchor(in,10.0);
 
         RoomInfoBox.getChildren().add(in);
 
-
-        RoomInfoBox.setMinHeight(75);
-        RoomInfoBox.setMinWidth(350);
+        RoomInfoBox.setMaxHeight(70);
+        RoomInfoBox.setMaxWidth(400);
 
         //입장 신청 (메소드 오류 발생)
         in.setOnAction(new EventHandler<ActionEvent>() {
