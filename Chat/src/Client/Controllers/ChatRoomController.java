@@ -39,6 +39,7 @@ public class ChatRoomController implements Initializable {
     @FXML private ListView contactList, waitingList;
     ObservableList<GridPane> items = FXCollections.observableArrayList();
 
+    Stage userListStage = new Stage();
     Socket socket = null;
     int std_id;
     String name;
@@ -103,16 +104,15 @@ public class ChatRoomController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
             	System.out.println("userlist display");
-            	Stage stage = new Stage();
                 // 새 창을 띄운다.
 				try {
 	                Parent root;
 					root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Friend.fxml"));
 	                Scene scene = new Scene(root);
-	                stage.setScene(scene);
-                    stage.initModality(Modality.NONE);
-                    stage.initOwner((Stage) userListBtn.getScene().getWindow());
-                    stage.show();
+	                userListStage.setScene(scene);
+	                userListStage.initModality(Modality.NONE);
+	                userListStage.initOwner((Stage) userListBtn.getScene().getWindow());
+	                userListStage.show();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
