@@ -21,10 +21,6 @@ public class Client extends Application{
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
         primaryStage.setTitle("팀프리");
-
-
-
-
         primaryStage.show();
     }
 
