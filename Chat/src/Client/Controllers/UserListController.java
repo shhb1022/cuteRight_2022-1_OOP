@@ -6,9 +6,14 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 
 import java.io.BufferedReader;
@@ -23,11 +28,7 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import Client.*;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
 
 import Client.Models.*;
@@ -37,7 +38,7 @@ public class UserListController implements Initializable {
     @FXML private ListView entranceDisplay,waitingDisplay;
 
     ObservableList<GridPane> ListEntrance = FXCollections.observableArrayList();
-    ObservableList<GridPane> ListWating = FXCollections.observableArrayList();
+    ObservableList<GridPane> ListWaiting = FXCollections.observableArrayList();
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -73,7 +74,7 @@ public class UserListController implements Initializable {
     			
     			//리스트 초기화
     			ListEntrance.clear();
-    			ListWating.clear();
+    			ListWaiting.clear();
     			
     			for(int i=0; i<list.size(); i++) {
     				JSONObject obj = (JSONObject) list.get(i);
@@ -92,40 +93,107 @@ public class UserListController implements Initializable {
     				if(member.getMember().equals("1")) {
     					ListEntrance.add(EntranceInfoBox(member));
     				}else if(member.getMember().equals("0")) {
-    					ListWating.add(WatingInfoBox(member));
+    					ListWaiting.add(WaitingInfoBox(member));
     				}
     			}
     			entranceDisplay.setItems(ListEntrance);
-    			waitingDisplay.setItems(ListWating);
+    			waitingDisplay.setItems(ListWaiting);
     		}
     	} catch (Exception e) {
     		e.printStackTrace();
     	}
     }
+
+//	public AnchorPane EntranceInfoBox(ChatRoomMemberDTO member) {
+////		Label userState = new Label();
+////		Label userStd_id = new Label();
+////		Label userName = new Label();
+////		Label userJob = new Label();
+////		Button banBtn = new Button();
+////		userState.setText(member.getState());
+////		userStd_id.setText(member.getStd_id());
+////		userName.setText(member.getName());
+////		userJob.setText(member.getD_job());
+////		banBtn.setText("퇴장");
+////
+////		userName.setFont(new Font("System", 20));
+//		userStd_id.setFont(new Font("System", 20));
+//		CheckBox userCheck = new CheckBox();
+//		Image img = new Image("/Client/Views/img/user.png");
+//		ImageView view = new ImageView(img);
+//		view.setFitHeight(30);
+//		view.setFitWidth(30);
+//
+//		AnchorPane userInfoBox = new AnchorPane();
+//
+//		AnchorPane.setTopAnchor(userStd_id,10.0);
+//		AnchorPane.setTopAnchor(userName,10.0);
+//		AnchorPane.setLeftAnchor(userStd_id,130.0);
+//		AnchorPane.setLeftAnchor(userName,40.0);
+//
+//
+//		AnchorPane.setTopAnchor(view,5.0);
+//		AnchorPane.setLeftAnchor(view, 5.0);
+//		AnchorPane.setBottomAnchor(view, 5.0);
+//		//AnchorPane.setRightAnchor(view,70.0);
+//
+//		UserInfoBox.getChildren().add(view);
+//
+//		AnchorPane.setTopAnchor(userCheck, 15.0);
+//		AnchorPane.setLeftAnchor(userCheck,260.0);
+//		AnchorPane.setBottomAnchor(userCheck,15.0);
+//		AnchorPane.setRightAnchor(userCheck,7.0);
+//		UserInfoBox.getChildren().add(userCheck);
+//		UserInfoBox.setMaxHeight(40);
+//		UserInfoBox.setMaxWidth(300);
     
     //접속유저
     public GridPane EntranceInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
-        Label userState = new Label();
-        userState.setPrefWidth(20);
+
+        String userState;
+		userState=member.getState();
+        //userState.setPrefWidth(60);
+
+		if(userState=="0"){
+			Image img = new Image("/Client/Views/img/multiply.png");
+			ImageView view = new ImageView(img);
+			view.setFitWidth(10);
+			view.setFitHeight(10);
+			userInfoBox.add(view, 3, 0);
+			view.
+		}else {
+			Image img = new Image("/Client/Views/img/check.png");
+			ImageView view = new ImageView(img);
+			view.setFitWidth(10);
+			view.setFitHeight(10);
+			userInfoBox.add(view, 3, 0);
+		}
+
         Label userStd_id = new Label();
-        userStd_id.setPrefWidth(50);
+        userStd_id.setPrefWidth(70);
         Label userName = new Label();
         userName.setPrefWidth(50);
         Label userJob = new Label();
-        userJob.setPrefWidth(50);
+        userJob.setPrefWidth(60);
         Button banBtn = new Button();
+
         
-        userState.setText(member.getState());
+
         userStd_id.setText(member.getStd_id());
         userName.setText(member.getName());
         userJob.setText(member.getD_job());
         banBtn.setText("퇴장");
+
+		userName.setTextAlignment(TextAlignment.CENTER);
+		userStd_id.setTextAlignment(TextAlignment.CENTER);
+		userJob.setTextAlignment(TextAlignment.CENTER);
+		//userState.setTextAlignment(TextAlignment.CENTER);
         
-        userInfoBox.add(userState, 0, 0);
+;
         userInfoBox.add(userStd_id, 1, 0);
-        userInfoBox.add(userName, 2, 0);
-        userInfoBox.add(userJob, 3, 0);
+        userInfoBox.add(userName, 0, 0);
+        userInfoBox.add(userJob, 2, 0);
         userInfoBox.add(banBtn, 4, 0);
         
         //내가 방장이거나 member의 이름 나와 갖지 않다면 활성화
@@ -168,9 +236,10 @@ public class UserListController implements Initializable {
         
         return userInfoBox;
     }
+
     
     //대기 유저
-    public GridPane WatingInfoBox(ChatRoomMemberDTO member) {
+    public GridPane WaitingInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
         Label userState = new Label();
         userState.setPrefWidth(20);
