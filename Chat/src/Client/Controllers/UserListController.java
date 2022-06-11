@@ -161,7 +161,6 @@ public class UserListController implements Initializable {
 			view.setFitWidth(10);
 			view.setFitHeight(10);
 			userInfoBox.add(view, 3, 0);
-			view.
 		}else {
 			Image img = new Image("/Client/Views/img/check.png");
 			ImageView view = new ImageView(img);
