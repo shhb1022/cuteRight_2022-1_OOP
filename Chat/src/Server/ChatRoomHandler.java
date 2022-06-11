@@ -59,7 +59,7 @@ public class ChatRoomHandler implements HttpHandler {
                         dao.increCur_person(room_id);
                         exchange.sendResponseHeaders(200, 0);
                     }
-                    else { //리더에게 '제한인원이 꽉 차서 입장수락 불가능한 상태~' 안내 팝업 출력
+                    else {//리더에게 '제한인원이 꽉 차서 입장수락 불가능한 상태~' 안내 팝업 출력
                         exchange.sendResponseHeaders(409, 0);
                     }
             	}

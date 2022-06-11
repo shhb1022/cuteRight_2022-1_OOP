@@ -32,11 +32,14 @@ import Client.Models.*;
 public class UserListController implements Initializable {
     @FXML private Button backBtn2;
     @FXML private ListView entranceDisplay,watingDisplay;
+
     ObservableList<GridPane> ListEntrance = FXCollections.observableArrayList();
     ObservableList<GridPane> ListWating = FXCollections.observableArrayList();
     
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+
+
     	
         backBtn2.setOnAction(new EventHandler<ActionEvent>() {
             @Override
@@ -216,6 +219,12 @@ public class UserListController implements Initializable {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
 						alert.setContentText(member.getName()+"를(을) 수락하였습니다.");
+						alert.showAndWait();
+					}
+					else if(http.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
+						Alert alert = new Alert(AlertType.INFORMATION);
+						alert.setHeaderText(null);
+						alert.setContentText("현재 방의 인원이 최대입니다.");
 						alert.showAndWait();
 					}
 					else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {

@@ -19,6 +19,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -109,6 +110,8 @@ public class ChatRoomController implements Initializable {
 					root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Friend.fxml"));
 	                Scene scene = new Scene(root);
 	                stage.setScene(scene);
+                    stage.initModality(Modality.NONE);
+                    stage.initOwner((Stage) userListBtn.getScene().getWindow());
                     stage.show();
 				} catch (Exception e) {
 					// TODO Auto-generated catch block

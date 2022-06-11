@@ -20,11 +20,13 @@ import javafx.scene.control.CheckBox;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
+import javafx.scene.image.ImageView;
 
 import javax.swing.*;
 import java.io.BufferedReader;
@@ -41,7 +43,10 @@ public class MainController implements Initializable {
     @FXML private ListView roomDisplay;
     @FXML private Button logoutBtn, createRoomBtn;
 
-    ObservableList<GridPane> roomList = FXCollections.observableArrayList();
+
+
+
+    ObservableList<AnchorPane> roomList = FXCollections.observableArrayList();
     
 
 	@SuppressWarnings("unchecked")
@@ -73,7 +78,7 @@ public class MainController implements Initializable {
         				int cur_person = Integer.parseInt(obj.get("cur_person").toString());
         				int leader_id = Integer.parseInt(obj.get("leader_id").toString());
         				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
-        				roomList.add(MyRoomBox(room));
+        				roomList.add(MyRoomBox2(room));
                     }
                     roomDisplay.setItems(roomList);
                 }
@@ -109,7 +114,7 @@ public class MainController implements Initializable {
                 				
                 				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
                 				System.out.println(room.toJSONString());
-                				roomList.add(MyRoomBox(room));
+                				roomList.add(MyRoomBox2(room));
                 			}
                 			roomDisplay.setItems(roomList);
                 		}
@@ -136,7 +141,7 @@ public class MainController implements Initializable {
                 				
                 				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
                 				System.out.println(room.toJSONString());
-                				roomList.add(OpenRoomBox(room));
+                				roomList.add(OpenRoomBox2(room));
                 				}
                 			roomDisplay.setItems(roomList);
                         }
@@ -199,37 +204,41 @@ public class MainController implements Initializable {
         });
         
     }
-        
 
-    public GridPane MyRoomBox(ChatRoomInfoDTO room) {
-        GridPane RoomInfoBox = new GridPane();
+    public AnchorPane MyRoomBox2(ChatRoomInfoDTO room) {
         Label roomTitle = new Label();
-        Label roomId = new Label();
-        roomId.setPrefWidth(50);
+        roomTitle.setText(room.getTitle());
         Button in = new Button();
         in.setText("입장");
+        AnchorPane RoomInfoBox = new AnchorPane(roomTitle);
 
-        
-        roomTitle.setText(room.getTitle());
-        roomId.setText(Integer.toString(room.getRoom_id()));
-        
-        RoomInfoBox.add(roomTitle, 1, 0);
-        RoomInfoBox.add(roomId,0,0);
-        RoomInfoBox.add(in, 2,1);
+        AnchorPane.setTopAnchor(roomTitle, 15.0);
+        AnchorPane.setLeftAnchor(roomTitle,15.0);
+        AnchorPane.setBottomAnchor(roomTitle, 55.0);
 
-        //버튼을 누르면 입장 가능한지 확인을 요청하고 http_ok가 들어오면 입장을 한다.
+        AnchorPane.setTopAnchor(in,50.0);
+        AnchorPane.setLeftAnchor(in,350.0);
+        AnchorPane.setBottomAnchor(in,5.0);
+        AnchorPane.setRightAnchor(in,25.0);
+
+        RoomInfoBox.getChildren().add(in);
+
+
+        RoomInfoBox.setMinHeight(75);
+        RoomInfoBox.setMinWidth(350);
+
         in.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 try {
-                	URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
+                    URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Admission","ENTRANCE");
-                    
+
                     if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            			Status.setCurrentRoom(room);
-            			
-            			// 현재 창을 종료한다.
+                        Status.setCurrentRoom(room);
+
+                        // 현재 창을 종료한다.
                         Stage currStage = (Stage) in.getScene().getWindow();
                         currStage.close();
 
@@ -239,10 +248,10 @@ public class MainController implements Initializable {
                         Scene scene = new Scene(root);
                         stage.setScene(scene);
                         stage.show();
-            		}
+                    }
                     else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                    	Alert alert = new Alert(AlertType.INFORMATION);
-                    	alert.setHeaderText(null);
+                        Alert alert = new Alert(AlertType.INFORMATION);
+                        alert.setHeaderText(null);
                         alert.setContentText("입장할 수 없는 방 입니다.");
                         alert.showAndWait();
                         //자동 갱신 필요
@@ -250,31 +259,91 @@ public class MainController implements Initializable {
                 } catch (Exception e){
                     e.printStackTrace();
                 }
-
-
-            }
-        });
-
-
-
-        return RoomInfoBox;
     }
-    
-    public GridPane OpenRoomBox(ChatRoomInfoDTO room) {
-        GridPane RoomInfoBox = new GridPane();
-        Label roomTitle = new Label();
-        Label roomId = new Label();
-        roomId.setPrefWidth(50);
-        Button in = new Button();
-        in.setText("입장 신청");
+        });
+        return RoomInfoBox;}
+        
 
-        
+//    public GridPane MyRoomBox(ChatRoomInfoDTO room) {
+//        GridPane RoomInfoBox = new GridPane();
+//        Label roomTitle = new Label();
+//        Label roomId = new Label();
+//        roomId.setPrefWidth(50);
+//        Button in = new Button();
+//        in.setText("입장");
+//
+//
+//        roomTitle.setText(room.getTitle());
+//        roomId.setText(Integer.toString(room.getRoom_id()));
+//
+//        RoomInfoBox.add(roomTitle, 5, 0);
+//        RoomInfoBox.add(roomId,0,0);
+//        RoomInfoBox.add(in, 10,1);
+//
+//        //버튼을 누르면 입장 가능한지 확인을 요청하고 http_ok가 들어오면 입장을 한다.
+//        in.setOnAction(new EventHandler<ActionEvent>() {
+//            public void handle(ActionEvent event) {
+//                try {
+//                	URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
+//                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
+//                    http.setRequestMethod("GET");
+//                    http.setRequestProperty("Admission","ENTRANCE");
+//
+//                    if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+//            			Status.setCurrentRoom(room);
+//
+//            			// 현재 창을 종료한다.
+//                        Stage currStage = (Stage) in.getScene().getWindow();
+//                        currStage.close();
+//
+//                        // 새 창을 띄운다.
+//                        Stage stage = new Stage();
+//                        Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/ChatRoom.fxml"));
+//                        Scene scene = new Scene(root);
+//                        stage.setScene(scene);
+//                        stage.show();
+//            		}
+//                    else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
+//                    	Alert alert = new Alert(AlertType.INFORMATION);
+//                    	alert.setHeaderText(null);
+//                        alert.setContentText("입장할 수 없는 방 입니다.");
+//                        alert.showAndWait();
+//                        //자동 갱신 필요
+//                    }
+//                } catch (Exception e){
+//                    e.printStackTrace();
+//                }
+//
+//
+//            }
+//        });
+//
+//
+//
+//        return RoomInfoBox;
+//    }
+    
+    public AnchorPane OpenRoomBox2(ChatRoomInfoDTO room) {
+        Label roomTitle = new Label();
         roomTitle.setText(room.getTitle());
-        roomId.setText(Integer.toString(room.getRoom_id()));
-        
-        RoomInfoBox.add(roomTitle, 1, 0);
-        RoomInfoBox.add(roomId,0,0);
-        RoomInfoBox.add(in, 2,1);
+        Button in = new Button();
+        in.setText("입장");
+        AnchorPane RoomInfoBox = new AnchorPane(roomTitle);
+
+        AnchorPane.setTopAnchor(roomTitle, 15.0);
+        AnchorPane.setLeftAnchor(roomTitle,15.0);
+        AnchorPane.setBottomAnchor(roomTitle, 55.0);
+
+        AnchorPane.setTopAnchor(in,50.0);
+        AnchorPane.setLeftAnchor(in,350.0);
+        AnchorPane.setBottomAnchor(in,5.0);
+        AnchorPane.setRightAnchor(in,25.0);
+
+        RoomInfoBox.getChildren().add(in);
+
+
+        RoomInfoBox.setMinHeight(75);
+        RoomInfoBox.setMinWidth(350);
 
         //입장 신청 (메소드 오류 발생)
         in.setOnAction(new EventHandler<ActionEvent>() {

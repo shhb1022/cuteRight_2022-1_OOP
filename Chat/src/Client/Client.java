@@ -1,11 +1,13 @@
 package Client;
 
 import javafx.application.Application;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -18,7 +20,11 @@ public class Client extends Application{
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
         primaryStage.setResizable(false);
-        primaryStage.setTitle("Client");
+        primaryStage.setTitle("팀프리");
+
+
+
+
         primaryStage.show();
     }
 
