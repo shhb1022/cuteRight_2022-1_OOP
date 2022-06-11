@@ -23,6 +23,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
+
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -49,6 +51,7 @@ public class ChatRoomController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+    	Stage userListStage = new Stage();
         addTextLimiter(chatInput, 256);
         std_id = Integer.parseInt(Status.getId());
         name = Status.getName();
@@ -107,17 +110,27 @@ public class ChatRoomController implements Initializable {
             @Override
             public void handle(MouseEvent event) {
             	System.out.println("userlist display");
-            	Stage stage = new Stage();
                 // 새 창을 띄운다.
 				try {
 	                Parent root;
 					root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Friend.fxml"));
 	                Scene scene = new Scene(root);
+<<<<<<< HEAD
                     stage.initModality(Modality.NONE);
                     stage.initOwner((Stage) userListBtn.getScene().getWindow());
 	                stage.setScene(scene);
                     stage.setResizable(false);
                     stage.show();
+=======
+	                Stage currStage = (Stage)userListBtn.getScene().getWindow();
+	                currStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+	                	  public void handle(WindowEvent event) {
+	                          userListStage.close();
+	                       }
+	                   });
+	                userListStage.setScene(scene);
+	                userListStage.show();
+>>>>>>> a1bed8f75971fcd832f17037aa0751d717f1f44f
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
