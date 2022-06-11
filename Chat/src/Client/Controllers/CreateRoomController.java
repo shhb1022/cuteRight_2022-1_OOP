@@ -15,9 +15,14 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -44,8 +49,10 @@ public class CreateRoomController implements Initializable {
     @FXML private TextField setTitle;
     @FXML private ComboBox<String> setLimitPersonnel;
     @FXML private ListView usersDisplay;
-    @FXML private Button backtoMainBtn2,createBtn;
-	ObservableList<GridPane> ListUsers = FXCollections.observableArrayList();
+    @FXML private Button createBtn;
+
+	@FXML private ImageView backToMainBtn2;
+	ObservableList<AnchorPane> ListUsers = FXCollections.observableArrayList();
 	String[] limit_personList = {"2","3","4","5","6","7","8","9","10"};
 	//유저 초대에 쓰는 배열 더 좋은게 생각이 안나므로 임시로
 	Vector<String> userInvitation = new Vector<String>();
@@ -56,11 +63,11 @@ public class CreateRoomController implements Initializable {
 		setLimitPersonnel.setItems(comboNumList);
 		setLimitPersonnel.getSelectionModel().selectFirst();
     	
-    	backtoMainBtn2.setOnAction(new EventHandler<ActionEvent>() {
-    		public void handle(ActionEvent event) {
+    	backToMainBtn2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+    		public void handle(MouseEvent event) {
     			try {
                 	// 현재 창을 종료한다.
-                    Stage currStage = (Stage) backtoMainBtn2.getScene().getWindow();
+                    Stage currStage = (Stage) backToMainBtn2.getScene().getWindow();
                     currStage.close();
                     
         			Stage stage = new Stage();
@@ -197,21 +204,57 @@ public class CreateRoomController implements Initializable {
     		e.printStackTrace();
     	}
     }
+
+	public AnchorPane UserInfoBox(String std_id,String name) {
+		Label userStd_id = new Label();
+		Label userName = new Label();
+		userStd_id.setText(std_id);
+		userName.setText(name);
+		userName.setFont(new Font("System", 20));
+		userStd_id.setFont(new Font("System", 20));
+		CheckBox userCheck = new CheckBox();
+		Image img = new Image("/Client/Views/img/user.png");
+		ImageView view = new ImageView(img);
+		view.setFitHeight(30);
+		view.setFitWidth(30);
+
+		AnchorPane UserInfoBox = new AnchorPane(userStd_id, userName);
+
+		AnchorPane.setTopAnchor(userStd_id,10.0);
+		AnchorPane.setTopAnchor(userName,10.0);
+		AnchorPane.setLeftAnchor(userStd_id,130.0);
+		AnchorPane.setLeftAnchor(userName,40.0);
+
+
+		AnchorPane.setTopAnchor(view,5.0);
+		AnchorPane.setLeftAnchor(view, 5.0);
+		AnchorPane.setBottomAnchor(view, 5.0);
+		//AnchorPane.setRightAnchor(view,70.0);
+
+		UserInfoBox.getChildren().add(view);
+
+		AnchorPane.setTopAnchor(userCheck, 15.0);
+		AnchorPane.setLeftAnchor(userCheck,260.0);
+		AnchorPane.setBottomAnchor(userCheck,15.0);
+		AnchorPane.setRightAnchor(userCheck,7.0);
+		UserInfoBox.getChildren().add(userCheck);
+		UserInfoBox.setMaxHeight(40);
+		UserInfoBox.setMaxWidth(300);
     
-    public GridPane UserInfoBox(String std_id,String name) {
-        GridPane userInfoBox = new GridPane();
-        Label userStd_id = new Label();
-        userStd_id.setPrefWidth(100);
-        Label userName = new Label();
-        userName.setPrefWidth(100);
-        CheckBox userCheck = new CheckBox();
-        
-        userStd_id.setText(std_id);
-        userName.setText(name);
-        
-        userInfoBox.add(userStd_id, 1, 0);
-        userInfoBox.add(userName, 2, 0);
-        userInfoBox.add(userCheck, 0, 0);
+//    public GridPane UserInfoBox(String std_id,String name) {
+//        GridPane userInfoBox = new GridPane();
+//        Label userStd_id = new Label();
+//        userStd_id.setPrefWidth(100);
+//        Label userName = new Label();
+//        userName.setPrefWidth(100);
+//        CheckBox userCheck = new CheckBox();
+//
+//        userStd_id.setText(std_id);
+//        userName.setText(name);
+//
+//        userInfoBox.add(userStd_id, 1, 0);
+//        userInfoBox.add(userName, 2, 0);
+//        userInfoBox.add(userCheck, 0, 0);
         
         userCheck.setOnAction(new EventHandler<ActionEvent>() {
     		public void handle(ActionEvent event) {
@@ -222,7 +265,7 @@ public class CreateRoomController implements Initializable {
     	    	}
     		}
     	});
-        return userInfoBox;
+        return UserInfoBox;
     }
 
 

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ListView?>
@@ -20,10 +21,14 @@
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
                </HBox.margin>
             </ImageView>
-            <ComboBox fx:id="chooseRoomList" prefHeight="49.0" prefWidth="308.0" styleClass="transparent-background" stylesheets="@../Values/style.css">
+            <ComboBox fx:id="chooseRoomList" prefHeight="49.0" prefWidth="308.0" stylesheets="@../Values/style.css">
                <HBox.margin>
                   <Insets />
-               </HBox.margin></ComboBox>
+               </HBox.margin>
+               <styleClass>
+                  <String fx:value="transparent-background" />
+                  <String fx:value="my-style" />
+               </styleClass></ComboBox>
             <ImageView fx:id="createRoomBtn" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <HBox.margin>
                   <Insets left="1.0" top="5.0" />
