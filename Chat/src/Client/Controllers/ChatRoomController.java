@@ -38,7 +38,9 @@ import java.util.ResourceBundle;
 
 public class ChatRoomController implements Initializable {
     @FXML private TextArea txtDisplay;
-    @FXML private TextField chatInput,title;
+    @FXML private TextField chatInput;
+
+    @FXML private Label title;
     @FXML private ImageView backToMainBtn, userListBtn, sendBtn;
 
     @FXML private ListView contactList, waitingList;
@@ -119,6 +121,7 @@ public class ChatRoomController implements Initializable {
 	                userListStage.setScene(scene);
 	                userListStage.setX(1500.0);
 	                userListStage.setY(95.0);
+                    userListStage.setResizable(false);
 	                userListStage.show();
 	                Stage currStage = (Stage) userListBtn.getScene().getWindow();
 	                   currStage.setOnCloseRequest(new EventHandler<WindowEvent>() {

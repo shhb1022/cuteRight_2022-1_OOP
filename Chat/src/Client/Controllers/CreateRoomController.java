@@ -222,8 +222,8 @@ public class CreateRoomController implements Initializable {
 		Label userName = new Label();
 		userStd_id.setText(std_id);
 		userName.setText(name);
-		userName.setFont(new Font("System", 20));
-		userStd_id.setFont(new Font("System", 20));
+		userName.setFont(new Font("System", 16));
+		userStd_id.setFont(new Font("System", 16));
 		CheckBox userCheck = new CheckBox();
 		Image img = new Image("/Client/Views/img/user.png");
 		ImageView view = new ImageView(img);

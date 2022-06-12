@@ -215,7 +215,7 @@ public class UserListController implements Initializable {
 					if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
-						alert.setContentText(member.getName()+"가 방에서 퇴장 당하였습니다");
+						alert.setContentText(member.getName()+"님이 방에서 퇴장 당하였습니다");
 						alert.showAndWait();
 					}
 					else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
@@ -310,7 +310,7 @@ public class UserListController implements Initializable {
 					if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
-						alert.setContentText(member.getName()+"를(을) 수락하였습니다.");
+						alert.setContentText(member.getName()+"님을 수락하였습니다.");
 						alert.showAndWait();
 					}
 					else if(http.getResponseCode() == HttpURLConnection.HTTP_CONFLICT) {
@@ -346,7 +346,7 @@ public class UserListController implements Initializable {
 					if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
 						Alert alert = new Alert(AlertType.INFORMATION);
 						alert.setHeaderText(null);
-						alert.setContentText(member.getName()+"를(을) 거절하였습니다.");
+						alert.setContentText(member.getName()+"님을 거절하였습니다.");
 						alert.showAndWait();
 						//재갱신
 					}
