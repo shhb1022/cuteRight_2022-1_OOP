@@ -63,7 +63,7 @@ public class MainController implements Initializable {
 
         try {
             if (selectedRoom.equals("내 채팅방")) {
-                URL url = new URL("http://localhost:3000/?std_id=" + Status.getId());
+                URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/?std_id=" + Status.getId());
                 HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 http.setRequestMethod("GET");
 
@@ -96,7 +96,7 @@ public class MainController implements Initializable {
                 String selectedRoom = (String) chooseRoomList.getValue();
                 try {
                 	if(selectedRoom.equals("내 채팅방")) {
-                		URL url = new URL("http://localhost:3000/?std_id="+Status.getId());
+                		URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/?std_id="+Status.getId());
                         HttpURLConnection http = (HttpURLConnection) url.openConnection();
                         http.setRequestMethod("GET");
                         
@@ -123,7 +123,7 @@ public class MainController implements Initializable {
                 		}
                 	}
                 	else if(selectedRoom.equals("전체채팅방")) {
-                		URL url = new URL("http://localhost:3000/?std_id=-"+Status.getId());
+                		URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/?std_id=-"+Status.getId());
                 		HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 		http.setRequestMethod("GET");
                             
@@ -184,7 +184,7 @@ public class MainController implements Initializable {
 //                String pw = UserInfo.getPw(); //굳이??
                 Stage stage = new Stage();
                 try {
-                    URL url = new URL("http://localhost:3000/logout");
+                    URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/logout");
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Authorization", Status.getId());
@@ -252,7 +252,7 @@ public class MainController implements Initializable {
         in.setOnAction(new EventHandler<ActionEvent>() {
             public void handle(ActionEvent event) {
                 try {
-                    URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
+                    URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Admission","ENTRANCE");
@@ -385,7 +385,7 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 Stage stage = new Stage();
                 try {
-                    URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
+                    URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
                     HttpURLConnection http = (HttpURLConnection)url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Admission","PROPOSAL");

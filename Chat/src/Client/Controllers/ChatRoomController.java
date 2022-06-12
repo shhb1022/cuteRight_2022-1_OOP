@@ -156,7 +156,7 @@ public class ChatRoomController implements Initializable {
             byte[] data = MessagePacker.intToByteArray(currentRoom.getRoom_id(), 2);
             send(data);
 
-            URL url = new URL("http://localhost:3000/chatMessage?room_id="+currentRoom.getRoom_id());
+            URL url = new URL("http://" +SocketConnection.SERVER_IP+":3000/chatMessage?room_id="+currentRoom.getRoom_id());
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod("GET");
             http.setRequestProperty("Authorization", Status.getId()+":"+Status.getPw());

@@ -127,7 +127,7 @@ public class CreateRoomController implements Initializable {
             	
                 // 서버와 연결                
                 try {               	
-                	URL url = new URL("http://localhost:3000/createRoom");
+                	URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/createRoom");
                 	HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 	http.setRequestMethod("POST");  
                 	http.setDoOutput(true);
@@ -195,7 +195,7 @@ public class CreateRoomController implements Initializable {
     //유저 정보를 요청하고 리스트에 출력한다.
     void usersList() {
     	try {
-    		URL url = new URL("http://localhost:3000/createRoom");
+    		URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/createRoom");
     		HttpURLConnection http = (HttpURLConnection) url.openConnection();
     		http.setRequestMethod("GET");
     		http.setRequestProperty("Authorization", Status.getId()+":"+Status.getPw());

@@ -105,7 +105,7 @@ public class SignInController implements Initializable {
             	UsersDTO users = new UsersDTO(Integer.parseInt(std_id),name,d_job,0,pwd);
                 // 서버와 연결
                 try {               	
-                	URL url = new URL("http://localhost:3000/signin");
+                	URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/signin");
                 	HttpURLConnection http = (HttpURLConnection) url.openConnection();
                 	http.setRequestMethod("POST");                
                 	http.setDoOutput(true);

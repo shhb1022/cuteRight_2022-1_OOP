@@ -61,7 +61,7 @@ public class UserListController implements Initializable {
     //유저 정보를 요청하고 리스트에 출력한다.
     void roomUsersList() {
     	try {
-    		URL url = new URL("http://localhost:3000/userList?room_id="+Status.getCurrentRoom().getRoom_id());
+    		URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/userList?room_id="+Status.getCurrentRoom().getRoom_id());
     		HttpURLConnection http = (HttpURLConnection) url.openConnection();
     		http.setRequestMethod("GET");
 
@@ -207,7 +207,7 @@ public class UserListController implements Initializable {
     		public void handle(ActionEvent event) {
     			System.out.println(member.getName()+" 강퇴");
     			try {
-					URL url = new URL("http://localhost:3000/chatRoom?room_id="+Status.getCurrentRoom().getRoom_id()+"&std_id="+member.getStd_id());
+					URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/chatRoom?room_id="+Status.getCurrentRoom().getRoom_id()+"&std_id="+member.getStd_id());
 					HttpURLConnection http = (HttpURLConnection) url.openConnection();
 					http.setRequestMethod("GET");
 					http.setRequestProperty("Admission", "BAN");
@@ -279,7 +279,7 @@ public class UserListController implements Initializable {
     		public void handle(ActionEvent event) {
     			System.out.println(member.getName()+" 수락");
     			try {
-					URL url = new URL("http://localhost:3000/chatRoom?room_id="+Status.getCurrentRoom().getRoom_id()+"&std_id="+member.getStd_id());
+					URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/chatRoom?room_id="+Status.getCurrentRoom().getRoom_id()+"&std_id="+member.getStd_id());
 					HttpURLConnection http = (HttpURLConnection) url.openConnection();
 					http.setRequestMethod("GET");
 					http.setRequestProperty("Admission", "ACCEPT");
@@ -315,7 +315,7 @@ public class UserListController implements Initializable {
     		public void handle(ActionEvent event) {
     			System.out.println(member.getName()+" 거절");
     			try {
-					URL url = new URL("http://localhost:3000/chatRoom?room_id="+Status.getCurrentRoom().getRoom_id()+"&std_id="+member.getStd_id());
+					URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/chatRoom?room_id="+Status.getCurrentRoom().getRoom_id()+"&std_id="+member.getStd_id());
 					HttpURLConnection http = (HttpURLConnection) url.openConnection();
 					http.setRequestMethod("GET");
 					http.setRequestProperty("Admission", "REFUSE");

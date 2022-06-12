@@ -1,5 +1,6 @@
 package Client.Controllers;
 
+import Client.SocketConnection;
 import Client.Status;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -63,7 +64,7 @@ public class LoginController implements Initializable {
 
                 // 서버와 연결
                 try {
-                    URL url = new URL("http://localhost:3000/login");
+                    URL url = new URL("http://"+ SocketConnection.SERVER_IP+":3000/login");
                     HttpURLConnection http = (HttpURLConnection) url.openConnection();
                     http.setRequestMethod("GET");
                     http.setRequestProperty("Authorization", id+":"+pw);

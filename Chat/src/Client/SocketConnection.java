@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.*;
 
 public class SocketConnection {
+    public static final String SERVER_IP = "0000.0000.0000";
     public static boolean socketConnect = false;
     public static Socket socket = null;
 
@@ -17,7 +18,6 @@ public class SocketConnection {
     public static void connect() throws UnknownHostException, SocketException {
         if(!socketConnect) {
             // 자신의 IP주소 넣기
-            final String SERVER_IP = InetAddress.getLocalHost().getHostAddress();
             final int SERVER_PORT = 5001;
 
             socket = new Socket();
