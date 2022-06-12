@@ -240,28 +240,51 @@ public class UserListController implements Initializable {
     //대기 유저
     public GridPane WaitingInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
-        Label userState = new Label();
-        userState.setPrefWidth(20);
-        Label userStd_id = new Label();
-        userStd_id.setPrefWidth(50);
-        Label userName = new Label();
-        userName.setPrefWidth(50);
-        Label userJob = new Label();
-        userJob.setPrefWidth(50);
-        Button acceptBtn = new Button();
-        Button refuseBtn = new Button();
-        
-        userState.setText(member.getState());
-        userStd_id.setText(member.getStd_id());
-        userName.setText(member.getName());
-        userJob.setText(member.getD_job());
-        acceptBtn.setText("수락");
-        refuseBtn.setText("거절");
-        
-        userInfoBox.add(userState, 0, 0);
-        userInfoBox.add(userStd_id, 1, 0);
-        userInfoBox.add(userName, 2, 0);
-        userInfoBox.add(userJob, 3, 0);
+
+		String userState;
+		userState=member.getState();
+		//userState.setPrefWidth(60);
+
+		if(userState=="0"){
+			Image img = new Image("/Client/Views/img/multiply.png");
+			ImageView view = new ImageView(img);
+			view.setFitWidth(10);
+			view.setFitHeight(10);
+			userInfoBox.add(view, 3, 0);
+		}else {
+			Image img = new Image("/Client/Views/img/check.png");
+			ImageView view = new ImageView(img);
+			view.setFitWidth(10);
+			view.setFitHeight(10);
+			userInfoBox.add(view, 3, 0);
+		}
+
+		Label userStd_id = new Label();
+		userStd_id.setPrefWidth(70);
+		Label userName = new Label();
+		userName.setPrefWidth(50);
+		Label userJob = new Label();
+		userJob.setPrefWidth(60);;
+		Button acceptBtn = new Button();
+		Button refuseBtn = new Button();
+
+
+		userStd_id.setText(member.getStd_id());
+		userName.setText(member.getName());
+		userJob.setText(member.getD_job());
+		acceptBtn.setText("수락");
+		refuseBtn.setText("거절");
+
+
+		userName.setTextAlignment(TextAlignment.CENTER);
+		userStd_id.setTextAlignment(TextAlignment.CENTER);
+		userJob.setTextAlignment(TextAlignment.CENTER);
+		//userState.setTextAlignment(TextAlignment.CENTER);
+
+		;
+		userInfoBox.add(userStd_id, 1, 0);
+		userInfoBox.add(userName, 0, 0);
+		userInfoBox.add(userJob, 2, 0);
         userInfoBox.add(acceptBtn, 4, 0);
         userInfoBox.add(refuseBtn, 5, 0);
         
