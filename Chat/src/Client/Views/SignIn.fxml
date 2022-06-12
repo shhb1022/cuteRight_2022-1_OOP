@@ -29,7 +29,9 @@
          </children>
       </HBox>
       <TextField fx:id="nameInput" layoutX="65.0" layoutY="140.0" prefHeight="30.0" prefWidth="270.0" styleClass="radius" stylesheets="@../Values/style.css" />
+      <TextField fx:id="newIdInput" layoutX="65.0" layoutY="210.0" prefHeight="30.0" prefWidth="270.0" styleClass="radius" stylesheets="@../Values/style.css" />
       <TextField fx:id="newPwdInput" layoutX="65.0" layoutY="283.0" prefHeight="30.0" prefWidth="270.0" styleClass="radius" />
+      <TextField fx:id="jobInput" layoutX="65.0" layoutY="351.0" prefHeight="30.0" prefWidth="270.0" styleClass="radius" />
       <Label layoutX="65.0" layoutY="113.0" prefHeight="27.0" prefWidth="74.0" text="이름">
          <font>
             <Font size="18.0" />
@@ -40,7 +42,6 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="newIdInput" layoutX="65.0" layoutY="210.0" prefHeight="30.0" prefWidth="270.0" styleClass="radius" stylesheets="@../Values/style.css" />
       <Label layoutX="65.0" layoutY="256.0" prefHeight="27.0" prefWidth="90.0" text="비밀번호">
          <font>
             <Font size="18.0" />
@@ -51,7 +52,6 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="jobInput" layoutX="65.0" layoutY="351.0" prefHeight="30.0" prefWidth="270.0" styleClass="radius" />
       <Button fx:id="signUpDoneBtn" alignment="CENTER" layoutX="65.0" layoutY="421.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="270.0" style="-fx-background-color: #ddd6f3;" stylesheets="@../Values/style.css" text="가입하기">
          <font>
             <Font size="20.0" />

@@ -43,7 +43,7 @@ public class SignInController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
 
         if(newIdInput.getText().equals("")) {
-            newIdInput.setPromptText("학번9자리로 입력하세요.");
+            newIdInput.setPromptText("학번9자리(숫자)로 입력하세요.");
         }
         if(jobInput.getText().equals("")) {
             jobInput.setPromptText("예:프론트, 백엔드");
@@ -66,10 +66,17 @@ public class SignInController implements Initializable {
                     alert.showAndWait();
                     return;
                 }
+                if(name.length()>4){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("이름을 4자 이내로 입력하세요");
+                    alert.showAndWait();
+                    return;
+                }
                 if(std_id.length()!=9) { //std_id에 입력한 값이 9자리인지 확인
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setHeaderText(null);
-                    alert.setContentText("학번 9자리를 입력하세요.");
+                    alert.setContentText("학번9자리(숫자)로 입력하세요.");
                     alert.showAndWait();
                     return;
                 }
