@@ -52,11 +52,11 @@ public class MainController implements Initializable {
     ObservableList<AnchorPane> roomList = FXCollections.observableArrayList();
     
 
-	@SuppressWarnings("unchecked")
-	public void initialize(URL location, ResourceBundle resources) {
+   @SuppressWarnings("unchecked")
+   public void initialize(URL location, ResourceBundle resources) {
 
 
-        ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "전체채팅방");
+        ObservableList<String> requestRoomList = FXCollections.observableArrayList("내 채팅방", "오픈채팅방");
         chooseRoomList.setItems(requestRoomList);
         chooseRoomList.getSelectionModel().selectFirst();
         String selectedRoom = (String) chooseRoomList.getValue();
@@ -74,14 +74,14 @@ public class MainController implements Initializable {
                     JSONArray list = (JSONArray) parser.parse(br);
                     roomList.clear();
                     for (int i = 0; i < list.size(); i++) {
-                    	JSONObject obj = (JSONObject) list.get(i);
-        				int room_id = Integer.parseInt(obj.get("room_id").toString());
-        				String title = obj.get("title").toString();
-        				int limit_person = Integer.parseInt(obj.get("limit_person").toString());
-        				int cur_person = Integer.parseInt(obj.get("cur_person").toString());
-        				int leader_id = Integer.parseInt(obj.get("leader_id").toString());
-        				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
-        				roomList.add(MyRoomBox2(room));
+                       JSONObject obj = (JSONObject) list.get(i);
+                    int room_id = Integer.parseInt(obj.get("room_id").toString());
+                    String title = obj.get("title").toString();
+                    int limit_person = Integer.parseInt(obj.get("limit_person").toString());
+                    int cur_person = Integer.parseInt(obj.get("cur_person").toString());
+                    int leader_id = Integer.parseInt(obj.get("leader_id").toString());
+                    ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
+                    roomList.add(MyRoomBox2(room));
                     }
                     roomDisplay.setItems(roomList);
                 }
@@ -95,60 +95,60 @@ public class MainController implements Initializable {
             public void handle(ActionEvent event) {
                 String selectedRoom = (String) chooseRoomList.getValue();
                 try {
-                	if(selectedRoom.equals("내 채팅방")) {
-                		URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/?std_id="+Status.getId());
+                   if(selectedRoom.equals("내 채팅방")) {
+                      URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/?std_id="+Status.getId());
                         HttpURLConnection http = (HttpURLConnection) url.openConnection();
                         http.setRequestMethod("GET");
                         
                         if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                			InputStream is = http.getInputStream();
-            				BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-                			JSONParser parser = new JSONParser();
-                			JSONArray list = (JSONArray)parser.parse(br);
-                			roomList.clear();
-                			for(int i=0; i<list.size(); i++) {
-                				JSONObject obj = (JSONObject) list.get(i);
-                				
-                				int room_id = Integer.parseInt(obj.get("room_id").toString());
-                				String title = obj.get("title").toString();
-                				int limit_person = Integer.parseInt(obj.get("limit_person").toString());
-                				int cur_person = Integer.parseInt(obj.get("cur_person").toString());
-                				int leader_id = Integer.parseInt(obj.get("leader_id").toString());
-                				
-                				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
-                				System.out.println(room.toJSONString());
-                				roomList.add(MyRoomBox2(room));
-                			}
-                			roomDisplay.setItems(roomList);
-                		}
-                	}
-                	else if(selectedRoom.equals("전체채팅방")) {
-                		URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/?std_id=-"+Status.getId());
-                		HttpURLConnection http = (HttpURLConnection) url.openConnection();
-                		http.setRequestMethod("GET");
+                         InputStream is = http.getInputStream();
+                        BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                         JSONParser parser = new JSONParser();
+                         JSONArray list = (JSONArray)parser.parse(br);
+                         roomList.clear();
+                         for(int i=0; i<list.size(); i++) {
+                            JSONObject obj = (JSONObject) list.get(i);
                             
-                		if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                			InputStream is = http.getInputStream();
-                			BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
-                			JSONParser parser = new JSONParser();
-                			JSONArray list = (JSONArray)parser.parse(br);
-                			roomList.clear();
-                			for(int i=0; i<list.size(); i++) {
-                				JSONObject obj = (JSONObject) list.get(i);
-                				
-                				int room_id = Integer.parseInt(obj.get("room_id").toString());
-                				String title = obj.get("title").toString();
-                				int limit_person = Integer.parseInt(obj.get("limit_person").toString());
-                				int cur_person = Integer.parseInt(obj.get("cur_person").toString());
-                				int leader_id = Integer.parseInt(obj.get("leader_id").toString());
-                				
-                				ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
-                				System.out.println(room.toJSONString());
-                				roomList.add(OpenRoomBox2(room));
-                				}
-                			roomDisplay.setItems(roomList);
+                            int room_id = Integer.parseInt(obj.get("room_id").toString());
+                            String title = obj.get("title").toString();
+                            int limit_person = Integer.parseInt(obj.get("limit_person").toString());
+                            int cur_person = Integer.parseInt(obj.get("cur_person").toString());
+                            int leader_id = Integer.parseInt(obj.get("leader_id").toString());
+                            
+                            ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
+                            System.out.println(room.toJSONString());
+                            roomList.add(MyRoomBox2(room));
+                         }
+                         roomDisplay.setItems(roomList);
+                      }
+                   }
+                   else if(selectedRoom.equals("오픈채팅방")) {
+                      URL url = new URL("http://"+SocketConnection.SERVER_IP+":3000/?std_id=-"+Status.getId());
+                      HttpURLConnection http = (HttpURLConnection) url.openConnection();
+                      http.setRequestMethod("GET");
+                            
+                      if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
+                         InputStream is = http.getInputStream();
+                         BufferedReader br = new BufferedReader(new InputStreamReader(is, "utf-8"));
+                         JSONParser parser = new JSONParser();
+                         JSONArray list = (JSONArray)parser.parse(br);
+                         roomList.clear();
+                         for(int i=0; i<list.size(); i++) {
+                            JSONObject obj = (JSONObject) list.get(i);
+                            
+                            int room_id = Integer.parseInt(obj.get("room_id").toString());
+                            String title = obj.get("title").toString();
+                            int limit_person = Integer.parseInt(obj.get("limit_person").toString());
+                            int cur_person = Integer.parseInt(obj.get("cur_person").toString());
+                            int leader_id = Integer.parseInt(obj.get("leader_id").toString());
+                            
+                            ChatRoomInfoDTO room = new ChatRoomInfoDTO(room_id,title,limit_person,cur_person,leader_id);
+                            System.out.println(room.toJSONString());
+                            roomList.add(OpenRoomBox2(room));
+                            }
+                         roomDisplay.setItems(roomList);
                         }
-                	}
+                   }
                     
 
                 } catch (Exception e) {
@@ -157,7 +157,7 @@ public class MainController implements Initializable {
             }
         });
 
-    	createRoomBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+       createRoomBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 Stage stage = new Stage();
@@ -306,15 +306,15 @@ public class MainController implements Initializable {
 //        in.setOnAction(new EventHandler<ActionEvent>() {
 //            public void handle(ActionEvent event) {
 //                try {
-//                	URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
+//                   URL url = new URL("http://localhost:3000/chatRoom?room_id="+room.getRoom_id()+"&std_id="+Status.getId());
 //                    HttpURLConnection http = (HttpURLConnection) url.openConnection();
 //                    http.setRequestMethod("GET");
 //                    http.setRequestProperty("Admission","ENTRANCE");
 //
 //                    if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-//            			Status.setCurrentRoom(room);
+//                     Status.setCurrentRoom(room);
 //
-//            			// 현재 창을 종료한다.
+//                     // 현재 창을 종료한다.
 //                        Stage currStage = (Stage) in.getScene().getWindow();
 //                        currStage.close();
 //
@@ -324,10 +324,10 @@ public class MainController implements Initializable {
 //                        Scene scene = new Scene(root);
 //                        stage.setScene(scene);
 //                        stage.show();
-//            		}
+//                  }
 //                    else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
-//                    	Alert alert = new Alert(AlertType.INFORMATION);
-//                    	alert.setHeaderText(null);
+//                       Alert alert = new Alert(AlertType.INFORMATION);
+//                       alert.setHeaderText(null);
 //                        alert.setContentText("입장할 수 없는 방 입니다.");
 //                        alert.showAndWait();
 //                        //자동 갱신 필요
@@ -391,24 +391,31 @@ public class MainController implements Initializable {
                     http.setRequestProperty("Admission","PROPOSAL");
                     
                     if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
-                    	Alert alert = new Alert(AlertType.INFORMATION);
-                    	alert.setHeaderText(null);
-                    	alert.setContentText(room.getRoom_id()+" 방의 입장 신청이 완료되었습니다");
-                    	alert.showAndWait();
-                    	//자동갱신 필요
+                       Alert alert = new Alert(AlertType.INFORMATION);
+                       alert.setHeaderText(null);
+                       alert.setContentText(room.getRoom_id()+" 방의 입장 신청이 완료되었습니다");
+                       alert.showAndWait();
+                       //자동갱신 필요
                     }
                     else if(http.getResponseCode() == HttpURLConnection.HTTP_FORBIDDEN) {
-                    	Alert alert = new Alert(AlertType.INFORMATION);
-                    	alert.setHeaderText(null);
-                    	alert.setContentText("이미 입장 신청 된 방입니다.");
-                    	alert.showAndWait();
+                       Alert alert = new Alert(AlertType.INFORMATION);
+                       alert.setHeaderText(null);
+                       alert.setContentText("이미 입장 신청 된 방입니다.");
+                       alert.showAndWait();
+                    }
+                    else if(http.getResponseCode() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                       Alert alert = new Alert(AlertType.INFORMATION);
+                       alert.setHeaderText(null);
+                       alert.setContentText("모집 정원이 마감되었습니다.");
+                       alert.showAndWait();
                     }
                     else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
-                    	Alert alert = new Alert(AlertType.INFORMATION);
-                    	alert.setHeaderText(null);
-                    	alert.setContentText("오류가 발생했습니다.");
-                    	alert.showAndWait();
+                       Alert alert = new Alert(AlertType.INFORMATION);
+                       alert.setHeaderText(null);
+                       alert.setContentText("오류가 발생했습니다.");
+                       alert.showAndWait();
                     }
+                    
                 } catch (Exception e){
                     e.printStackTrace();
                 }
