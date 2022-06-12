@@ -63,7 +63,7 @@ public class CreateRoomController implements Initializable {
 		setLimitPersonnel.setItems(comboNumList);
 		setLimitPersonnel.getSelectionModel().selectFirst();
 		if(setTitle.getText().equals("")) {
-			setTitle.setPromptText("16자 내로 입력해주세요");
+			setTitle.setPromptText("10글자 내로 입력해주세요");
 		}
 
     	backToMainBtn2.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -100,10 +100,10 @@ public class CreateRoomController implements Initializable {
 					alert.showAndWait();
 					return;
 				}
-                if(title.length()>16) { //방 제목 글자수 제한 20
+                if(title.length()>10) { //방 제목 글자수 제한 20
 				Alert alert = new Alert(AlertType.INFORMATION);
 				alert.setHeaderText(null);
-				alert.setContentText("16자 이내의 방 제목을 입력해주세요.");
+				alert.setContentText("10글자 이내의 방 제목을 입력해주세요.");
 				alert.showAndWait();
 				return;
 			}
