@@ -155,7 +155,7 @@ public class UserListController implements Initializable {
 		userState=member.getState();
         //userState.setPrefWidth(60);
 
-		if(userState=="0"){
+		if(userState.equals("0")){
 			Image img = new Image("/Client/Views/img/multiply.png");
 			ImageView view = new ImageView(img);
 			view.setFitWidth(10);
@@ -245,7 +245,7 @@ public class UserListController implements Initializable {
 		userState=member.getState();
 		//userState.setPrefWidth(60);
 
-		if(userState=="0"){
+		if(userState.equals("0")){
 			Image img = new Image("/Client/Views/img/multiply.png");
 			ImageView view = new ImageView(img);
 			view.setFitWidth(10);

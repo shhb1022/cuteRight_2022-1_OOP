@@ -29,7 +29,7 @@ public class Client extends Application{
         super.stop();
         SocketConnection.close();
         if(Status.getId() != null) {
-            URL url = new URL("http://localhost:3000/logout");
+            URL url = new URL("http://" +SocketConnection.SERVER_IP+":3000/logout");
             HttpURLConnection http = (HttpURLConnection) url.openConnection();
             http.setRequestMethod("GET");
             http.setRequestProperty("Authorization", Status.getId());

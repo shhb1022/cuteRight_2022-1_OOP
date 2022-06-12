@@ -68,7 +68,7 @@ public class Server {
             );
 
             // 서버 생성
-            httpServerManager = new Server("localhost", 3000);
+            httpServerManager = new Server("192.168.0.59", 3000);
             httpServerManager.start();
             // Shutdown Hook
             Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
