@@ -62,14 +62,14 @@ public class SignInController implements Initializable {
                 if(name==""){
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setHeaderText(null);
-                    alert.setContentText("이름을 입력하세요");
+                    alert.setContentText("이름을 입력하세요.");
                     alert.showAndWait();
                     return;
                 }
                 if(name.length()>4){
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setHeaderText(null);
-                    alert.setContentText("이름을 4자 이내로 입력하세요");
+                    alert.setContentText("이름을 4자 이내로 입력하세요.");
                     alert.showAndWait();
                     return;
                 }
@@ -98,6 +98,13 @@ public class SignInController implements Initializable {
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setHeaderText(null);
                     alert.setContentText("희망직무를 입력하세요.");
+                    alert.showAndWait();
+                    return;
+                }
+                if(d_job.length()>10){
+                    Alert alert = new Alert(AlertType.INFORMATION);
+                    alert.setHeaderText(null);
+                    alert.setContentText("희망직무를 10자 이내로 입력하세요.");
                     alert.showAndWait();
                     return;
                 }
