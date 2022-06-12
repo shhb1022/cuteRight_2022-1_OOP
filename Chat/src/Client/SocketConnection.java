@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.net.*;
 
 public class SocketConnection {
-    public static final String SERVER_IP = "0000.0000.0000";
+    public static final String SERVER_IP = "192.168.0.59";
     public static boolean socketConnect = false;
     public static Socket socket = null;
 
