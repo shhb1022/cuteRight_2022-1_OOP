@@ -175,6 +175,7 @@ public class CreateRoomController implements Initializable {
                         Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Main.fxml"));
                         Scene scene = new Scene(root);
                         stage.setScene(scene);
+						stage.setResizable(false);
                         stage.show();
                 		}
                 	else if (http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
@@ -235,7 +236,7 @@ public class CreateRoomController implements Initializable {
 		AnchorPane.setTopAnchor(userStd_id,12.0);
 		AnchorPane.setTopAnchor(userName,12.0);
 		AnchorPane.setLeftAnchor(userStd_id,130.0);
-		AnchorPane.setLeftAnchor(userName,40.0);
+		AnchorPane.setLeftAnchor(userName,50.0);
 
 
 		AnchorPane.setTopAnchor(view,5.0);
@@ -246,7 +247,7 @@ public class CreateRoomController implements Initializable {
 		UserInfoBox.getChildren().add(view);
 
 		AnchorPane.setTopAnchor(userCheck, 15.0);
-		AnchorPane.setLeftAnchor(userCheck,260.0);
+		AnchorPane.setLeftAnchor(userCheck,280.0);
 		AnchorPane.setBottomAnchor(userCheck,15.0);
 		//AnchorPane.setRightAnchor(userCheck,7.0);
 		UserInfoBox.getChildren().add(userCheck);

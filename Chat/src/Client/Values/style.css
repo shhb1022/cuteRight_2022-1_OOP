@@ -1,9 +1,13 @@
-.dark-gray-background{
-    -fx-background-color: #46474A;
-}
+/*.dark-gray-background{*/
+/*    -fx-background-color: #46474A;*/
+/*}*/
 
-.gray-background{
-    -fx-background-color: #636566;
+/*.gray-background{*/
+/*    -fx-background-color: #636566;*/
+/*}*/
+
+.backgroundColor {
+    -fx-background-color: linear-gradient(to Bottom, #d3cce3, #E9E4F0);
 }
 
 .transparent-background{
@@ -54,3 +58,13 @@
     -fx-font-size: 23;
     -fx-text-alignment: center
 }
+
+.shadow1 {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 10, 0.5, 0.0, 0.0);
+}
+
+.bottom-line{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #898989;
+}
+

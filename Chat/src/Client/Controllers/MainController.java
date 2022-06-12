@@ -4,6 +4,7 @@ import Client.SocketConnection;
 import Client.Status;
 import Client.Models.ChatRoomInfoDTO;
 import Server.Models.UsersDTO;
+import com.sun.javafx.binding.StringFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -224,6 +225,7 @@ public class MainController implements Initializable {
 
 
         AnchorPane RoomInfoBox = new AnchorPane(roomTitle);
+//        RoomInfoBox.getStyleClass().addAll(style2.css());
 
         AnchorPane.setTopAnchor(roomTitle, 18.0);
         AnchorPane.setLeftAnchor(roomTitle,70.0);
@@ -269,6 +271,7 @@ public class MainController implements Initializable {
                         Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/ChatRoom.fxml"));
                         Scene scene = new Scene(root);
                         stage.setScene(scene);
+                        stage.setResizable(false);
                         stage.show();
                     }
                     else if(http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {

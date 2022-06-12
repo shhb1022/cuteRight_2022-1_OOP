@@ -31,6 +31,9 @@ public class LoginController implements Initializable {
         if(idInput.getText().equals("")) {
             idInput.setPromptText("학번(숫자)");
         }
+        if(pwdInput.getText().equals("")){
+            pwdInput.setPromptText("비밀번호");
+        }
        loginBtn.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {

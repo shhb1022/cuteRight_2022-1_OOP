@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
@@ -12,11 +13,11 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controllers.CreateRoomController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="400.0" styleClass="backgroundColor" stylesheets="@../Values/style2.css" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controllers.CreateRoomController">
    <children>
-      <HBox prefHeight="42.0" prefWidth="400.0" styleClass="main-background" stylesheets="@../Values/style.css">
+      <HBox prefHeight="42.0" prefWidth="400.0" stylesheets="@../Values/style.css">
          <children>
-            <ImageView fx:id="backToMainBtn2" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="backToMainBtn2" fitHeight="35.0" fitWidth="35.0" pickOnBounds="true" preserveRatio="true" styleClass="shadow1">
                <HBox.margin>
                   <Insets bottom="7.0" left="7.0" right="7.0" top="7.0" />
                </HBox.margin>
@@ -24,7 +25,7 @@
                   <Image url="@img/arrow-left.png" />
                </image>
             </ImageView>
-            <Label alignment="CENTER" prefHeight="42.0" prefWidth="302.0" text="채팅방 생성">
+            <Label alignment="CENTER" prefHeight="42.0" prefWidth="302.0" styleClass="shadow1" text="채팅방 생성">
                <font>
                   <Font size="27.0" />
                </font>
@@ -32,25 +33,33 @@
                   <Insets top="5.0" />
                </HBox.margin></Label>
          </children>
+         <styleClass>
+            <String fx:value="transparent-background" />
+            <String fx:value="purple-outline3" />
+         </styleClass>
       </HBox>
-      <ListView fx:id="usersDisplay" layoutX="35.0" layoutY="242.0" prefHeight="220.0" prefWidth="330.0" />
-      <Button fx:id="createBtn" layoutX="126.0" layoutY="466.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="149.0" text="확인">
+      <ListView fx:id="usersDisplay" layoutX="35.0" layoutY="236.0" prefHeight="220.0" prefWidth="330.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" />
+      <Button fx:id="createBtn" layoutX="126.0" layoutY="461.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="150.0" style="-fx-background-color: #ddd6f3;" stylesheets="@../Values/style.css" text="확인">
          <font>
             <Font size="15.0" />
-         </font></Button>
-      <Label layoutX="59.0" layoutY="90.0" prefHeight="35.0" prefWidth="60.0" text="제목">
+         </font>
+         <styleClass>
+            <String fx:value="purple-outline2" />
+            <String fx:value="radius" />
+         </styleClass></Button>
+      <Label layoutX="35.0" layoutY="89.0" prefHeight="35.0" prefWidth="48.0" styleClass="bottom-line" stylesheets="@../Values/style.css" text="제목">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
-      <Label layoutX="51.0" layoutY="149.0" prefHeight="35.0" prefWidth="98.0" text="제한 인원">
+      <Label layoutX="35.0" layoutY="147.0" prefHeight="35.0" prefWidth="87.0" styleClass="bottom-line" stylesheets="@../Values/style.css" text="제한 인원">
          <font>
             <Font size="19.0" />
          </font>
       </Label>
-      <TextField fx:id="setTitle" layoutX="125.0" layoutY="91.0" prefHeight="30.0" prefWidth="226.0" />
-      <ComboBox fx:id="setLimitPersonnel" layoutX="211.0" layoutY="151.0" prefHeight="30.0" prefWidth="140.0" />
-      <Label layoutX="51.0" layoutY="207.0" prefHeight="35.0" prefWidth="98.0" text="친구 선택">
+      <TextField fx:id="setTitle" layoutX="121.0" layoutY="92.0" prefHeight="30.0" prefWidth="244.0" />
+      <ComboBox fx:id="setLimitPersonnel" layoutX="225.0" layoutY="152.0" prefHeight="30.0" prefWidth="140.0" />
+      <Label layoutX="35.0" layoutY="201.0" prefHeight="35.0" prefWidth="98.0" stylesheets="@../Values/style.css" text="친구 선택">
          <font>
             <Font size="19.0" />
          </font>
