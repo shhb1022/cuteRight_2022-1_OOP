@@ -33,8 +33,8 @@
                </HBox.margin></Label>
          </children>
       </HBox>
-      <ListView fx:id="usersDisplay" layoutX="50.0" layoutY="240.0" prefHeight="200.0" prefWidth="300.0" />
-      <Button fx:id="createBtn" layoutX="120.0" layoutY="452.0" mnemonicParsing="false" prefHeight="34.0" prefWidth="149.0" text="확인">
+      <ListView fx:id="usersDisplay" layoutX="35.0" layoutY="242.0" prefHeight="220.0" prefWidth="330.0" />
+      <Button fx:id="createBtn" layoutX="126.0" layoutY="466.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="149.0" text="확인">
          <font>
             <Font size="15.0" />
          </font></Button>

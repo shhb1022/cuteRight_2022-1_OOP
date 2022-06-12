@@ -232,8 +232,8 @@ public class CreateRoomController implements Initializable {
 
 		AnchorPane UserInfoBox = new AnchorPane(userStd_id, userName);
 
-		AnchorPane.setTopAnchor(userStd_id,10.0);
-		AnchorPane.setTopAnchor(userName,10.0);
+		AnchorPane.setTopAnchor(userStd_id,12.0);
+		AnchorPane.setTopAnchor(userName,12.0);
 		AnchorPane.setLeftAnchor(userStd_id,130.0);
 		AnchorPane.setLeftAnchor(userName,40.0);
 
@@ -248,10 +248,10 @@ public class CreateRoomController implements Initializable {
 		AnchorPane.setTopAnchor(userCheck, 15.0);
 		AnchorPane.setLeftAnchor(userCheck,260.0);
 		AnchorPane.setBottomAnchor(userCheck,15.0);
-		AnchorPane.setRightAnchor(userCheck,7.0);
+		//AnchorPane.setRightAnchor(userCheck,7.0);
 		UserInfoBox.getChildren().add(userCheck);
 		UserInfoBox.setMaxHeight(40);
-		UserInfoBox.setMaxWidth(300);
+		UserInfoBox.setMaxWidth(240);
     
 //    public GridPane UserInfoBox(String std_id,String name) {
 //        GridPane userInfoBox = new GridPane();
