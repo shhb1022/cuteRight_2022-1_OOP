@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.String?>
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
@@ -42,21 +43,25 @@
       </HBox>
    </top>
    <bottom>
-      <HBox prefHeight="50.0" prefWidth="400.0" BorderPane.alignment="CENTER">
+      <HBox prefHeight="50.0" prefWidth="400.0" stylesheets="@../Values/style.css" BorderPane.alignment="CENTER">
          <children>
             <TextField fx:id="chatInput" prefHeight="50.0" prefWidth="350.0" styleClass="purple-outline3" stylesheets="@../Values/style.css">
                <font>
                   <Font size="16.0" />
                </font></TextField>
-            <ImageView fx:id="sendBtn" fitHeight="44.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="sendBtn" fitHeight="40.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@img/paper-plane.png" />
                </image>
                <HBox.margin>
-                  <Insets bottom="2.0" left="2.0" right="2.0" top="2.0" />
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
                </HBox.margin>
             </ImageView>
          </children>
+         <styleClass>
+            <String fx:value="main-background" />
+            <String fx:value="purple-outline3" />
+         </styleClass>
       </HBox>
    </bottom>
    <center>

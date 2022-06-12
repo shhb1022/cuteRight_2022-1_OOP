@@ -4,7 +4,6 @@ import Client.SocketConnection;
 import Client.Status;
 import Client.Models.ChatRoomInfoDTO;
 import Server.Models.UsersDTO;
-import com.sun.javafx.binding.StringFormatter;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -225,6 +224,7 @@ public class MainController implements Initializable {
 
 
         AnchorPane RoomInfoBox = new AnchorPane(roomTitle);
+        RoomInfoBox.getStylesheets().add("/Client/Values/style2.css");
 //        RoomInfoBox.getStyleClass().addAll(style2.css());
 
         AnchorPane.setTopAnchor(roomTitle, 18.0);
