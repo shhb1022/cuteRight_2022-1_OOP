@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Client.Controllers.UserListController">
+   <children>
+      <HBox prefHeight="40.0" prefWidth="300.0" styleClass="main-background" stylesheets="@../Values/style.css">
+         <children>
+            <ImageView fx:id="backBtn2" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@img/arrow-left.png" />
+               </image>
+               <HBox.margin>
+                  <Insets bottom="4.0" left="4.0" right="4.0" top="4.0" />
+               </HBox.margin>
+            </ImageView>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="220.0" text="친구 목록">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <ListView fx:id="entranceDisplay" layoutY="40.0" prefHeight="160.0" prefWidth="300.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" />
+      <HBox layoutY="200.0" prefHeight="40.0" prefWidth="300.0" styleClass="main-background" stylesheets="@../Values/style.css">
+         <children>
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="300.0" text="대기 명단">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+      </HBox>
+      <ListView fx:id="waitingDisplay" layoutY="240.0" prefHeight="160.0" prefWidth="300.0" styleClass="purple-outline3" stylesheets="@../Values/style.css" />
+   </children>
+</Pane>

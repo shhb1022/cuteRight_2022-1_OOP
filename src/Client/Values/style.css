@@ -1,0 +1,56 @@
+.dark-gray-background{
+    -fx-background-color: #46474A;
+}
+
+.gray-background{
+    -fx-background-color: #636566;
+}
+
+.transparent-background{
+    -fx-background-color: rgba(0,0,0,0);
+}
+
+.radius{
+    -fx-background-radius: 30;
+}
+
+.white-background{
+    -fx-background-color: #fff;
+}
+
+.main-background{
+    -fx-background-color: #E9E4F0;
+}
+
+.input{
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #898989;
+}
+
+.black-outline{
+    -fx-border-color: #000000;
+}
+
+.purple-outline{
+    -fx-border-color: #A939FF;
+    -fx-border-radius: 30;
+}
+
+.purple-outline2{
+    -fx-border-color: #C49BFD;
+    -fx-border-radius: 30;
+}
+.purple-outline3{
+    -fx-border-color: #C49BFD;
+}
+
+
+.blue-outline{
+    -fx-border-color: #4256FF;
+    -fx-border-radius: 30;
+}
+
+.combo-box{
+    -fx-font-size: 23;
+    -fx-text-alignment: center
+}
