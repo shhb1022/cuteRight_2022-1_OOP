@@ -197,7 +197,7 @@ public class UserListController implements Initializable {
         userInfoBox.add(userStd_id, 1, 0);
         userInfoBox.add(userName, 0, 0);
         userInfoBox.add(userJob, 2, 0);
-        userInfoBox.add(banBtn, 5, 0);
+        userInfoBox.add(banBtn, 4, 0);
         
         //내가 방장이거나 member의 이름 나와 갖지 않다면 활성화
         if((Status.getCurrentRoom().getLeader_id() == Integer.parseInt(Status.getId())) && !(member.getStd_id().equals(Status.getId()))) {

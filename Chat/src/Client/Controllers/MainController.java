@@ -241,12 +241,14 @@ public class MainController implements Initializable {
         AnchorPane.setTopAnchor(in,41.0);
         AnchorPane.setLeftAnchor(in,330.0);
         AnchorPane.setBottomAnchor(in,5.0);
-        AnchorPane.setRightAnchor(in,10.0);
+        AnchorPane.setRightAnchor(in,7.0);
 
         RoomInfoBox.getChildren().add(in);
 
         RoomInfoBox.setMaxHeight(70);
         RoomInfoBox.setMaxWidth(400);
+        RoomInfoBox.setStyle("-fx-background-color: #ffdde1;");
+        RoomInfoBox.setStyle("-fx-border-color: #DAE2F8;");
 
 
 
@@ -376,12 +378,14 @@ public class MainController implements Initializable {
         AnchorPane.setTopAnchor(in,41.0);
         AnchorPane.setLeftAnchor(in,330.0);
         AnchorPane.setBottomAnchor(in,5.0);
-        AnchorPane.setRightAnchor(in,10.0);
+        AnchorPane.setRightAnchor(in,7.0);
 
         RoomInfoBox.getChildren().add(in);
 
         RoomInfoBox.setMaxHeight(70);
         RoomInfoBox.setMaxWidth(400);
+        RoomInfoBox.setStyle("-fx-background-color: #ffdde1;");
+        RoomInfoBox.setStyle("-fx-border-color: #DAE2F8;");
 
         //입장 신청 (메소드 오류 발생)
         in.setOnAction(new EventHandler<ActionEvent>() {
