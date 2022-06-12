@@ -134,6 +134,13 @@ public class SignInController implements Initializable {
                         Stage currStage = (Stage) signUpDoneBtn.getScene().getWindow();
                         currStage.close();
 
+                        Stage stage = new Stage();
+                        Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Login.fxml"));
+                        Scene scene = new Scene(root);
+                        stage.setScene(scene);
+                        stage.setResizable(false);
+                        stage.show();
+
 						/* 새 창 띄우는 부분 주석처리 0608-sh
 						 * // 새 창을 띄운다. Stage stage = new Stage(); Parent root = (Parent)
 						 * FXMLLoader.load(getClass().getResource("/Client/Views/Login.fxml")); Scene
