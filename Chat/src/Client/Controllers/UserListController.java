@@ -152,6 +152,7 @@ public class UserListController implements Initializable {
     //접속유저
     public GridPane EntranceInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
+		userInfoBox.setHgap(2);
 
         String userState;
 		userState=member.getState();
@@ -172,7 +173,7 @@ public class UserListController implements Initializable {
 		}
 
         Label userStd_id = new Label();
-        userStd_id.setPrefWidth(70);
+        userStd_id.setPrefWidth(65);
         Label userName = new Label();
         userName.setPrefWidth(50);
         Label userJob = new Label();
@@ -243,6 +244,7 @@ public class UserListController implements Initializable {
     //대기 유저
     public GridPane WaitingInfoBox(ChatRoomMemberDTO member) {
         GridPane userInfoBox = new GridPane();
+		userInfoBox.setHgap(2);
 
 		String userState;
 		userState=member.getState();
@@ -263,7 +265,7 @@ public class UserListController implements Initializable {
 		}
 
 		Label userStd_id = new Label();
-		userStd_id.setPrefWidth(70);
+		userStd_id.setPrefWidth(65);
 		Label userName = new Label();
 		userName.setPrefWidth(50);
 		Label userJob = new Label();
