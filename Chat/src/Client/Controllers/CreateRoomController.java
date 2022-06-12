@@ -53,7 +53,7 @@ public class CreateRoomController implements Initializable {
 
 	@FXML private ImageView backToMainBtn2;
 	ObservableList<AnchorPane> ListUsers = FXCollections.observableArrayList();
-	String[] limit_personList = {"2","3","4","5","6","7","8","9","10"};
+	String[] limit_personList = {"1", "2","3","4","5","6","7","8","9","10"};
 	//유저 초대에 쓰는 배열 더 좋은게 생각이 안나므로 임시로
 	Vector<String> userInvitation = new Vector<String>();
 
