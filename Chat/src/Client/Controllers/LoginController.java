@@ -12,6 +12,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -43,7 +44,7 @@ public class LoginController implements Initializable {
                 if(id==""){ //id 입력했는지 확인
                     Alert alert = new Alert(AlertType.INFORMATION);
                     alert.setHeaderText(null);
-                    alert.setContentText("비밀번호를 입력하세요.");
+                    alert.setContentText("아이디를 입력하세요.");
                     alert.showAndWait();
                     return;
                 }
@@ -96,6 +97,7 @@ public class LoginController implements Initializable {
                         Scene scene = new Scene(root);
                         stage.setScene(scene);
                         stage.setResizable(false);
+
                         stage.show();
                     } else if (http.getResponseCode() == HttpURLConnection.HTTP_BAD_REQUEST) {
                         // 경고 메세지를 출력한다.
@@ -120,12 +122,32 @@ public class LoginController implements Initializable {
             @Override
             public void handle(ActionEvent event) {
                 try {
+                    Stage currStage = (Stage) signUpBtn.getScene().getWindow();
+                    currStage.close();
                     // 새 창을 띄운다.
                     Stage stage = new Stage();
                     Parent root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Signin.fxml"));
                     Scene scene = new Scene(root);
                     stage.setScene(scene);
                     stage.setResizable(false);
+                    stage.setOnCloseRequest(e->{
+                        e.consume();
+                        try{
+                            stage.close();
+                            Stage newStage = new Stage();
+                            Parent root2 = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Login.fxml"));
+                            Scene scene2 = new Scene(root2);
+                            newStage.setScene(scene2);
+                            newStage.setResizable(false);
+                            newStage.show();
+                            //Window.getWindows().forEach(window -> {((Stage)window).close();});
+
+                        }catch (Exception e2) {
+                            e2.printStackTrace();
+                        }
+
+
+                    });
                     stage.show();
                 } catch (Exception e) {
                     e.printStackTrace();
