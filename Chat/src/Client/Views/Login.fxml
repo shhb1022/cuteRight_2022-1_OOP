@@ -23,8 +23,8 @@
             <Font name="System" size="50.0" />
          </font>
       </Label>
-      <TextField fx:id="idInput" layoutX="59.0" layoutY="239.0" prefHeight="38.0" prefWidth="286.0" styleClass="radius" stylesheets="@../Values/style.css" />
-      <PasswordField fx:id="pwdInput" layoutX="59.0" layoutY="286.0" prefHeight="38.0" prefWidth="286.0" styleClass="radius" stylesheets="@../Values/style.css" />
+      <TextField fx:id="idInput" layoutX="57.0" layoutY="219.0" prefHeight="38.0" prefWidth="286.0" styleClass="radius" stylesheets="@../Values/style.css" />
+      <PasswordField fx:id="pwdInput" layoutX="57.0" layoutY="277.0" prefHeight="38.0" prefWidth="286.0" styleClass="radius" stylesheets="@../Values/style.css" />
       <Button fx:id="loginBtn" alignment="CENTER" layoutX="57.0" layoutY="334.0" mnemonicParsing="false" prefHeight="23.0" prefWidth="286.0" style="-fx-background-color: #C9D6FF;" stylesheets="@../Values/style.css" text="로그인">
          <font>
             <Font size="20.0" />

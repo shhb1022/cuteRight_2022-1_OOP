@@ -119,8 +119,8 @@ public class ChatRoomController implements Initializable {
 					root = (Parent) FXMLLoader.load(getClass().getResource("/Client/Views/Friend.fxml"));
 	                Scene scene = new Scene(root);
 	                userListStage.setScene(scene);
-	                userListStage.setX(1500.0);
-	                userListStage.setY(95.0);
+	                userListStage.setX(event.getScreenX()+17);
+	                userListStage.setY(event.getScreenY()+24);
                     userListStage.setResizable(false);
 	                userListStage.show();
 	                Stage currStage = (Stage) userListBtn.getScene().getWindow();

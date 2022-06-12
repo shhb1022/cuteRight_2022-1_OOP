@@ -393,7 +393,7 @@ public class MainController implements Initializable {
                     if(http.getResponseCode() == HttpURLConnection.HTTP_OK) {
                        Alert alert = new Alert(AlertType.INFORMATION);
                        alert.setHeaderText(null);
-                       alert.setContentText(room.getRoom_id()+" 방의 입장 신청이 완료되었습니다");
+                       alert.setContentText("입장 신청이 완료되었습니다");
                        alert.showAndWait();
                        //자동갱신 필요
                     }
