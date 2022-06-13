@@ -76,6 +76,8 @@ public class ChatRoomHandler implements HttpHandler {
                     dao.setForbid(std_id, room_id);
                     dao.decreCur_person(room_id);
                     exchange.sendResponseHeaders(200, 0);
+                    ChattingServer instance = ChattingServer.getInstance();
+                    instance.sendNotice(room_id, std_id);
                }
             }
 

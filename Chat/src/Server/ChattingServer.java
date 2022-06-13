@@ -136,18 +136,11 @@ public class ChattingServer {
                        ChatMessageDTO chat = new ChatMessageDTO(packet.getStdId(),packet.getRoomId(), packet.getName(), packet.getMessage());
                        dao.addMessage(chat); // 모든 클라이언트에 send // 수정해야할 사항: 동일한 room_id를 가진 client에넣어야 됨. 
                        for(Client client : connections.get(room_id)) {
-                       client.send(packet.getPacket()); } } else { System.out.println("강퇴당한 사용자라");
+                          client.send(packet.getPacket());
                        }
-                      
-
-                     /*
-                      * // ChatMessageDTO를 DB에 저장 DAO dao = new DAO(); ChatMessageDTO chat = new
-                      * ChatMessageDTO(packet.getStdId(), packet.getRoomId(), packet.getName(),
-                      * packet.getMessage()); dao.addMessage(chat);
-                      * 
-                      * // 모든 클라이언트에 send // 수정해야할 사항: 동일한 room_id를 가진 client에 넣어야 됨. for (Client
-                      * client : connections.get(room_id)) { client.send(packet.getPacket()); }
-                      */
+                       } else {
+                          System.out.println("강퇴당한 사용자라");
+                       }
                   }
                } catch (Exception e) {
                   try {
@@ -179,6 +172,15 @@ public class ChattingServer {
       }
    }
 
+   public void sendNotice(int room_id , int std_id) {
+      Vector<Client> cs = connections.get(room_id);
+      DAO dao = new DAO();
+      String userName = dao.stdName(std_id);
+      MessagePacker packet = new MessagePacker(0,room_id, "공지", userName+"이 강퇴되었습니다!");
+      for(Client c : cs) {
+         c.send(packet.getPacket());
+      }
+   }
    public void addRoom(int room_id) {
       connections.put(room_id, new Vector<Client>());
    }
